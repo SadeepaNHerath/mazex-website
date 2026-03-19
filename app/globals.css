@@ -83,43 +83,30 @@ h1, h2, h3, h4, h5, h6 {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Robot dot animation */
-@keyframes robot-move {
-  0% { transform: translate(20px, 20px); }
-  10% { transform: translate(60px, 20px); }
-  20% { transform: translate(60px, 60px); }
-  30% { transform: translate(100px, 60px); }
-  40% { transform: translate(100px, 100px); }
-  50% { transform: translate(140px, 100px); }
-  60% { transform: translate(140px, 140px); }
-  70% { transform: translate(180px, 140px); }
-  80% { transform: translate(180px, 180px); }
-  90% { transform: translate(220px, 180px); }
-  100% { transform: translate(220px, 220px); }
+/* Floating animation for hero elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
-.animate-robot {
-  animation: robot-move 8s ease-in-out infinite;
+.animate-float {
+  animation: float 4s ease-in-out infinite;
 }
 
-/* Slow robot for larger maze */
-@keyframes robot-move-slow {
-  0% { transform: translate(25px, 25px); }
-  8% { transform: translate(75px, 25px); }
-  16% { transform: translate(75px, 75px); }
-  24% { transform: translate(125px, 75px); }
-  32% { transform: translate(125px, 125px); }
-  40% { transform: translate(175px, 125px); }
-  48% { transform: translate(175px, 175px); }
-  56% { transform: translate(225px, 175px); }
-  64% { transform: translate(225px, 225px); }
-  72% { transform: translate(275px, 225px); }
-  80% { transform: translate(275px, 275px); }
-  88% { transform: translate(275px, 325px); }
-  96% { transform: translate(325px, 325px); }
-  100% { transform: translate(325px, 325px); }
+/* Subtle shimmer for text/gradients */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
 }
 
-.animate-robot-slow {
-  animation: robot-move-slow 12s ease-in-out infinite;
+.animate-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 6s linear infinite;
+}
+
+/* Section divider gradient line */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #2C7DA0, transparent);
+  width: 100%;
 }
