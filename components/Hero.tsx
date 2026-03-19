@@ -94,7 +94,7 @@ export default function Hero() {
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#2C7DA0] to-[#61A5C2] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </a>
               <a
-                href="#delegate-book"
+                href="#delegates"
                 id="hero-learn-btn"
                 className="border border-[#61A5C2]/60 text-[#61A5C2] px-8 py-3.5 rounded-full font-semibold hover:bg-[#61A5C2]/10 hover:border-[#61A5C2] transition-all duration-300 text-base"
               >
