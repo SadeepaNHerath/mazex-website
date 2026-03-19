@@ -16,7 +16,7 @@ export default function Navbar() {
           {/* Logo */}
           <a href="#" className="flex items-center hover:opacity-90 transition-opacity">
             <Image
-              src="/images/logo-white.svg"
+              src="/images/brand/logo-white.svg"
               alt="MazeX Logo"
               width={100}
               height={56}

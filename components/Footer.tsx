@@ -85,7 +85,7 @@ export default function Footer() {
             >
               <div className="mb-6 flex items-center">
                 <Image
-                  src="/images/logo-white.svg"
+                  src="/images/brand/logo-white.svg"
                   alt="MazeX Logo"
                   width={140}
                   height={78}
@@ -190,7 +190,7 @@ export default function Footer() {
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#2C7DA0]/30 to-[#61A5C2]/30 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative bg-white rounded-full p-3 w-[72px] h-[72px] flex items-center justify-center shadow-lg shadow-black/20 transition-transform duration-300 group-hover:scale-105">
                   <Image
-                    src="/images/IEEE SB.webp"
+                    src="/images/logos/IEEE SB.webp"
                     alt="University of Moratuwa IEEE Student Branch"
                     width={52}
                     height={52}
@@ -243,7 +243,7 @@ export default function Footer() {
                 <div className="absolute -inset-2 bg-gradient-to-r from-[#2C7DA0]/20 to-[#61A5C2]/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative bg-white rounded-2xl px-8 py-5 shadow-lg shadow-black/20 transition-all duration-300 group-hover:scale-[1.03] group-hover:shadow-xl group-hover:shadow-[#2C7DA0]/10 flex items-center justify-center">
                   <Image
-                    src="/images/IEEE RAS.webp"
+                    src="/images/logos/IEEE RAS.webp"
                     alt="IEEE Robotics and Automation Society — University of Moratuwa"
                     width={360}
                     height={90}
@@ -265,7 +265,7 @@ export default function Footer() {
                 <div className="absolute -inset-2 bg-gradient-to-r from-[#61A5C2]/20 to-[#A9D6E5]/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative bg-white rounded-2xl px-8 py-5 shadow-lg shadow-black/20 transition-all duration-300 group-hover:scale-[1.03] group-hover:shadow-xl group-hover:shadow-[#61A5C2]/10 flex items-center justify-center">
                   <Image
-                    src="/images/IEEE WIE.webp"
+                    src="/images/logos/IEEE WIE.webp"
                     alt="IEEE Women in Engineering — University of Moratuwa"
                     width={360}
                     height={90}
