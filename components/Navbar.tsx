@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import { NAV_LINKS } from "@/lib/constants";
 
 export default function Navbar() {
@@ -13,10 +14,15 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <a href="#" className="flex items-baseline gap-0 text-xl font-bold font-[family-name:var(--font-space-grotesk)]">
-            <span className="text-[#EAF6FF]">MAZE</span>
-            <span className="text-[#61A5C2] text-2xl">X</span>
-            <span className="text-[#2C7DA0] text-xs ml-0.5 relative -top-2">1.0</span>
+          <a href="#" className="flex items-center hover:opacity-90 transition-opacity">
+            <Image
+              src="/images/logo-white.svg"
+              alt="MazeX Logo"
+              width={100}
+              height={56}
+              className="h-10 w-auto object-contain"
+              priority
+            />
           </a>
 
           {/* Desktop nav links */}

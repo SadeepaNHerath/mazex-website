@@ -83,12 +83,14 @@ export default function Footer() {
               transition={{ duration: 0.6 }}
               className="lg:col-span-1"
             >
-              <div className="flex items-baseline gap-0 text-2xl font-bold font-[family-name:var(--font-space-grotesk)] mb-4">
-                <span className="text-[#EAF6FF]">MAZE</span>
-                <span className="text-[#61A5C2] text-3xl">X</span>
-                <span className="text-[#2C7DA0] text-xs ml-0.5 relative -top-3">
-                  1.0
-                </span>
+              <div className="mb-6 flex items-center">
+                <Image
+                  src="/images/logo-white.svg"
+                  alt="MazeX Logo"
+                  width={140}
+                  height={78}
+                  className="h-12 w-auto object-contain"
+                />
               </div>
               <p className="text-[#A9D6E5]/70 text-sm leading-relaxed mb-6">
                 Micromouse Workshop Series &amp; Competition organized by IEEE
