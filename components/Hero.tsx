@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { HERO_STATS } from "@/lib/constants";
 import HexBackground from "./HexBackground";
 import MazeAnimation from "./MazeAnimation";
 
@@ -95,33 +94,12 @@ export default function Hero() {
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#2C7DA0] to-[#61A5C2] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </a>
               <a
-                href="#about"
+                href="#delegate-book"
                 id="hero-learn-btn"
                 className="border border-[#61A5C2]/60 text-[#61A5C2] px-8 py-3.5 rounded-full font-semibold hover:bg-[#61A5C2]/10 hover:border-[#61A5C2] transition-all duration-300 text-base"
               >
-                Learn More
+                Delegate Book
               </a>
-            </motion.div>
-
-            {/* Stat pills */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-wrap gap-3"
-            >
-              {HERO_STATS.map((stat, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, delay: 0.6 + i * 0.1 }}
-                  className="bg-[#1B4965]/50 border border-[#2C7DA0]/25 text-[#A9D6E5] px-4 py-2 rounded-lg text-xs sm:text-sm flex items-center gap-2 backdrop-blur-sm hover:border-[#2C7DA0]/50 transition-colors duration-300"
-                >
-                  <span>{stat.icon}</span>
-                  {stat.label}
-                </motion.span>
-              ))}
             </motion.div>
           </div>
 

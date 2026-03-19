@@ -83,7 +83,10 @@ export default function Countdown() {
             key={i}
             className="bg-[#1B4965]/60 backdrop-blur-sm border border-[#2C7DA0]/30 rounded-xl p-4 sm:p-6 min-w-[70px] sm:min-w-[90px] text-center"
           >
-            <div className="text-3xl sm:text-5xl font-bold text-[#EAF6FF] font-[family-name:var(--font-space-grotesk)] tabular-nums">
+            <div 
+              className="text-3xl sm:text-5xl font-bold text-[#EAF6FF] font-[family-name:var(--font-space-grotesk)] tabular-nums"
+              suppressHydrationWarning
+            >
               {String(unit.value).padStart(2, "0")}
             </div>
             <div className="text-[#61A5C2] text-xs sm:text-sm mt-1 uppercase tracking-wider">
