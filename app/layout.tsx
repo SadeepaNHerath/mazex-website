@@ -20,6 +20,15 @@ export const metadata: Metadata = {
     "MazeX 1.0 is an intra-university Micromouse Robotics Competition organized by IEEE RAS and WIE at the University of Moratuwa. Register by May 5, 2026. Competition Day: June 20, 2026.",
   keywords:
     "Micromouse, Robotics, IEEE, University of Moratuwa, RAS, WIE, MazeX, Competition, Sri Lanka",
+  icons: {
+    icon: [
+      { url: '/icon.ico' }
+      // TODO: Additional formats (PNG, SVG) should be added later for better device support
+    ],
+    apple: [
+      // { url: '/apple-touch-icon.png' } // Add this later when PNG/SVG are available
+    ]
+  }
 };
 
 export default function RootLayout({
