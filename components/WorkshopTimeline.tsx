@@ -14,25 +14,25 @@ const MicromouseRobot = () => (
     className="drop-shadow-[0_0_15px_rgba(168,85,247,0.8)]"
   >
     <ellipse cx="24" cy="16" rx="16" ry="12" fill="#A855F7" opacity="0.3" filter="blur(4px)" />
-    <rect x="8" y="6" width="28" height="20" rx="3" fill="#0A1122" stroke="#818CF8" strokeWidth="1.5" />
-    <rect x="12" y="2" width="12" height="6" rx="2" fill="#1E293B" stroke="#475569" strokeWidth="1.5" />
-    <rect x="12" y="24" width="12" height="6" rx="2" fill="#1E293B" stroke="#475569" strokeWidth="1.5" />
-    <path d="M 38 10 L 44 6 M 38 22 L 44 26 M 40 16 L 46 16" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" />
+    <rect x="8" y="6" width="28" height="20" rx="3" fill="#0e0a14" stroke="#818CF8" strokeWidth="1.5" />
+    <rect x="12" y="2" width="12" height="6" rx="2" fill="#1a1624" stroke="#403357" strokeWidth="1.5" />
+    <rect x="12" y="24" width="12" height="6" rx="2" fill="#1a1624" stroke="#403357" strokeWidth="1.5" />
+    <path d="M 38 10 L 44 6 M 38 22 L 44 26 M 40 16 L 46 16" stroke="#5a4b73" strokeWidth="2" strokeLinecap="round" />
     <rect x="18" y="10" width="10" height="12" rx="2" fill="#1C1635" stroke="#A855F7" strokeWidth="1.5" />
     <circle cx="23" cy="16" r="2" fill="#F8FAFC" className="animate-pulse" />
-    <circle cx="32" cy="10" r="1.5" fill="#38BDF8" />
-    <circle cx="32" cy="22" r="1.5" fill="#38BDF8" />
+    <circle cx="32" cy="10" r="1.5" fill="#5a4b73" />
+    <circle cx="32" cy="22" r="1.5" fill="#5a4b73" />
   </svg>
 );
 
 const WorkshopCardContent = ({ event }: { event: (typeof WORKSHOP_EVENTS)[0] }) => (
-  <div className="w-full bg-[#0A1122]/95 backdrop-blur-[24px] border border-[#1E293B] rounded-[18px] p-5 sm:p-6 shadow-[0_16px_40px_rgba(0,0,0,0.6)] group hover:border-[#334155] transition-colors duration-300 z-30 overflow-hidden relative">
+  <div className="w-full bg-[#0e0a14]/95 backdrop-blur-[24px] border border-[#1a1624] rounded-[18px] p-5 sm:p-6 shadow-[0_16px_40px_rgba(0,0,0,0.6)] group hover:border-[#2f2540] transition-colors duration-300 z-30 overflow-hidden relative">
     <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-[#A855F7] to-[#818cf8]/10" />
     <div className="absolute top-0 left-0 bottom-0 w-[1.5px] bg-gradient-to-b from-[#A855F7] to-[#818cf8]/10" />
 
     <div className="mb-3 sm:mb-4 inline-flex items-center gap-2 bg-[#1C1635] border border-[#3E2570] rounded-md px-2.5 py-1.5 shadow-sm">
       <svg
-        className="w-3.5 h-3.5 text-[#B388EB]"
+        className="w-3.5 h-3.5 text-[#7e68a3]"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -44,7 +44,7 @@ const WorkshopCardContent = ({ event }: { event: (typeof WORKSHOP_EVENTS)[0] }) 
           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
         />
       </svg>
-      <span className="text-[#B388EB] text-[9px] sm:text-[10px] font-bold tracking-widest uppercase">
+      <span className="text-[#7e68a3] text-[9px] sm:text-[10px] font-bold tracking-widest uppercase">
         {event.date}
       </span>
     </div>
@@ -58,7 +58,7 @@ const WorkshopCardContent = ({ event }: { event: (typeof WORKSHOP_EVENTS)[0] }) 
       </span>
     </h3>
 
-    <p className="text-[12px] leading-relaxed text-[#94A3B8] sm:text-[13px]">
+    <p className="text-[12px] leading-relaxed text-[#9e8db3] sm:text-[13px]">
       {event.description}
     </p>
   </div>

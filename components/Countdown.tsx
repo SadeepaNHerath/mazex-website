@@ -56,7 +56,7 @@ export default function Countdown() {
               className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 cursor-pointer ${
                 !showCompetition
                   ? "theme-button text-[#F8FAFC]"
-                  : "text-[#CBD5E1] hover:text-[#F8FAFC]"
+                  : "text-[#c9bedb] hover:text-[#F8FAFC]"
               }`}
             >
               Registration Opens
@@ -69,7 +69,7 @@ export default function Countdown() {
               className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 cursor-pointer ${
                 showCompetition
                   ? "theme-button text-[#F8FAFC]"
-                  : "text-[#CBD5E1] hover:text-[#F8FAFC]"
+                  : "text-[#c9bedb] hover:text-[#F8FAFC]"
               }`}
             >
               Competition Day
@@ -88,7 +88,7 @@ export default function Countdown() {
             >
               {String(unit.value).padStart(2, "0")}
             </div>
-            <div className="mt-2 text-xs uppercase tracking-[0.24em] text-[#CBD5E1] sm:text-sm">
+            <div className="mt-2 text-xs uppercase tracking-[0.24em] text-[#c9bedb] sm:text-sm">
               {unit.label}
             </div>
           </div>

@@ -29,7 +29,7 @@ export default function Sponsorship() {
           <h2 className="mb-4 text-3xl font-bold text-[#F8FAFC] sm:text-4xl lg:text-5xl">
             Partner With Us
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-[#94A3B8]">
+          <p className="mx-auto max-w-2xl text-lg text-[#9e8db3]">
             Join us in shaping the next generation of robotics engineers
           </p>
         </motion.div>
@@ -76,7 +76,7 @@ export default function Sponsorship() {
                 {tier.perks.map((perk, j) => (
                   <li
                     key={j}
-                    className="flex items-start gap-2 text-sm text-[#94A3B8]"
+                    className="flex items-start gap-2 text-sm text-[#9e8db3]"
                   >
                     <span
                       className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full"
@@ -110,7 +110,7 @@ export default function Sponsorship() {
           <h3 className="mb-3 text-2xl font-bold text-[#F8FAFC]">
             Interested in partnering? Let&apos;s talk.
           </h3>
-          <p className="mx-auto mb-6 max-w-lg text-[#94A3B8]">
+          <p className="mx-auto mb-6 max-w-lg text-[#9e8db3]">
             Help us make MazeX 1.0 a landmark event for robotics education at
             the University of Moratuwa.
           </p>

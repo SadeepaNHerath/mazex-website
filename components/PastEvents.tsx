@@ -53,7 +53,7 @@ export default function PastEvents() {
               <h3 className="mb-3 text-xl font-bold text-[#F8FAFC]">
                 {event.title}
               </h3>
-              <p className="flex-1 text-sm leading-relaxed text-[#94A3B8]">
+              <p className="flex-1 text-sm leading-relaxed text-[#9e8db3]">
                 {event.description}
               </p>
             </motion.div>

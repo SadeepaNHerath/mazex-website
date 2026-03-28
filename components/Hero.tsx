@@ -8,7 +8,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="theme-section relative flex min-h-screen items-center overflow-hidden pt-28 pb-16 sm:pt-32"
+      className="theme-section relative flex min-h-screen items-center overflow-hidden pt-20 pb-16 sm:pt-24"
     >
       <div
         className="absolute top-[15%] right-[6%] h-[640px] w-[640px] rounded-full pointer-events-none"
@@ -24,10 +24,6 @@ export default function Hero() {
             "radial-gradient(circle, rgba(129, 140, 248, 0.03) 0%, transparent 50%)",
         }}
       />
-      <div className="absolute inset-x-4 top-[96px] hidden h-[18px] rounded-full border border-[#A855F7]/20 bg-[#0A1224]/80 shadow-[0_0_22px_rgba(168,85,247,0.12)] lg:block">
-        <div className="absolute left-5 right-5 top-1/2 h-[2px] -translate-y-1/2 border-t-2 border-dashed border-[#A855F7]/35" />
-      </div>
-
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
           <div>
@@ -37,7 +33,7 @@ export default function Hero() {
               transition={{ duration: 0.5 }}
               className="mb-6 inline-block"
             >
-              <span className="theme-kicker">IEEE RAS Ã— WIE | University of Moratuwa</span>
+              <span className="theme-kicker">IEEE RAS x WIE | University of Moratuwa</span>
             </motion.div>
 
             <motion.h1
@@ -54,7 +50,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mb-5 text-lg font-semibold text-[#CBD5E1] sm:text-xl md:text-2xl"
+              className="mb-5 text-lg font-semibold text-[#c9bedb] sm:text-xl md:text-2xl"
             >
               Micromouse Workshop Series &amp; Competition
             </motion.h2>
@@ -128,7 +124,7 @@ export default function Hero() {
                 <div className="theme-track h-10 w-28" />
               </div>
 
-              <div className="rounded-[1.7rem] border border-[#24304d] bg-[#070E1A]/92 p-5 sm:p-6 lg:p-8">
+              <div className="flex items-center justify-center border border-[#24304d] bg-[#070E1A]/92 p-5 sm:p-6 lg:p-8">
                 <MazeAnimation size={360} className="animate-float mx-auto" />
               </div>
 
@@ -137,7 +133,7 @@ export default function Hero() {
                   <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#A855F7]">
                     Workshop Mode
                   </p>
-                  <p className="mt-2 text-sm text-[#CBD5E1]">
+                  <p className="mt-2 text-sm text-[#c9bedb]">
                     Learn the build path step by step before competition day.
                   </p>
                 </div>
@@ -145,7 +141,7 @@ export default function Hero() {
                   <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#818CF8]">
                     Live Mapping
                   </p>
-                  <p className="mt-2 text-sm text-[#CBD5E1]">
+                  <p className="mt-2 text-sm text-[#c9bedb]">
                     Sensors, control, and search come together in real time.
                   </p>
                 </div>

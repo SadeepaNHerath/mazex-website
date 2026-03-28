@@ -93,14 +93,14 @@ export default function ContactUs() {
 
         <a
           href={`tel:${member.phone}`}
-          className="mb-2 text-base font-medium tracking-wide text-[#CBD5E1] hover:text-[#F8FAFC]"
+          className="mb-2 text-base font-medium tracking-wide text-[#c9bedb] hover:text-[#F8FAFC]"
         >
           {member.phone}
         </a>
 
         <a
           href={`mailto:${member.email}`}
-          className="text-sm tracking-wide text-[#94A3B8] hover:text-[#F8FAFC]"
+          className="text-sm tracking-wide text-[#9e8db3] hover:text-[#F8FAFC]"
         >
           {member.email}
         </a>
@@ -126,7 +126,7 @@ export default function ContactUs() {
             <span className="text-[#F8FAFC]">Contact </span>
             <span className="gradient-text">Us</span>
           </h2>
-          <p className="mx-auto max-w-2xl text-base leading-relaxed text-[#94A3B8] sm:text-lg">
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-[#9e8db3] sm:text-lg">
             Have questions about MazeX 1.0? Reach out to our organizing
             committee.
           </p>

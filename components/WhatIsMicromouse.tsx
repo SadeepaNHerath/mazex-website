@@ -45,7 +45,7 @@ export default function WhatIsMicromouse() {
               <div className="theme-track h-10 w-24" />
             </div>
 
-            <div className="rounded-[1.7rem] border border-[#24304d] bg-[#070E1A]/90 p-5 sm:p-7">
+            <div className="flex items-center justify-center border border-[#24304d] bg-[#070E1A]/90 p-5 sm:p-7">
               <MazeAnimation size={320} className="mx-auto" />
             </div>
           </motion.div>
@@ -78,7 +78,7 @@ export default function WhatIsMicromouse() {
                   <h4 className="mb-2 text-sm font-bold uppercase tracking-[0.18em] text-[#F8FAFC]">
                     {stat.title}
                   </h4>
-                  <p className="text-sm text-[#94A3B8]">{stat.description}</p>
+                  <p className="text-sm text-[#9e8db3]">{stat.description}</p>
                 </motion.div>
               ))}
             </div>

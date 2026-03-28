@@ -3,14 +3,14 @@
 @theme inline {
   --color-maze-bg: #020104;
   --color-maze-bg-soft: #05030a;
-  --color-maze-panel: #0a1122;
-  --color-maze-panel-alt: #111a31;
-  --color-maze-rail: #18233d;
-  --color-maze-border: #2d374f;
-  --color-maze-accent: #a855f7;
-  --color-maze-accent-soft: #c084fc;
-  --color-maze-signal: #818cf8;
-  --color-maze-cyan: #38bdf8;
+  --color-maze-panel: #0e0a14;
+  --color-maze-panel-alt: #15101f;
+  --color-maze-rail: #1c152b;
+  --color-maze-border: #2f2540;
+  --color-maze-accent: #6b528f;
+  --color-maze-accent-soft: #8a73a6;
+  --color-maze-signal: #5a4b73;
+  --color-maze-cyan: #7a6a96;
   --color-maze-text: #f8fafc;
   --color-maze-muted: #94a3b8;
   --color-maze-muted-strong: #cbd5e1;
@@ -29,8 +29,8 @@ body {
   background-color: #020104;
   background-image:
     radial-gradient(circle at 14% 18%, rgba(88, 28, 135, 0.045) 0%, transparent 20%),
-    radial-gradient(circle at 82% 14%, rgba(67, 56, 202, 0.03) 0%, transparent 18%),
-    radial-gradient(circle at 72% 72%, rgba(30, 41, 59, 0.03) 0%, transparent 14%),
+    radial-gradient(circle at 82% 14%, rgba(57, 43, 85, 0.03) 0%, transparent 18%),
+    radial-gradient(circle at 72% 72%, rgba(35, 25, 45, 0.03) 0%, transparent 14%),
     linear-gradient(180deg, #020104 0%, #05030a 30%, #04030a 62%, #010102 100%);
   background-size: auto, auto, auto, auto;
   background-position: center, center, center, center;
@@ -58,7 +58,7 @@ a {
 }
 
 ::selection {
-  background: rgba(168, 85, 247, 0.28);
+  background: rgba(107, 82, 143, 0.28);
   color: #f8fafc;
 }
 
@@ -78,7 +78,7 @@ a {
 }
 
 .gradient-text {
-  background: linear-gradient(90deg, #f8fafc 0%, #c084fc 45%, #818cf8 100%);
+  background: linear-gradient(90deg, #f8fafc 0%, #8a73a6 45%, #5a4b73 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -109,7 +109,7 @@ a {
   border-radius: 9999px;
   border: 1px solid rgba(62, 73, 107, 0.9);
   background: rgba(13, 20, 37, 0.86);
-  color: #c084fc;
+  color: #8a73a6;
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.32em;
@@ -122,8 +122,8 @@ a {
   width: 0.55rem;
   height: 0.55rem;
   border-radius: 9999px;
-  background: linear-gradient(180deg, #f8fafc 0%, #a855f7 100%);
-  box-shadow: 0 0 14px rgba(168, 85, 247, 0.45);
+  background: linear-gradient(180deg, #f8fafc 0%, #6b528f 100%);
+  box-shadow: 0 0 14px rgba(107, 82, 143, 0.45);
 }
 
 .theme-copy {
@@ -138,7 +138,7 @@ a {
   border: 1px solid rgba(51, 65, 85, 0.9);
   background: linear-gradient(180deg, rgba(10, 17, 34, 0.96) 0%, rgba(16, 25, 47, 0.92) 100%);
   box-shadow:
-    0 30px 80px rgba(2, 6, 23, 0.5),
+    0 20px 50px rgba(5, 2, 8, 0.4),
     inset 0 1px 0 rgba(248, 250, 252, 0.03);
   backdrop-filter: blur(24px);
 }
@@ -150,7 +150,7 @@ a {
   left: 0;
   right: 14%;
   height: 1px;
-  background: linear-gradient(90deg, rgba(192, 132, 252, 0.95) 0%, rgba(129, 140, 248, 0.35) 75%, transparent 100%);
+  background: linear-gradient(90deg, rgba(138, 115, 166, 0.95) 0%, rgba(90, 75, 115, 0.35) 75%, transparent 100%);
 }
 
 .theme-card::after {
@@ -160,7 +160,7 @@ a {
   left: 0;
   bottom: 22%;
   width: 1px;
-  background: linear-gradient(180deg, rgba(168, 85, 247, 0.92) 0%, rgba(129, 140, 248, 0.08) 100%);
+  background: linear-gradient(180deg, rgba(107, 82, 143, 0.92) 0%, rgba(138, 115, 166, 0.05) 100%);
 }
 
 .theme-card-soft {
@@ -178,29 +178,29 @@ a {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at top right, rgba(168, 85, 247, 0.12), transparent 42%),
-    radial-gradient(circle at bottom left, rgba(129, 140, 248, 0.08), transparent 40%);
+    radial-gradient(circle at top right, rgba(107, 82, 143, 0.12), transparent 42%),
+    radial-gradient(circle at bottom left, rgba(138, 115, 166, 0.05), transparent 40%);
   pointer-events: none;
 }
 
 .theme-divider {
   height: 1px;
   width: 100%;
-  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.95), rgba(129, 140, 248, 0.45), transparent);
+  background: linear-gradient(90deg, transparent, rgba(107, 82, 143, 0.95), rgba(90, 75, 115, 0.45), transparent);
 }
 
 .theme-button {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(192, 132, 252, 0.6);
-  background: linear-gradient(90deg, rgba(168, 85, 247, 0.95) 0%, rgba(129, 140, 248, 0.95) 100%);
+  border: 1px solid rgba(138, 115, 166, 0.6);
+  background: linear-gradient(90deg, rgba(107, 82, 143, 0.95) 0%, rgba(90, 75, 115, 0.95) 100%);
   color: #f8fafc;
-  box-shadow: 0 16px 35px rgba(79, 70, 229, 0.28);
+  box-shadow: 0 10px 20px rgba(90, 75, 115, 0.15);
 }
 
 .theme-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 20px 45px rgba(129, 140, 248, 0.4);
+  box-shadow: 0 20px 45px rgba(90, 75, 115, 0.4);
 }
 
 .theme-button.theme-button-register {
@@ -224,7 +224,7 @@ a {
 }
 
 .theme-button-secondary:hover {
-  border-color: rgba(192, 132, 252, 0.55);
+  border-color: rgba(138, 115, 166, 0.55);
   color: #f8fafc;
   box-shadow: 0 18px 35px rgba(2, 6, 23, 0.35);
 }
@@ -247,7 +247,7 @@ a {
   border-radius: 0.85rem;
   border: 1px solid rgba(62, 73, 107, 0.85);
   background: rgba(28, 22, 53, 0.88);
-  color: #c084fc;
+  color: #8a73a6;
   padding: 0.45rem 0.8rem;
 }
 
@@ -255,9 +255,9 @@ a {
   position: relative;
   overflow: hidden;
   border-radius: 9999px;
-  border: 1px solid rgba(168, 85, 247, 0.28);
+  border: 1px solid rgba(107, 82, 143, 0.28);
   background: rgba(10, 18, 36, 0.92);
-  box-shadow: 0 0 24px rgba(168, 85, 247, 0.15);
+  box-shadow: 0 0 24px rgba(107, 82, 143, 0.15);
 }
 
 .theme-track::before {
@@ -268,16 +268,16 @@ a {
   right: 0.75rem;
   height: 2px;
   transform: translateY(-50%);
-  border-top: 2px dashed rgba(168, 85, 247, 0.35);
+  border-top: 2px dashed rgba(107, 82, 143, 0.35);
 }
 
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow: 0 0 22px rgba(129, 140, 248, 0.22);
+    box-shadow: 0 0 22px rgba(90, 75, 115, 0.22);
   }
   50% {
-    box-shadow: 0 0 34px rgba(168, 85, 247, 0.4), 0 0 60px rgba(129, 140, 248, 0.2);
+    box-shadow: 0 0 34px rgba(107, 82, 143, 0.4), 0 0 60px rgba(90, 75, 115, 0.2);
   }
 }
 
@@ -316,7 +316,7 @@ a {
 .section-divider {
   height: 1px;
   width: 100%;
-  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.88), rgba(129, 140, 248, 0.42), transparent);
+  background: linear-gradient(90deg, transparent, rgba(107, 82, 143, 0.88), rgba(90, 75, 115, 0.42), transparent);
 }
 
 @keyframes pin-pulse {

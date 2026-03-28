@@ -2,13 +2,12 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { NAV_LINKS } from "@/lib/constants";
 import {
   FaFacebookF,
-  FaLinkedinIn,
-  FaYoutube,
   FaInstagram,
+  FaLinkedinIn,
   FaWhatsapp,
+  FaYoutube,
 } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 
@@ -17,235 +16,128 @@ const SOCIAL_LINKS = [
     icon: FaFacebookF,
     label: "Facebook",
     href: "https://www.facebook.com/IEEEUOMSB",
-    bg: "bg-[#1877F2]",
   },
   {
     icon: FaLinkedinIn,
     label: "LinkedIn",
     href: "https://www.linkedin.com/company/ieeeuomsb/",
-    bg: "bg-[#0A66C2]",
   },
   {
     icon: FaYoutube,
     label: "YouTube",
     href: "https://www.youtube.com/@IEEEUOMSB",
-    bg: "bg-[#FF0000]",
   },
   {
     icon: FaInstagram,
     label: "Instagram",
     href: "https://www.instagram.com/ieeesbuom",
-    bg: "bg-gradient-to-br from-[#F58529] via-[#DD2A7B] to-[#8134AF]",
   },
   {
     icon: FaWhatsapp,
     label: "WhatsApp",
     href: "https://whatsapp.com/channel/0029VawdYwuFnSzHnM7b8J30",
-    bg: "bg-[#25D366]",
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" as const },
-  },
-};
-
 export default function Footer() {
   return (
-    <footer className="theme-section relative overflow-hidden pb-8">
-      <div className="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-[#A855F7]/6 opacity-40 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-20 right-1/4 h-80 w-80 rounded-full bg-[#818CF8]/6 opacity-40 blur-[100px] pointer-events-none" />
+    <footer className="theme-section relative overflow-hidden bg-[linear-gradient(180deg,rgba(13,10,20,0.98)_0%,rgba(18,13,28,0.98)_58%,rgba(11,8,18,1)_100%)] pb-0 shadow-[0_-18px_48px_rgba(5,2,8,0.24)]">
+      <div className="pointer-events-none absolute top-0 left-[16%] h-80 w-80 rounded-full bg-[#6b528f]/10 blur-[120px]" />
+      <div className="pointer-events-none absolute right-[12%] bottom-0 h-72 w-72 rounded-full bg-[#5a4b73]/8 blur-[110px]" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="theme-card p-8 sm:p-10">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="mb-6 flex items-center">
-                <Image
-                  src="/images/brand/logo-white.svg"
-                  alt="MazeX Logo"
-                  width={140}
-                  height={78}
-                  className="h-12 w-auto object-contain"
-                />
-              </div>
-              <p className="mb-6 text-sm leading-relaxed text-[#94A3B8]">
-                Micromouse Workshop Series &amp; Competition organized by IEEE
-                RAS and WIE at the University of Moratuwa.
-              </p>
-              <a
-                href="mailto:ieeerassbm@gmail.com"
-                className="inline-flex items-center gap-2 text-sm text-[#CBD5E1] hover:text-[#F8FAFC]"
-              >
-                <HiOutlineMail size={16} />
-                ieeerassbm@gmail.com
-              </a>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              <h4 className="mb-6 text-sm font-bold uppercase tracking-[0.28em] text-[#C084FC]">
-                Quick Links
-              </h4>
-              <ul className="space-y-3">
-                {NAV_LINKS.map((link) => (
-                  <li key={link.href}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-[#94A3B8] hover:text-[#F8FAFC]"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <h4 className="mb-6 text-sm font-bold uppercase tracking-[0.28em] text-[#818CF8]">
-                Organized By
-              </h4>
-              <ul className="space-y-3 text-sm text-[#94A3B8]">
-                <li>
-                  <a href="https://site.ieee.org/sb-moratuwa/" target="_blank" rel="noopener noreferrer" className="hover:text-[#F8FAFC]">
-                    University of Moratuwa IEEE Student Branch
-                  </a>
-                </li>
-                <li>
-                  <a href="https://site.ieee.org/sb-moratuwa/chapters/robotics-and-automation-society/" target="_blank" rel="noopener noreferrer" className="hover:text-[#F8FAFC]">
-                    IEEE Robotics &amp; Automation Society Chapter
-                  </a>
-                </li>
-                <li>
-                  <a href="https://site.ieee.org/sb-moratuwa/chapters/women-in-engineering/" target="_blank" rel="noopener noreferrer" className="hover:text-[#F8FAFC]">
-                    IEEE WIE Affinity Group
-                  </a>
-                </li>
-              </ul>
-            </motion.div>
-          </div>
-        </div>
-
-        <div className="theme-card mt-6 px-6 py-10 sm:px-8">
+        <div className="grid grid-cols-1 gap-12 border-b border-[#2f2540]/70 py-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-16">
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col items-center gap-10"
+            transition={{ duration: 0.6 }}
           >
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col items-center gap-6 sm:flex-row"
+            <div className="mb-6 flex items-center">
+              <Image
+                src="/images/brand/logo-white.svg"
+                alt="MazeX Logo"
+                width={140}
+                height={78}
+                className="h-12 w-auto object-contain"
+              />
+            </div>
+
+            <p className="mb-6 max-w-xl text-sm leading-relaxed text-[#9e8db3]">
+              Micromouse Workshop Series &amp; Competition organized by IEEE
+              RAS and WIE at the University of Moratuwa.
+            </p>
+
+            <a
+              href="mailto:ieeerassbm@gmail.com"
+              className="inline-flex items-center gap-2 text-sm text-[#c9bedb] hover:text-[#f8fafc]"
             >
-              <a
-                href="https://site.ieee.org/sb-moratuwa/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-              >
-                <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-white p-3 shadow-lg shadow-black/20">
-                  <Image
-                    src="/images/logos/IEEE SB.webp"
-                    alt="University of Moratuwa IEEE Student Branch"
-                    width={52}
-                    height={52}
-                    className="object-contain"
-                  />
-                </div>
-              </a>
-              <div className="text-center sm:text-left">
-                <p className="text-base font-bold leading-tight text-[#F8FAFC] sm:text-lg">
-                  University of Moratuwa
-                </p>
-                <p className="text-sm font-medium text-[#C084FC]">
-                  IEEE Student Branch
-                </p>
-              </div>
-              <div className="mt-4 flex flex-wrap items-center gap-4 sm:mt-0 sm:ml-8">
-                {SOCIAL_LINKS.map((social) => {
-                  const Icon = social.icon;
-                  return (
-                    <a
-                      key={`showcase-${social.label}`}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={social.label}
-                      className={`flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-110 ${social.bg}`}
-                    >
-                      <Icon className="h-6 w-6" />
-                    </a>
-                  );
-                })}
-              </div>
-            </motion.div>
+              <HiOutlineMail size={16} />
+              ieeerassbm@gmail.com
+            </a>
 
-            <div className="h-px w-full max-w-xl bg-gradient-to-r from-transparent via-[#A855F7]/30 to-transparent" />
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              {SOCIAL_LINKS.map((social) => {
+                const Icon = social.icon;
 
-            <motion.div
-              variants={itemVariants}
-              className="flex w-full max-w-3xl flex-col items-center justify-center gap-8 sm:flex-row sm:gap-10"
-            >
-              <a
-                href="https://site.ieee.org/sb-moratuwa/chapters/robotics-and-automation-society/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full flex-1"
-              >
-                <div className="flex items-center justify-center rounded-2xl bg-white px-8 py-5 shadow-lg shadow-black/20 transition-transform duration-300 hover:scale-[1.03]">
-                  <Image
-                    src="/images/logos/IEEE RAS.webp"
-                    alt="IEEE Robotics and Automation Society â€” University of Moratuwa"
-                    width={360}
-                    height={90}
-                    className="max-h-[60px] w-full object-contain"
-                  />
-                </div>
-              </a>
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#3a3150] bg-white/[0.03] text-white shadow-[0_10px_28px_rgba(5,2,8,0.18)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#6b528f]/70 hover:bg-white/[0.05]"
+                  >
+                    <Icon className="h-5 w-5" />
+                  </a>
+                );
+              })}
+            </div>
+          </motion.div>
 
-              <div className="hidden h-16 w-px bg-gradient-to-b from-transparent via-[#A855F7]/30 to-transparent sm:block" />
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <h4 className="mb-6 text-sm font-bold uppercase tracking-[0.28em] text-[#8a73a6]">
+              Organized By
+            </h4>
 
-              <a
-                href="https://site.ieee.org/sb-moratuwa/chapters/women-in-engineering/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full flex-1"
-              >
-                <div className="flex items-center justify-center rounded-2xl bg-white px-8 py-5 shadow-lg shadow-black/20 transition-transform duration-300 hover:scale-[1.03]">
-                  <Image
-                    src="/images/logos/IEEE WIE.webp"
-                    alt="IEEE Women in Engineering â€” University of Moratuwa"
-                    width={360}
-                    height={90}
-                    className="max-h-[60px] w-full object-contain"
-                  />
-                </div>
-              </a>
-            </motion.div>
+            <ul className="space-y-3 text-sm text-[#9e8db3]">
+              <li>
+                <a
+                  href="https://site.ieee.org/sb-moratuwa/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#f8fafc]"
+                >
+                  University of Moratuwa IEEE Student Branch
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://site.ieee.org/sb-moratuwa/chapters/robotics-and-automation-society/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#f8fafc]"
+                >
+                  IEEE Robotics &amp; Automation Society Chapter
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://site.ieee.org/sb-moratuwa/chapters/women-in-engineering/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#f8fafc]"
+                >
+                  IEEE WIE Affinity Group
+                </a>
+              </li>
+            </ul>
           </motion.div>
         </div>
 
@@ -253,14 +145,14 @@ export default function Footer() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-6 rounded-[1.4rem] border border-[#24304d] bg-[#070E1A]/92 px-6 py-5"
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="flex flex-col gap-2 py-5 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left"
         >
-          <p className="text-center text-sm font-semibold text-[#CBD5E1]">
+          <p className="text-sm font-semibold text-[#c9bedb]">
             IEEE Student Branch, University of Moratuwa
           </p>
-          <p className="mt-1 text-center text-xs text-[#94A3B8]">
-            Â© 2026 MazeX 1.0 â€“ All rights reserved.
+          <p className="text-xs text-[#8f7ea6]">
+            &copy; 2026 MazeX 1.0 - All rights reserved.
           </p>
         </motion.div>
       </div>

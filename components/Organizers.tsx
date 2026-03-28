@@ -36,7 +36,7 @@ export default function Organizers() {
               </span>
 
               <div className="mb-6 flex h-24 items-center justify-center rounded-[1.4rem] border border-[#24304d] bg-[#0B1427]/90">
-                <span className="text-sm font-medium text-[#CBD5E1]">
+                <span className="text-sm font-medium text-[#c9bedb]">
                   {org.tag} Logo
                 </span>
               </div>
@@ -59,7 +59,7 @@ export default function Organizers() {
               )}
 
               <p className="mb-4 text-sm text-[#C084FC]">{org.subtitle}</p>
-              <p className="text-sm leading-relaxed text-[#94A3B8]">
+              <p className="text-sm leading-relaxed text-[#9e8db3]">
                 {org.description}
               </p>
             </motion.div>

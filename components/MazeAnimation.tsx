@@ -153,9 +153,9 @@ export default function MazeAnimation({
   const robotGradId = `${mazeId}-robot-grad`;
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative flex w-full items-center justify-center ${className}`}>
       <div
-        className="absolute inset-0 rounded-2xl"
+        className="absolute inset-0"
         style={{
           background:
             "radial-gradient(circle at center, rgba(129, 140, 248, 0.12) 0%, transparent 72%)",
@@ -166,7 +166,7 @@ export default function MazeAnimation({
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
-        className="relative z-10"
+        className="relative z-10 block"
       >
         <defs>
           <filter id={wallGlowId} x="-10%" y="-10%" width="120%" height="120%">

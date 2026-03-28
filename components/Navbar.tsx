@@ -10,7 +10,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 sm:px-5">
+    <nav className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-5">
       <div className="mx-auto max-w-7xl rounded-[1.6rem] border border-[#303959]/80 bg-[#070E1A]/82 backdrop-blur-2xl shadow-[0_20px_60px_rgba(2,6,23,0.35)]">
         <div className="rounded-[1.6rem] px-4 sm:px-6 lg:px-8">
           <div className="flex h-[72px] items-center justify-between">
@@ -31,7 +31,7 @@ export default function Navbar() {
                   <a
                     key={link.href}
                     href={link.href}
-                    className="rounded-full px-4 py-2 text-sm font-medium text-[#CBD5E1] hover:bg-[#151f37] hover:text-[#F8FAFC]"
+                    className="rounded-full px-4 py-2 text-sm font-medium text-[#c9bedb] hover:bg-[#151f37] hover:text-[#F8FAFC]"
                   >
                     {link.label}
                   </a>
@@ -71,7 +71,7 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="block rounded-2xl border border-[#25304d] bg-[#0b1427]/90 px-4 py-3 text-base font-medium text-[#CBD5E1] hover:border-[#4C1D95] hover:text-[#F8FAFC]"
+                  className="block rounded-2xl border border-[#25304d] bg-[#0b1427]/90 px-4 py-3 text-base font-medium text-[#c9bedb] hover:border-[#4C1D95] hover:text-[#F8FAFC]"
                 >
                   {link.label}
                 </a>

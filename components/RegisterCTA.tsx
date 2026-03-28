@@ -28,7 +28,7 @@ export default function RegisterCTA() {
             Ready to Build Your Micromouse?
           </h2>
 
-          <p className="mx-auto mb-12 max-w-2xl text-lg text-[#94A3B8]">
+          <p className="mx-auto mb-12 max-w-2xl text-lg text-[#9e8db3]">
             Registration opens April 4th, 2026. Don&apos;t miss your chance to
             compete.
           </p>
