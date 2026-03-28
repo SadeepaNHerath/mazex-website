@@ -5,7 +5,10 @@ import Countdown from "./Countdown";
 
 export default function RegisterCTA() {
   return (
-    <section id="register" className="theme-section relative overflow-hidden py-24 sm:py-32">
+    <section
+      id="register"
+      className="theme-section relative overflow-hidden py-24 sm:py-32"
+    >
       <div
         className="absolute top-1/2 left-1/2 h-[760px] w-[760px] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
         style={{
@@ -14,7 +17,7 @@ export default function RegisterCTA() {
         }}
       />
 
-      <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative z-10 mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -28,7 +31,7 @@ export default function RegisterCTA() {
             Ready to Build Your Micromouse?
           </h2>
 
-          <p className="mx-auto mb-12 max-w-2xl text-lg text-[#9e8db3]">
+          <p className="mx-auto max-w-2xl text-lg text-[#9e8db3]">
             Registration opens April 4th, 2026. Don&apos;t miss your chance to
             compete.
           </p>
@@ -38,23 +41,9 @@ export default function RegisterCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-12"
+            className="mt-10"
           >
-            <Countdown />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <a
-              href="#"
-              className="theme-button theme-button-register animate-pulse-glow inline-block rounded-full px-10 py-4 text-lg font-bold"
-            >
-              Register Now â€” Starting April 4
-            </a>
+            <Countdown registrationMode="comingSoon" />
           </motion.div>
         </motion.div>
       </div>

@@ -65,16 +65,129 @@ a {
 .site-shell {
   position: relative;
   overflow: hidden;
+  background:
+    radial-gradient(circle at top, rgba(168, 85, 247, 0.06) 0%, transparent 28%),
+    linear-gradient(180deg, #020104 0%, #04030a 18%, #020208 46%, #010102 100%);
+}
+
+.site-shell > section,
+.site-shell > footer {
+  isolation: isolate;
+  --section-top: #05030a;
+  --section-mid: #0b0812;
+  --section-bottom: #040208;
+  --section-glow-left: rgba(168, 85, 247, 0.08);
+  --section-glow-right: rgba(129, 140, 248, 0.06);
+  --section-glow-bottom: rgba(107, 82, 143, 0.06);
+  --section-border: rgba(255, 255, 255, 0.05);
+}
+
+.site-shell > section:nth-of-type(1) {
+  --section-top: #05030b;
+  --section-mid: #0f0918;
+  --section-bottom: #06030d;
+  --section-glow-left: rgba(168, 85, 247, 0.12);
+  --section-glow-right: rgba(99, 102, 241, 0.09);
+  --section-glow-bottom: rgba(76, 29, 149, 0.08);
+}
+
+.site-shell > section:nth-of-type(2) {
+  --section-top: #07040b;
+  --section-mid: #130919;
+  --section-bottom: #08040d;
+  --section-glow-left: rgba(192, 132, 252, 0.12);
+  --section-glow-right: rgba(129, 140, 248, 0.07);
+  --section-glow-bottom: rgba(107, 82, 143, 0.08);
+}
+
+.site-shell > section:nth-of-type(3) {
+  --section-top: #04060d;
+  --section-mid: #08111b;
+  --section-bottom: #04060b;
+  --section-glow-left: rgba(96, 165, 250, 0.1);
+  --section-glow-right: rgba(129, 140, 248, 0.08);
+  --section-glow-bottom: rgba(56, 189, 248, 0.06);
+}
+
+.site-shell > section:nth-of-type(4) {
+  --section-top: #06040d;
+  --section-mid: #14081b;
+  --section-bottom: #07040b;
+  --section-glow-left: rgba(168, 85, 247, 0.12);
+  --section-glow-right: rgba(56, 189, 248, 0.08);
+  --section-glow-bottom: rgba(129, 140, 248, 0.07);
+}
+
+.site-shell > section:nth-of-type(5) {
+  --section-top: #05050c;
+  --section-mid: #0d0a17;
+  --section-bottom: #05040a;
+  --section-glow-left: rgba(217, 70, 239, 0.08);
+  --section-glow-right: rgba(129, 140, 248, 0.07);
+  --section-glow-bottom: rgba(168, 85, 247, 0.07);
+}
+
+.site-shell > section:nth-of-type(6) {
+  --section-top: #04070d;
+  --section-mid: #09131a;
+  --section-bottom: #04060b;
+  --section-glow-left: rgba(45, 212, 191, 0.07);
+  --section-glow-right: rgba(99, 102, 241, 0.08);
+  --section-glow-bottom: rgba(56, 189, 248, 0.06);
+}
+
+.site-shell > section:nth-of-type(7) {
+  --section-top: #08050c;
+  --section-mid: #120917;
+  --section-bottom: #07040a;
+  --section-glow-left: rgba(244, 114, 182, 0.07);
+  --section-glow-right: rgba(168, 85, 247, 0.08);
+  --section-glow-bottom: rgba(129, 140, 248, 0.06);
+}
+
+.site-shell > section:nth-of-type(8) {
+  --section-top: #05060d;
+  --section-mid: #0b0e19;
+  --section-bottom: #04050b;
+  --section-glow-left: rgba(96, 165, 250, 0.08);
+  --section-glow-right: rgba(168, 85, 247, 0.08);
+  --section-glow-bottom: rgba(129, 140, 248, 0.06);
+}
+
+.site-shell > section:nth-of-type(9) {
+  --section-top: #07040b;
+  --section-mid: #150a17;
+  --section-bottom: #08040b;
+  --section-glow-left: rgba(217, 70, 239, 0.1);
+  --section-glow-right: rgba(244, 114, 182, 0.07);
+  --section-glow-bottom: rgba(168, 85, 247, 0.08);
+}
+
+.site-shell > section:nth-of-type(10),
+.site-shell > footer {
+  --section-top: #04060c;
+  --section-mid: #0a0b15;
+  --section-bottom: #030309;
+  --section-glow-left: rgba(96, 165, 250, 0.07);
+  --section-glow-right: rgba(168, 85, 247, 0.08);
+  --section-glow-bottom: rgba(107, 82, 143, 0.06);
 }
 
 .theme-section,
 .theme-section-alt {
   position: relative;
+  border-top: 1px solid var(--section-border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.025);
   background:
-    radial-gradient(circle at 18% 20%, rgba(126, 34, 206, 0.04) 0%, transparent 18%),
-    radial-gradient(circle at 82% 18%, rgba(91, 33, 182, 0.03) 0%, transparent 16%),
-    radial-gradient(circle at 50% 100%, rgba(76, 29, 149, 0.02) 0%, transparent 20%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.992) 0%, rgba(5, 2, 9, 0.985) 46%, rgba(1, 0, 4, 0.992) 100%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, transparent 12%, transparent 88%, rgba(255, 255, 255, 0.015) 100%),
+    radial-gradient(circle at 18% 20%, var(--section-glow-left) 0%, transparent 22%),
+    radial-gradient(circle at 82% 18%, var(--section-glow-right) 0%, transparent 20%),
+    radial-gradient(circle at 50% 100%, var(--section-glow-bottom) 0%, transparent 24%),
+    linear-gradient(180deg, var(--section-top) 0%, var(--section-mid) 48%, var(--section-bottom) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    inset 0 40px 80px rgba(255, 255, 255, 0.015),
+    inset 0 -50px 90px rgba(0, 0, 0, 0.22);
 }
 
 .gradient-text {

@@ -25,8 +25,20 @@ function calculateTimeLeft(targetDate: Date, now: number): TimeLeft {
   };
 }
 
-export default function Countdown() {
-  const [showCompetition, setShowCompetition] = useState(false);
+interface CountdownProps {
+  initialMode?: "registration" | "competition";
+  showModeSwitch?: boolean;
+  registrationMode?: "countdown" | "comingSoon";
+}
+
+export default function Countdown({
+  initialMode = "registration",
+  showModeSwitch = true,
+  registrationMode = "countdown",
+}: CountdownProps) {
+  const [showCompetition, setShowCompetition] = useState(
+    initialMode === "competition"
+  );
   const targetDate = showCompetition ? COMPETITION_DATE : REGISTRATION_OPEN_DATE;
   const [now, setNow] = useState(() => Date.now());
   const timeLeft = calculateTimeLeft(targetDate, now);
@@ -45,55 +57,71 @@ export default function Countdown() {
 
   return (
     <div>
-      <div className="mb-8 flex justify-center">
-        <div className="rounded-full border border-[#303959] bg-[#0B1427]/85 p-1.5 shadow-[0_12px_30px_rgba(2,6,23,0.25)]">
-          <div className="flex gap-1">
-            <button
-              onClick={() => {
-                setShowCompetition(false);
-                setNow(Date.now());
-              }}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 cursor-pointer ${
-                !showCompetition
-                  ? "theme-button text-[#F8FAFC]"
-                  : "text-[#c9bedb] hover:text-[#F8FAFC]"
-              }`}
-            >
-              Registration Opens
-            </button>
-            <button
-              onClick={() => {
-                setShowCompetition(true);
-                setNow(Date.now());
-              }}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 cursor-pointer ${
-                showCompetition
-                  ? "theme-button text-[#F8FAFC]"
-                  : "text-[#c9bedb] hover:text-[#F8FAFC]"
-              }`}
-            >
-              Competition Day
-            </button>
+      {showModeSwitch ? (
+        <div className="mb-8 flex justify-center">
+          <div className="rounded-full border border-[#303959] bg-[#0B1427]/85 p-1.5 shadow-[0_12px_30px_rgba(2,6,23,0.25)]">
+            <div className="flex gap-1">
+              <button
+                onClick={() => {
+                  setShowCompetition(false);
+                  setNow(Date.now());
+                }}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 cursor-pointer ${
+                  !showCompetition
+                    ? "theme-button text-[#F8FAFC]"
+                    : "text-[#c9bedb] hover:text-[#F8FAFC]"
+                }`}
+              >
+                Registration Opens
+              </button>
+              <button
+                onClick={() => {
+                  setShowCompetition(true);
+                  setNow(Date.now());
+                }}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 cursor-pointer ${
+                  showCompetition
+                    ? "theme-button text-[#F8FAFC]"
+                    : "text-[#c9bedb] hover:text-[#F8FAFC]"
+                }`}
+              >
+                Competition Day
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="mb-8 flex justify-center">
+          <span className="inline-flex rounded-full border border-[#303959] bg-[#0B1427]/85 px-6 py-3 text-sm font-semibold uppercase tracking-[0.24em] text-[#c9bedb]">
+            Competition Day
+          </span>
+        </div>
+      )}
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-6">
-        {units.map((unit, i) => (
-          <div key={i} className="theme-card-soft p-4 text-center sm:p-6">
-            <div className="mb-3 h-1 w-14 rounded-full bg-gradient-to-r from-[#A855F7] to-[#818CF8] mx-auto" />
-            <div
-              className="font-[family-name:var(--font-space-grotesk)] text-3xl font-bold tabular-nums text-[#F8FAFC] sm:text-5xl"
-              suppressHydrationWarning
-            >
-              {String(unit.value).padStart(2, "0")}
+      {showCompetition || registrationMode === "countdown" ? (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-6">
+          {units.map((unit, i) => (
+            <div key={i} className="theme-card-soft p-4 text-center sm:p-6">
+              <div className="mb-3 h-1 w-14 rounded-full bg-gradient-to-r from-[#A855F7] to-[#818CF8] mx-auto" />
+              <div
+                className="font-[family-name:var(--font-space-grotesk)] text-3xl font-bold tabular-nums text-[#F8FAFC] sm:text-5xl"
+                suppressHydrationWarning
+              >
+                {String(unit.value).padStart(2, "0")}
+              </div>
+              <div className="mt-2 text-xs uppercase tracking-[0.24em] text-[#c9bedb] sm:text-sm">
+                {unit.label}
+              </div>
             </div>
-            <div className="mt-2 text-xs uppercase tracking-[0.24em] text-[#c9bedb] sm:text-sm">
-              {unit.label}
-            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="py-6 text-center">
+          <div className="text-base font-semibold uppercase tracking-[0.24em] text-[#c9bedb] sm:text-lg">
+            Coming Soon
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

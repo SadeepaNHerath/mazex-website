@@ -19,7 +19,7 @@ export default function Timeline() {
 
         <div className="relative">
           {/* Vertical line */}
-          <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-[#2C7DA0]/50 md:-translate-x-px" />
+          <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[#A855F7]/50 to-[#818CF8]/20 md:-translate-x-px" />
 
           {TIMELINE_EVENTS.map((event, i) => (
             <motion.div
@@ -36,7 +36,7 @@ export default function Timeline() {
             >
               {/* Number circle */}
               <div className="absolute left-6 md:left-1/2 -translate-x-1/2 z-10">
-                <div className="w-12 h-12 rounded-full bg-[#2C7DA0] flex items-center justify-center font-bold text-[#EAF6FF] text-sm shadow-[0_0_20px_rgba(44,125,160,0.5)]">
+                <div className="w-12 h-12 rounded-full border-[2.5px] border-[#A855F7] bg-[#1C1635] flex items-center justify-center font-bold text-[#F8FAFC] text-sm shadow-[0_0_15px_rgba(168,85,247,0.5)]">
                   {event.number}
                 </div>
               </div>
@@ -47,11 +47,11 @@ export default function Timeline() {
                   i % 2 === 0 ? "md:pr-8 md:text-right" : "md:pl-8"
                 }`}
               >
-                <div className="bg-[#1B4965]/60 backdrop-blur-sm border border-[#2C7DA0]/40 rounded-xl p-6 hover:shadow-[0_0_20px_rgba(44,125,160,0.2)] transition-all duration-300">
-                  <h3 className="text-[#EAF6FF] font-bold text-lg mb-1">
+                <div className="bg-[#0e0a14]/95 backdrop-blur-[24px] border border-[#1a1624] rounded-xl p-6 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)] hover:border-[#2f2540] transition-all duration-300 group">
+                  <h3 className="text-[#F8FAFC] font-bold text-lg mb-1 group-hover:bg-gradient-to-r group-hover:from-[#F8FAFC] group-hover:to-[#A855F7] group-hover:bg-clip-text group-hover:text-transparent">
                     {event.title}
                   </h3>
-                  <p className="text-[#A9D6E5] text-sm">{event.date}</p>
+                  <p className="text-[#9e8db3] text-sm font-semibold tracking-wide uppercase">{event.date}</p>
                 </div>
               </div>
             </motion.div>
