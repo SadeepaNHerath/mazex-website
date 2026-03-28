@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { REGISTRATION_OPEN_DATE, COMPETITION_DATE } from "@/lib/constants";
 
 interface TimeLeft {
@@ -10,8 +10,7 @@ interface TimeLeft {
   seconds: number;
 }
 
-function calculateTimeLeft(targetDate: Date): TimeLeft {
-  const now = new Date().getTime();
+function calculateTimeLeft(targetDate: Date, now: number): TimeLeft {
   const diff = targetDate.getTime() - now;
 
   if (diff <= 0) {
@@ -29,17 +28,13 @@ function calculateTimeLeft(targetDate: Date): TimeLeft {
 export default function Countdown() {
   const [showCompetition, setShowCompetition] = useState(false);
   const targetDate = showCompetition ? COMPETITION_DATE : REGISTRATION_OPEN_DATE;
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft(targetDate));
-
-  const updateTime = useCallback(() => {
-    setTimeLeft(calculateTimeLeft(targetDate));
-  }, [targetDate]);
+  const [now, setNow] = useState(() => Date.now());
+  const timeLeft = calculateTimeLeft(targetDate, now);
 
   useEffect(() => {
-    updateTime();
-    const timer = setInterval(updateTime, 1000);
+    const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
-  }, [updateTime]);
+  }, []);
 
   const units = [
     { value: timeLeft.days, label: "Days" },
@@ -50,46 +45,50 @@ export default function Countdown() {
 
   return (
     <div>
-      {/* Toggle */}
-      <div className="flex justify-center mb-8">
-        <div className="bg-[#1B4965]/60 p-1 rounded-full flex gap-1 border border-[#2C7DA0]/30">
-          <button
-            onClick={() => setShowCompetition(false)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer ${
-              !showCompetition
-                ? "bg-[#2C7DA0] text-[#EAF6FF] shadow-[0_0_15px_rgba(44,125,160,0.4)]"
-                : "text-[#61A5C2] hover:text-[#A9D6E5]"
-            }`}
-          >
-            Registration Opens
-          </button>
-          <button
-            onClick={() => setShowCompetition(true)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer ${
-              showCompetition
-                ? "bg-[#2C7DA0] text-[#EAF6FF] shadow-[0_0_15px_rgba(44,125,160,0.4)]"
-                : "text-[#61A5C2] hover:text-[#A9D6E5]"
-            }`}
-          >
-            Competition Day
-          </button>
+      <div className="mb-8 flex justify-center">
+        <div className="rounded-full border border-[#303959] bg-[#0B1427]/85 p-1.5 shadow-[0_12px_30px_rgba(2,6,23,0.25)]">
+          <div className="flex gap-1">
+            <button
+              onClick={() => {
+                setShowCompetition(false);
+                setNow(Date.now());
+              }}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 cursor-pointer ${
+                !showCompetition
+                  ? "theme-button text-[#F8FAFC]"
+                  : "text-[#CBD5E1] hover:text-[#F8FAFC]"
+              }`}
+            >
+              Registration Opens
+            </button>
+            <button
+              onClick={() => {
+                setShowCompetition(true);
+                setNow(Date.now());
+              }}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 cursor-pointer ${
+                showCompetition
+                  ? "theme-button text-[#F8FAFC]"
+                  : "text-[#CBD5E1] hover:text-[#F8FAFC]"
+              }`}
+            >
+              Competition Day
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Timer */}
-      <div className="flex justify-center gap-3 sm:gap-6">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-6">
         {units.map((unit, i) => (
-          <div
-            key={i}
-            className="bg-[#1B4965]/60 backdrop-blur-sm border border-[#2C7DA0]/30 rounded-xl p-4 sm:p-6 min-w-[70px] sm:min-w-[90px] text-center"
-          >
-            <div 
-              className="text-3xl sm:text-5xl font-bold text-[#EAF6FF] font-[family-name:var(--font-space-grotesk)] tabular-nums"
+          <div key={i} className="theme-card-soft p-4 text-center sm:p-6">
+            <div className="mb-3 h-1 w-14 rounded-full bg-gradient-to-r from-[#A855F7] to-[#818CF8] mx-auto" />
+            <div
+              className="font-[family-name:var(--font-space-grotesk)] text-3xl font-bold tabular-nums text-[#F8FAFC] sm:text-5xl"
               suppressHydrationWarning
             >
               {String(unit.value).padStart(2, "0")}
             </div>
-            <div className="text-[#61A5C2] text-xs sm:text-sm mt-1 uppercase tracking-wider">
+            <div className="mt-2 text-xs uppercase tracking-[0.24em] text-[#CBD5E1] sm:text-sm">
               {unit.label}
             </div>
           </div>

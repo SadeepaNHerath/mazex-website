@@ -57,7 +57,6 @@ const cardVariants = {
 };
 
 export default function ContactUs() {
-  /* First row: 3 cards, Second row: 2 cards centered */
   const topRow = TEAM_MEMBERS.slice(0, 3);
   const bottomRow = TEAM_MEMBERS.slice(3);
 
@@ -67,14 +66,12 @@ export default function ContactUs() {
       variants={cardVariants}
       className="group relative w-full"
     >
-      {/* Glow border on hover */}
-      <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-[#2C7DA0]/40 to-[#61A5C2]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-[1px]" />
+      <div className="absolute -inset-[1px] rounded-[1.6rem] bg-gradient-to-b from-[#A855F7]/30 to-[#818CF8]/16 opacity-0 blur-[2px] transition-opacity duration-500 group-hover:opacity-100" />
 
-      <div className="relative flex flex-col items-center bg-[#0A1929]/80 backdrop-blur-sm border border-[#1B4965]/40 rounded-2xl px-6 py-10 transition-all duration-500 group-hover:border-[#2C7DA0]/50 group-hover:bg-[#0D2040]/90 group-hover:-translate-y-2 group-hover:shadow-2xl group-hover:shadow-[#2C7DA0]/10">
-        {/* Profile image */}
+      <div className="theme-card relative flex flex-col items-center px-6 py-10 transition-all duration-500 group-hover:-translate-y-2">
         <div className="relative mb-6">
-          <div className="absolute -inset-1.5 rounded-full bg-gradient-to-br from-[#2C7DA0] to-[#61A5C2] opacity-50 group-hover:opacity-100 transition-opacity duration-500 blur-[3px]" />
-          <div className="relative w-32 h-32 rounded-full overflow-hidden ring-[3px] ring-[#1B4965]/60 group-hover:ring-[#2C7DA0]/80 transition-all duration-500">
+          <div className="absolute -inset-1.5 rounded-full bg-gradient-to-br from-[#A855F7] to-[#818CF8] opacity-55 blur-[4px]" />
+          <div className="relative h-32 w-32 overflow-hidden rounded-full ring-[3px] ring-[#2D374F] transition-all duration-500 group-hover:ring-[#A855F7]/70">
             <Image
               src={member.image}
               alt={member.name}
@@ -84,31 +81,26 @@ export default function ContactUs() {
           </div>
         </div>
 
-        {/* Name */}
-        <h3 className="text-[#EAF6FF] font-bold text-xl font-[family-name:var(--font-space-grotesk)] mb-2 text-center tracking-tight">
+        <h3 className="mb-2 text-center text-xl font-bold tracking-tight text-[#F8FAFC]">
           {member.name}
         </h3>
 
-        {/* Role badge */}
-        <span className="inline-block bg-gradient-to-r from-[#2C7DA0]/20 to-[#61A5C2]/20 border border-[#2C7DA0]/30 text-[#61A5C2] text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-6">
+        <span className="mb-6 inline-flex rounded-full border border-[#3E2570] bg-[#1C1635] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-[#C084FC]">
           {member.role}
         </span>
 
-        {/* Thin separator */}
-        <div className="w-12 h-px bg-gradient-to-r from-transparent via-[#2C7DA0]/50 to-transparent mb-6" />
+        <div className="mb-6 h-px w-16 bg-gradient-to-r from-transparent via-[#A855F7]/50 to-transparent" />
 
-        {/* Phone */}
         <a
           href={`tel:${member.phone}`}
-          className="text-[#A9D6E5] text-base font-medium tracking-wide hover:text-[#EAF6FF] transition-colors duration-200 mb-2"
+          className="mb-2 text-base font-medium tracking-wide text-[#CBD5E1] hover:text-[#F8FAFC]"
         >
           {member.phone}
         </a>
 
-        {/* Email */}
         <a
           href={`mailto:${member.email}`}
-          className="text-[#61A5C2]/80 text-sm tracking-wide hover:text-[#EAF6FF] transition-colors duration-200"
+          className="text-sm tracking-wide text-[#94A3B8] hover:text-[#F8FAFC]"
         >
           {member.email}
         </a>
@@ -117,64 +109,46 @@ export default function ContactUs() {
   );
 
   return (
-    <section
-      id="contact"
-      className="relative py-20 lg:py-28 overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(180deg, #061826 0%, #0A1F33 50%, #061826 100%)",
-      }}
-    >
-      {/* Ambient glows */}
-      <div className="absolute top-20 left-1/4 w-[500px] h-[500px] bg-[#2C7DA0]/8 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-20 right-1/4 w-[400px] h-[400px] bg-[#61A5C2]/6 rounded-full blur-[120px] pointer-events-none" />
+    <section id="contact" className="theme-section-alt relative overflow-hidden py-20 lg:py-28">
+      <div className="absolute top-20 left-1/4 h-[500px] w-[500px] rounded-full bg-[#A855F7]/8 opacity-40 blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-20 right-1/4 h-[400px] w-[400px] rounded-full bg-[#818CF8]/8 opacity-40 blur-[120px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section header */}
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-16 text-center"
         >
-          <div className="inline-flex items-center gap-2 bg-[#2C7DA0]/10 border border-[#2C7DA0]/20 rounded-full px-4 py-1.5 mb-6">
-            <span className="w-2 h-2 rounded-full bg-[#61A5C2] animate-pulse" />
-            <span className="text-[#A9D6E5] text-sm font-medium tracking-wide uppercase">
-              Get In Touch
-            </span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] mb-4">
-            <span className="text-[#EAF6FF]">Contact </span>
-            <span className="bg-gradient-to-r from-[#61A5C2] to-[#A9D6E5] bg-clip-text text-transparent">
-              Us
-            </span>
+          <span className="theme-kicker mb-5">Get In Touch</span>
+          <h2 className="mb-4 text-3xl font-bold sm:text-4xl lg:text-5xl">
+            <span className="text-[#F8FAFC]">Contact </span>
+            <span className="gradient-text">Us</span>
           </h2>
-          <p className="text-[#A9D6E5]/70 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-[#94A3B8] sm:text-lg">
             Have questions about MazeX 1.0? Reach out to our organizing
             committee.
           </p>
-          <div className="mt-6 mx-auto w-24 h-1 rounded-full bg-gradient-to-r from-[#2C7DA0] to-[#61A5C2]" />
+          <div className="mt-6 mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-[#A855F7] to-[#818CF8]" />
         </motion.div>
 
-        {/* Top row: 3 cards */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-6 lg:mb-8"
+          className="mb-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:mb-8 lg:grid-cols-3 lg:gap-8"
         >
           {topRow.map(renderCard)}
         </motion.div>
 
-        {/* Bottom row: 2 cards centered */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
-          className="flex flex-col sm:flex-row justify-center gap-6 lg:gap-8"
+          className="flex flex-col justify-center gap-6 sm:flex-row lg:gap-8"
         >
           {bottomRow.map((member) => (
             <div

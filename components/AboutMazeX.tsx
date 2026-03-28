@@ -15,58 +15,60 @@ const itemVariants = {
 
 export default function AboutMazeX() {
   return (
-    <section id="about" className="relative py-24 sm:py-32">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          {/* Left - Text */}
+    <section id="about" className="theme-section-alt relative py-24 sm:py-32">
+      <div className="absolute left-[-10%] top-10 h-[380px] w-[380px] rounded-full bg-[#A855F7]/10 opacity-40 blur-[130px] pointer-events-none" />
+      <div className="absolute right-[-8%] bottom-0 h-[320px] w-[320px] rounded-full bg-[#818CF8]/10 opacity-40 blur-[120px] pointer-events-none" />
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-[0.95fr_1.05fr]">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-text mb-6">
+            <span className="theme-kicker mb-5">Mission Brief</span>
+            <h2 className="mb-6 text-3xl font-bold leading-tight text-[#F8FAFC] sm:text-4xl lg:text-5xl">
               What is MazeX 1.0?
             </h2>
-            <p className="text-[#A9D6E5]/80 text-lg leading-relaxed mb-8">
+            <p className="theme-copy mb-8 text-lg">
               MazeX 1.0 is an intra-university Micromouse Robotics Competition
               organized by IEEE RAS and WIE at the University of Moratuwa. It is
               a technical initiative designed to push the boundaries of robotics
               through hands-on engineering.
             </p>
-            <div className="border-l-2 border-[#2C7DA0] pl-4">
-              <p className="text-[#61A5C2] text-sm leading-relaxed italic">
+
+            <div className="theme-card p-6 sm:p-8">
+              <div className="theme-chip mb-4 text-[11px] font-bold uppercase tracking-[0.28em]">
+                Why It Matters
+              </div>
+              <p className="theme-copy text-sm italic sm:text-base">
                 A preliminary workshop will introduce micromouse concepts, maze
-                solving techniques, and robot design — giving all participants
+                solving techniques, and robot design â€” giving all participants
                 practical experience in robotics, embedded systems, and algorithm
                 development.
               </p>
             </div>
           </motion.div>
 
-          {/* Right - Feature cards grid */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-2 sm:grid-cols-3 gap-4"
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
           >
             {ABOUT_FEATURES.map((feature, i) => (
               <motion.div
                 key={i}
                 variants={itemVariants}
-                className="bg-[#1B4965]/60 backdrop-blur-sm border border-[#2C7DA0]/40 rounded-xl p-5 text-center hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(44,125,160,0.3)] transition-all duration-300 cursor-default"
+                className="theme-card-soft cursor-default p-5 transition-all duration-300 hover:-translate-y-1 sm:p-6"
               >
-                <div
-                  className="text-3xl mb-3"
-                  style={{
-                    filter: "drop-shadow(0 0 8px rgba(44,125,160,0.5))",
-                  }}
-                >
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#352F55] bg-[#1C1635] text-3xl shadow-[0_0_18px_rgba(168,85,247,0.18)]">
                   {feature.icon}
                 </div>
-                <p className="text-[#EAF6FF] text-sm font-medium">
+                <div className="mb-3 h-px w-full bg-gradient-to-r from-[#A855F7]/70 via-[#818CF8]/30 to-transparent" />
+                <p className="text-sm font-medium leading-relaxed text-[#EAF6FF]">
                   {feature.label}
                 </p>
               </motion.div>

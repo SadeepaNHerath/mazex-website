@@ -10,52 +10,52 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#061826]/80 backdrop-blur-md border-b border-[#1B4965]/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <a href="#" className="flex items-center hover:opacity-90 transition-opacity">
-            <Image
-              src="/images/brand/logo-white.svg"
-              alt="MazeX Logo"
-              width={100}
-              height={56}
-              className="h-10 w-auto object-contain"
-              priority
-            />
-          </a>
-
-          {/* Desktop nav links */}
-          <div className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-[#A9D6E5] hover:text-[#EAF6FF] text-sm transition-colors duration-200"
-              >
-                {link.label}
-              </a>
-            ))}
-            <a
-              href="#register"
-              className="bg-[#2C7DA0] text-[#EAF6FF] px-5 py-2 rounded-full text-sm font-semibold hover:shadow-[0_0_20px_rgba(44,125,160,0.5)] transition-all duration-300"
-            >
-              Register Now
+    <nav className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 sm:px-5">
+      <div className="mx-auto max-w-7xl rounded-[1.6rem] border border-[#303959]/80 bg-[#070E1A]/82 backdrop-blur-2xl shadow-[0_20px_60px_rgba(2,6,23,0.35)]">
+        <div className="rounded-[1.6rem] px-4 sm:px-6 lg:px-8">
+          <div className="flex h-[72px] items-center justify-between">
+            <a href="#" className="flex items-center hover:opacity-90 transition-opacity">
+              <Image
+                src="/images/brand/logo-white.svg"
+                alt="MazeX Logo"
+                width={100}
+                height={56}
+                className="h-10 w-auto object-contain"
+                priority
+              />
             </a>
-          </div>
 
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-[#EAF6FF] p-2"
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            <div className="hidden items-center gap-4 md:flex">
+              <div className="flex items-center gap-2 rounded-full border border-[#26304d] bg-[#0b1427]/85 px-3 py-2">
+                {NAV_LINKS.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="rounded-full px-4 py-2 text-sm font-medium text-[#CBD5E1] hover:bg-[#151f37] hover:text-[#F8FAFC]"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+              <a
+                href="#register"
+                className="theme-button theme-button-register rounded-full px-5 py-2 text-sm font-semibold"
+              >
+                Register Now
+              </a>
+            </div>
+
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="rounded-full border border-[#303959] bg-[#0b1427]/90 p-2 text-[#EAF6FF] md:hidden"
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile drawer */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -63,15 +63,15 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-[#061826]/95 backdrop-blur-lg border-t border-[#1B4965]/50 overflow-hidden"
+            className="mx-auto mt-3 max-w-7xl overflow-hidden rounded-[1.6rem] border border-[#303959]/80 bg-[#070E1A]/95 shadow-[0_20px_60px_rgba(2,6,23,0.35)] md:hidden"
           >
-            <div className="px-4 py-6 space-y-4">
+            <div className="space-y-3 px-4 py-6">
               {NAV_LINKS.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="block text-[#A9D6E5] hover:text-[#EAF6FF] text-lg transition-colors"
+                  className="block rounded-2xl border border-[#25304d] bg-[#0b1427]/90 px-4 py-3 text-base font-medium text-[#CBD5E1] hover:border-[#4C1D95] hover:text-[#F8FAFC]"
                 >
                   {link.label}
                 </a>
@@ -79,7 +79,7 @@ export default function Navbar() {
               <a
                 href="#register"
                 onClick={() => setIsOpen(false)}
-                className="block bg-[#2C7DA0] text-[#EAF6FF] px-5 py-3 rounded-full text-center font-semibold mt-4"
+                className="theme-button theme-button-register mt-4 block rounded-full px-5 py-3 text-center font-semibold"
               >
                 Register Now
               </a>
