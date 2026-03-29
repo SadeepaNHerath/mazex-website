@@ -72,7 +72,7 @@ export default function Delegates() {
                 Download the Official Delegate Booklet
               </h3>
               <p className="max-w-xl text-sm leading-relaxed text-[#9e8db3] sm:text-base">
-                Get your hands on the complete guide â€” event schedules,
+                Get your hands on the complete guide: event schedules,
                 competition rules, venue navigation, and all the technical
                 resources you&apos;ll need. Available as a convenient PDF for
                 offline access.
@@ -81,8 +81,7 @@ export default function Delegates() {
 
             <div className="flex-shrink-0">
               <a
-                href="/downloads/Delegate_booklet_dummy.pdf"
-                download
+                href="/resources/delegate-booklet"
                 className="theme-button inline-flex items-center gap-3 rounded-full px-8 py-4 text-base font-bold"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

@@ -50,6 +50,12 @@ const noticeCopy: Record<
     className:
       "border-emerald-500/25 bg-emerald-500/10 text-emerald-100",
   },
+  "password-updated": {
+    icon: ShieldCheck,
+    message: "Password changed successfully. Sign in with your new password.",
+    className:
+      "border-emerald-500/25 bg-emerald-500/10 text-emerald-100",
+  },
 };
 
 function SubmitButton({ disabled }: { disabled: boolean }) {

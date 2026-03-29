@@ -209,6 +209,37 @@ export async function getCurrentAdmin(): Promise<AuthenticatedAdmin | null> {
   }
 }
 
+export async function getCurrentAdminPasswordClient() {
+  if (!isAppwriteConfigured()) {
+    return null;
+  }
+
+  const cookieStore = await cookies();
+  const sessionSecret = cookieStore.get(ADMIN_SESSION_COOKIE_NAME)?.value;
+
+  if (!sessionSecret) {
+    return null;
+  }
+
+  const { adminLabel } = getAppwriteConfig();
+  const userAgent = await getRequestUserAgent();
+
+  try {
+    const sessionAccount = new Account(
+      createAppwriteSessionClient(sessionSecret, userAgent),
+    );
+    const user = await sessionAccount.get();
+
+    if (!isAuthorizedAdmin(user, adminLabel)) {
+      return null;
+    }
+
+    return sessionAccount;
+  } catch {
+    return null;
+  }
+}
+
 export async function destroyCurrentAdminSession() {
   const cookieStore = await cookies();
   const sessionSecret = cookieStore.get(ADMIN_SESSION_COOKIE_NAME)?.value;

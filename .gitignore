@@ -49,3 +49,4 @@ Icon
 
 # pnpm
 .pnpm-store
+appwrite.config.json

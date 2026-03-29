@@ -413,57 +413,105 @@ input.admin-auth-input:autofill {
 }
 
 .admin-shell {
-  --admin-bg: #0b1220;
-  --admin-sidebar: #111827;
-  --admin-sidebar-border: #243044;
-  --admin-header: #101827;
-  --admin-surface: #172033;
-  --admin-surface-muted: #0f1728;
-  --admin-border: #2b3951;
+  --admin-bg: #09111f;
+  --admin-sidebar: rgba(8, 15, 29, 0.88);
+  --admin-sidebar-border: rgba(148, 163, 184, 0.12);
+  --admin-header: rgba(9, 17, 31, 0.74);
+  --admin-surface: rgba(17, 24, 39, 0.88);
+  --admin-surface-muted: rgba(148, 163, 184, 0.08);
+  --admin-border: rgba(148, 163, 184, 0.14);
+  --admin-border-strong: rgba(148, 163, 184, 0.24);
   --admin-text: #f8fafc;
   --admin-muted: #94a3b8;
-  --admin-accent: #2563eb;
+  --admin-subtle: #cbd5e1;
+  --admin-accent: #7dd3fc;
+  --admin-accent-strong: #38bdf8;
+  --admin-accent-soft: rgba(125, 211, 252, 0.14);
   --admin-accent-contrast: #eff6ff;
-  --admin-chart-1: #2563eb;
-  --admin-chart-2: #0f766e;
-  --admin-chart-3: #c2410c;
-  background: var(--admin-bg);
+  background:
+    radial-gradient(circle at top right, rgba(56, 189, 248, 0.14) 0%, transparent 24%),
+    radial-gradient(circle at 16% 22%, rgba(96, 165, 250, 0.1) 0%, transparent 22%),
+    linear-gradient(180deg, #09111f 0%, #0b1324 44%, #08101c 100%);
   color: var(--admin-text);
 }
 
 .admin-shell[data-theme="light"] {
-  --admin-bg: #eef3f9;
-  --admin-sidebar: #dbe6f2;
-  --admin-sidebar-border: #b8c7d8;
-  --admin-header: #e5edf6;
-  --admin-surface: #ffffff;
-  --admin-surface-muted: #f3f7fb;
-  --admin-border: #d4dee8;
+  --admin-bg: #f3f6fb;
+  --admin-sidebar: rgba(255, 255, 255, 0.82);
+  --admin-sidebar-border: rgba(148, 163, 184, 0.22);
+  --admin-header: rgba(243, 246, 251, 0.84);
+  --admin-surface: rgba(255, 255, 255, 0.88);
+  --admin-surface-muted: rgba(226, 232, 240, 0.58);
+  --admin-border: rgba(148, 163, 184, 0.26);
+  --admin-border-strong: rgba(100, 116, 139, 0.28);
   --admin-text: #0f172a;
-  --admin-muted: #475569;
-  --admin-accent: #1d4ed8;
+  --admin-muted: #526075;
+  --admin-subtle: #334155;
+  --admin-accent: #0ea5e9;
+  --admin-accent-strong: #0284c7;
+  --admin-accent-soft: rgba(14, 165, 233, 0.12);
   --admin-accent-contrast: #eff6ff;
-  --admin-chart-1: #2563eb;
-  --admin-chart-2: #0f766e;
-  --admin-chart-3: #ea580c;
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.12) 0%, transparent 22%),
+    radial-gradient(circle at 10% 18%, rgba(59, 130, 246, 0.1) 0%, transparent 20%),
+    linear-gradient(180deg, #f5f7fb 0%, #eef3f9 44%, #f8fafc 100%);
+}
+
+.admin-main {
+  position: relative;
+}
+
+.admin-main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0%, transparent 16%, transparent 84%, rgba(255, 255, 255, 0.025) 100%),
+    radial-gradient(circle at 78% 14%, rgba(125, 211, 252, 0.08) 0%, transparent 20%);
 }
 
 .admin-sidebar {
   background: var(--admin-sidebar);
   border-color: var(--admin-sidebar-border);
+  backdrop-filter: blur(22px);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.02);
 }
 
 .admin-panel {
+  position: relative;
+  overflow: hidden;
   border-radius: 1.75rem;
   border: 1px solid var(--admin-border);
-  background: var(--admin-surface);
-  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--admin-surface) 96%, rgba(255, 255, 255, 0.04)) 0%,
+      var(--admin-surface) 100%
+    );
+  box-shadow:
+    0 24px 60px rgba(2, 6, 23, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(22px);
+}
+
+.admin-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top right, rgba(125, 211, 252, 0.08) 0%, transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 22%);
+  pointer-events: none;
 }
 
 .admin-panel-subtle {
+  position: relative;
+  overflow: hidden;
   border-radius: 1.25rem;
   border: 1px solid var(--admin-border);
   background: var(--admin-surface-muted);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .admin-icon-button {
@@ -477,12 +525,14 @@ input.admin-auth-input:autofill {
   transition:
     background-color 180ms ease,
     border-color 180ms ease,
-    transform 180ms ease;
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .admin-icon-button:hover {
-  border-color: var(--admin-accent);
+  border-color: var(--admin-border-strong);
   background: var(--admin-surface-muted);
+  box-shadow: 0 14px 32px rgba(2, 6, 23, 0.14);
   transform: translateY(-1px);
 }
 
@@ -494,12 +544,14 @@ input.admin-auth-input:autofill {
   transition:
     background-color 180ms ease,
     border-color 180ms ease,
-    transform 180ms ease;
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .admin-button-secondary:hover {
-  border-color: var(--admin-accent);
+  border-color: var(--admin-border-strong);
   background: var(--admin-surface-muted);
+  box-shadow: 0 16px 30px rgba(2, 6, 23, 0.14);
   transform: translateY(-1px);
 }
 
@@ -510,26 +562,29 @@ input.admin-auth-input:autofill {
   gap: 0.9rem;
   border-radius: 1.25rem;
   border: 1px solid var(--admin-border);
-  background: var(--admin-surface-muted);
+  background: transparent;
   color: var(--admin-muted);
-  padding: 0.95rem 1rem;
+  padding: 0.9rem 1rem;
   font-weight: 600;
   transition:
     background-color 180ms ease,
     border-color 180ms ease,
     color 180ms ease,
-    transform 180ms ease;
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .admin-nav-item:hover {
-  border-color: var(--admin-accent);
+  border-color: var(--admin-border-strong);
+  background: var(--admin-surface-muted);
   color: var(--admin-text);
+  box-shadow: 0 12px 28px rgba(2, 6, 23, 0.12);
   transform: translateY(-1px);
 }
 
 .admin-nav-item[data-active="true"] {
-  border-color: var(--admin-accent);
-  background: var(--admin-surface);
+  border-color: color-mix(in srgb, var(--admin-accent) 35%, var(--admin-border));
+  background: color-mix(in srgb, var(--admin-accent-soft) 82%, transparent);
   color: var(--admin-text);
 }
 
