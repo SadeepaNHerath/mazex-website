@@ -1,7 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { SPONSOR_TIERS } from "@/lib/constants";
+
+const DUMMY_PARTNERS = [
+  {
+    type: "Title Partner",
+    name: "Knurdz",
+    website: "https://knurdz.com",
+    logo: "/knurdz-logo-horizontal-bg (1).png",
+  },
+  {
+    type: "Gold Partner",
+    name: "Microsoft",
+    website: "https://microsoft.com",
+    logo: "/Microsoft-logo.webp",
+  },
+];
 
 const containerVariants = {
   hidden: {},
@@ -15,23 +29,19 @@ const itemVariants = {
 
 export default function Sponsorship() {
   return (
-    <section id="sponsors" className="theme-section relative py-24 sm:py-32">
+    <section id="sponsors" className="theme-section relative py-16 sm:py-20 lg:py-24">
       <div className="absolute left-[4%] top-[12%] h-[260px] w-[260px] rounded-full bg-[#A855F7]/8 opacity-40 blur-[110px] pointer-events-none" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
+          className="mb-10 text-center sm:mb-14"
         >
-          <span className="theme-kicker mb-5">Partnership Grid</span>
-          <h2 className="mb-4 text-3xl font-bold text-[#F8FAFC] sm:text-4xl lg:text-5xl">
-            Partner With Us
+          <h2 className="text-3xl font-bold tracking-tight text-[#F8FAFC] sm:text-4xl lg:text-5xl">
+            Official Partners
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-[#9e8db3]">
-            Join us in shaping the next generation of robotics engineers
-          </p>
         </motion.div>
 
         <motion.div
@@ -39,84 +49,77 @@ export default function Sponsorship() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          className="flex flex-col items-center justify-center gap-16 pt-4 md:flex-row md:items-end md:gap-28 md:pt-8"
         >
-          {SPONSOR_TIERS.map((tier, i) => (
+          {DUMMY_PARTNERS.map((partner, i) => (
             <motion.div
               key={i}
               variants={itemVariants}
-              className="theme-card flex flex-col p-6"
+              className="group flex flex-col items-center"
             >
-              <div
-                className="absolute left-0 right-[35%] top-0 h-[2px]"
-                style={{ background: `linear-gradient(90deg, ${tier.color}, transparent)` }}
-              />
+              <a
+                href={partner.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative flex h-16 w-48 sm:h-20 sm:w-64 overflow-hidden items-center justify-center rounded bg-white p-1 sm:p-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_8px_30px_rgba(168,85,247,0.3)] hover:ring-2 hover:ring-[#A855F7]/50"
+              >
+                {/* Shine Animation */}
+                <motion.div
+                  animate={{ translateX: ["-150%", "150%"] }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    repeatDelay: 3.5,
+                    ease: "easeInOut",
+                    delay: i * 2,
+                  }}
+                  className="absolute inset-0 z-10 skew-x-[-25deg] bg-gradient-to-r from-transparent via-white/80 to-transparent"
+                />
 
-              <div className="mb-4 flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#2D374F] bg-[#111A31]/90 text-2xl">
-                  {tier.icon}
-                </span>
-                <h3 className="text-lg font-bold" style={{ color: tier.color }}>
-                  {tier.tier}
-                </h3>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={partner.logo}
+                  alt={`${partner.name} Logo`}
+                  className="z-0 h-full w-full object-contain transition-transform duration-500 group-hover:scale-110"
+                />
+              </a>
+              
+              <div className="mt-8 flex flex-col items-center gap-1 sm:gap-2">
+                <h4 className="text-sm font-semibold tracking-[0.25em] text-white sm:text-base">
+                  {partner.type.toUpperCase()}
+                </h4>
+                
+                <a
+                  href={partner.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 flex items-center gap-2 text-sm font-medium tracking-wide text-[#9e8db3] transition-colors duration-300 hover:text-white"
+                >
+                  Visit Website
+                  <svg className="h-4 w-4 opacity-50 transition-opacity duration-300 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
               </div>
-
-              <span
-                className="mb-5 inline-flex self-start rounded-full px-3 py-1 text-xs font-semibold"
-                style={{
-                  backgroundColor: `${tier.color}18`,
-                  color: tier.color,
-                  border: `1px solid ${tier.color}40`,
-                }}
-              >
-                {tier.amount}
-              </span>
-
-              <ul className="mb-6 flex-1 space-y-2">
-                {tier.perks.map((perk, j) => (
-                  <li
-                    key={j}
-                    className="flex items-start gap-2 text-sm text-[#9e8db3]"
-                  >
-                    <span
-                      className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full"
-                      style={{ backgroundColor: tier.color }}
-                    />
-                    {perk}
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                className="theme-button-secondary w-full rounded-xl py-2 text-sm font-medium"
-                style={{
-                  borderColor: `${tier.color}45`,
-                  color: tier.color,
-                }}
-              >
-                Learn More
-              </button>
             </motion.div>
           ))}
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="theme-card mt-16 p-8 text-center sm:p-12"
+          className="mx-auto mt-20 flex flex-col items-center text-center px-4"
         >
-          <h3 className="mb-3 text-2xl font-bold text-[#F8FAFC]">
-            Interested in partnering? Let&apos;s talk.
+          <h3 className="mb-8 text-xl font-medium text-[#e2e8f0] sm:text-2xl">
+            Interested in partnering?{" "}
+            <span className="bg-gradient-to-r from-[#A855F7] to-[#818CF8] bg-clip-text font-bold text-transparent">Let&apos;s talk.</span>
           </h3>
-          <p className="mx-auto mb-6 max-w-lg text-[#9e8db3]">
-            Help us make MazeX 1.0 a landmark event for robotics education at
-            the University of Moratuwa.
-          </p>
+          
           <a
             href="mailto:contact@mazex.lk"
-            className="theme-button inline-block rounded-full px-8 py-3 font-semibold"
+            className="inline-flex items-center justify-center rounded-full bg-[#F8FAFC] px-7 py-3 font-bold text-[#3b0764] shadow-[0_4px_14px_0_rgba(255,255,255,0.2)] transition-all hover:scale-105 hover:bg-white active:scale-95"
           >
             Contact Us
           </a>

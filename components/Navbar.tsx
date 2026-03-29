@@ -154,7 +154,7 @@ export default function Navbar() {
                   className={`flex items-center gap-2 rounded-full border px-3 py-2 transition-[background-color,border-color] duration-500 ${theme.linkGroup}`}
                 >
                   {NAV_LINKS.map((link) => (
-                    <Link
+                    <a
                       key={link.href}
                       href={getHomeSectionHref(link.href)}
                       className={`rounded-full px-4 py-2 text-sm font-medium transition-[background-color,color,box-shadow] duration-300 ${
@@ -162,15 +162,15 @@ export default function Navbar() {
                       }`}
                     >
                       {link.label}
-                    </Link>
+                    </a>
                   ))}
                 </div>
-                <Link
+                <a
                   href={getHomeSectionHref("#register")}
                   className="theme-button theme-button-register rounded-full px-6 py-2.5 text-sm font-medium"
                 >
                   Register Now
-                </Link>
+                </a>
                 <Link
                   href="/login"
                   aria-label="Admin login"
@@ -210,7 +210,7 @@ export default function Navbar() {
             >
               <div className="mx-auto max-w-7xl space-y-3 px-4 py-6 sm:px-6">
                 {NAV_LINKS.map((link) => (
-                  <Link
+                  <a
                     key={link.href}
                     href={getHomeSectionHref(link.href)}
                     onClick={() => setIsOpen(false)}
@@ -221,15 +221,15 @@ export default function Navbar() {
                     }`}
                   >
                     {link.label}
-                  </Link>
+                  </a>
                 ))}
-                <Link
+                <a
                   href={getHomeSectionHref("#register")}
                   onClick={() => setIsOpen(false)}
                   className="theme-button theme-button-register mt-4 block rounded-full px-3.5 py-2 text-center font-medium"
                 >
                   Register Now
-                </Link>
+                </a>
                 <Link
                   href="/login"
                   onClick={() => setIsOpen(false)}
