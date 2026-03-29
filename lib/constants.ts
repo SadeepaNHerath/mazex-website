@@ -47,6 +47,7 @@ export const WORKSHOP_EVENTS = [
     {
         number: "01",
         date: "11th April, 2026",
+        fullDate: "2026-04-11",
         title: "Foundations, Components & Build Start",
         description:
             "Introduction to Micromouse rules, robot anatomy, and electronics basics. Teams begin their physical build.",
@@ -54,6 +55,7 @@ export const WORKSHOP_EVENTS = [
     {
         number: "02",
         date: "18th April, 2026",
+        fullDate: "2026-04-18",
         title: "Microcontrollers, Sensors & Basic Movement",
         description:
             "Microcontroller setup, IR sensor interfacing, and encoder integration. Robot performs its first movements.",
@@ -61,6 +63,7 @@ export const WORKSHOP_EVENTS = [
     {
         number: "03",
         date: "25th April, 2026",
+        fullDate: "2026-04-25",
         title: "PID Control & Wall Following",
         description:
             "PID theory, tuning, and implementation for stable wall-following behaviour.",
@@ -68,6 +71,7 @@ export const WORKSHOP_EVENTS = [
     {
         number: "04",
         date: "2nd May, 2026",
+        fullDate: "2026-05-02",
         title: "Maze-Solving Algorithms & Full Integration",
         description:
             "Flood Fill algorithm and full system integration into a competition-ready robot.",

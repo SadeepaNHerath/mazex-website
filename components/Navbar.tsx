@@ -148,7 +148,7 @@ export default function Navbar() {
                 </div>
                 <a
                   href="#register"
-                  className="theme-button theme-button-register rounded-full px-5 py-2 text-sm font-semibold"
+                  className="theme-button theme-button-register rounded-full px-7 py-4 text-sm font-medium"
                 >
                   Register Now
                 </a>
@@ -192,7 +192,7 @@ export default function Navbar() {
                 <a
                   href="#register"
                   onClick={() => setIsOpen(false)}
-                  className="theme-button theme-button-register mt-4 block rounded-full px-5 py-3 text-center font-semibold"
+                  className="theme-button theme-button-register mt-4 block rounded-full px-4 py-3 text-center font-medium"
                 >
                   Register Now
                 </a>

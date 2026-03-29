@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionValueEvent } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { motion, useTransform, useSpring, useMotionValue, useInView } from "framer-motion";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { WORKSHOP_EVENTS } from "@/lib/constants";
 
 const MicromouseRobot = () => (
@@ -76,37 +76,52 @@ const WorkshopPinMarker = () => (
 export default function WorkshopTimeline() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-10%" });
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start center", "end center"],
-  });
+  // Calculate progress based on actual dates
+  const dateProgress = useMemo(() => {
+    // Need to check for window to avoid SSR mismatch, though "use client" covers it
+    const now = new Date();
+    
+    // @ts-ignore - fullDate was added to the constants
+    const passedCount = WORKSHOP_EVENTS.filter(event => {
+      // @ts-ignore 
+      const eventDate = new Date(event.fullDate);
+      return now >= eventDate;
+    }).length;
 
-  // Unified progress value driven by either scroll or hover
+    // Logic for progress points:
+    // 0 passed -> Dot 1 (12.5%)
+    // 1 passed -> Dot 2 (37.5%)
+    // 2 passed -> Dot 3 (62.5%)
+    // 3 passed -> Dot 4 (87.5%)
+    // 4 passed -> 100%
+    if (passedCount >= WORKSHOP_EVENTS.length) return 1.0;
+    return (passedCount * 2 + 1) / (WORKSHOP_EVENTS.length * 2);
+  }, []);
+
   const targetProgress = useMotionValue(0);
 
-  // Sync with scroll progress when not hovering
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (hoveredIndex === null) {
-      targetProgress.set(latest);
+  // Sync with date progress when in view and not hovering
+  useEffect(() => {
+    if (isInView && hoveredIndex === null) {
+      targetProgress.set(dateProgress);
     }
-  });
+  }, [isInView, dateProgress, hoveredIndex, targetProgress]);
 
   // Sync with hover progress when hovering
   useEffect(() => {
     if (hoveredIndex !== null) {
-      // Correct targets for 4 dots: 1/8, 3/8, 5/8, 7/8 (0.125, 0.375, 0.625, 0.875)
       const target = (hoveredIndex * 2 + 1) / (WORKSHOP_EVENTS.length * 2);
       targetProgress.set(target);
-    } else {
-      // Immediately snap to current scroll progress when starting/ending hover mode
-      // to ensure smooth transition from current scroll position
-      targetProgress.set(scrollYProgress.get());
+    } else if (isInView) {
+      // Return to date progress when not hovering
+      targetProgress.set(dateProgress);
     }
-  }, [hoveredIndex, targetProgress, scrollYProgress]);
+  }, [hoveredIndex, targetProgress, dateProgress, isInView]);
 
   const smoothProgress = useSpring(targetProgress, {
-    stiffness: 100,
+    stiffness: 80,
     damping: 30,
     restDelta: 0.001,
   });

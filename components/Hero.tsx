@@ -78,14 +78,14 @@ export default function Hero() {
               <a
                 href="#register"
                 id="hero-register-btn"
-                className="theme-button theme-button-register rounded-full px-8 py-3.5 text-base font-semibold"
+                className="theme-button theme-button-register rounded-full px-7 py-4 text-sm font-medium"
               >
                 Register Now
               </a>
               <a
                 href="#delegates"
                 id="hero-learn-btn"
-                className="theme-button-secondary rounded-full px-8 py-3.5 text-base font-semibold"
+                className="theme-button-secondary rounded-full px-7 py-4 text-sm font-medium"
               >
                 Delegate Book
               </a>
