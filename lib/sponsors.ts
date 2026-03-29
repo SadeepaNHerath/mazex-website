@@ -20,6 +20,7 @@ type SponsorRow = Models.Row & {
   title?: string;
   websiteUrl?: string | null;
   imageFileId?: string;
+  sortOrder?: number;
 };
 
 function createTablesDbService() {
@@ -81,6 +82,10 @@ function mapSponsorRow(row: SponsorRow): PublicSponsor | null {
         ? row.websiteUrl.trim()
         : null,
     imageSrc: `/api/sponsors/${imageFileId}`,
+    sortOrder:
+      typeof row.sortOrder === "number" && Number.isFinite(row.sortOrder)
+        ? row.sortOrder
+        : 0,
   };
 }
 
@@ -116,7 +121,7 @@ export async function listSponsors() {
     const rows = await createTablesDbService().listRows<SponsorRow>({
       databaseId,
       tableId,
-      queries: [Query.orderAsc("$createdAt")],
+      queries: [Query.orderAsc("sortOrder"), Query.orderAsc("$createdAt")],
     });
 
     return rows.rows
@@ -135,6 +140,7 @@ export async function createSponsor(params: {
   title: string;
   websiteUrl: string | null;
   image: File;
+  sortOrder: number;
 }) {
   const { databaseId, tableId, bucketId } = getSponsorsConfig();
   const storage = createStorageService();
@@ -157,6 +163,7 @@ export async function createSponsor(params: {
         title: params.title,
         websiteUrl: params.websiteUrl,
         imageFileId: uploadedFile.$id,
+        sortOrder: params.sortOrder,
       },
     });
   } catch (error) {

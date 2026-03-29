@@ -83,6 +83,7 @@ export default function AdminSponsorsForm({
   const [isDragging, setIsDragging] = useState(false);
   const [title, setTitle] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
+  const [sortOrder, setSortOrder] = useState("0");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewName, setPreviewName] = useState<string | null>(null);
@@ -96,6 +97,29 @@ export default function AdminSponsorsForm({
     state.message && state.status !== "idle"
       ? `${state.status}:${state.toastKey}`
       : null;
+
+  function syncSelectedFileToInput(
+    input: HTMLInputElement | null,
+    file: File | null,
+  ) {
+    if (!input) {
+      return;
+    }
+
+    if (!file) {
+      input.value = "";
+      return;
+    }
+
+    const transfer = new DataTransfer();
+    transfer.items.add(file);
+    input.files = transfer.files;
+  }
+
+  function handleImageInputRef(node: HTMLInputElement | null) {
+    imageInputRef.current = node;
+    syncSelectedFileToInput(node, selectedFile);
+  }
 
   useEffect(() => {
     if (!activeToastId) {
@@ -120,19 +144,8 @@ export default function AdminSponsorsForm({
   }, [previewUrl, state.status, state.toastKey]);
 
   useEffect(() => {
-    if (!imageInputRef.current) {
-      return;
-    }
-
-    if (!selectedFile) {
-      imageInputRef.current.value = "";
-      return;
-    }
-
-    const transfer = new DataTransfer();
-    transfer.items.add(selectedFile);
-    imageInputRef.current.files = transfer.files;
-  }, [selectedFile]);
+    syncSelectedFileToInput(imageInputRef.current, selectedFile);
+  }, [selectedFile, state.toastKey]);
 
   useEffect(() => {
     if (state.status !== "success") {
@@ -142,6 +155,7 @@ export default function AdminSponsorsForm({
     const timeoutId = window.setTimeout(() => {
       setTitle("");
       setWebsiteUrl("");
+      setSortOrder("0");
       setSelectedFile(null);
       setPreviewUrl(null);
       setPreviewName(null);
@@ -232,6 +246,7 @@ export default function AdminSponsorsForm({
   const isSuccessToast = visibleToast?.status === "success";
   const latestSuccessAt = state.status === "success" ? state.toastKey : 0;
   const showPreview = Boolean(previewUrl) && lastSelectionAt > latestSuccessAt;
+  const previewSrc = showPreview ? previewUrl : null;
 
   return (
     <>
@@ -339,6 +354,33 @@ export default function AdminSponsorsForm({
 
             <div className="space-y-3">
               <label
+                htmlFor="sortOrder"
+                className="block text-sm font-medium text-[var(--admin-text)]"
+              >
+                Sort order
+                <span className="ml-2 text-xs font-normal text-[var(--admin-muted)]">
+                  (order in which displayed in home)
+                </span>
+              </label>
+
+              <div className="flex min-h-[52px] items-center gap-3 rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-surface)] px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition focus-within:border-[var(--admin-border-strong)] focus-within:shadow-[0_0_0_3px_var(--admin-accent-soft)]">
+                <Type className="h-4.5 w-4.5 shrink-0 text-[var(--admin-muted)]" />
+                <input
+                  id="sortOrder"
+                  name="sortOrder"
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={sortOrder}
+                  onChange={(event) => setSortOrder(event.target.value)}
+                  placeholder="0"
+                  className="h-full w-full border-0 bg-transparent py-4 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-muted)]"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <label
                 htmlFor="image"
                 className="block text-sm font-medium text-[var(--admin-text)]"
               >
@@ -364,7 +406,7 @@ export default function AdminSponsorsForm({
                   PNG, JPG, SVG, WebP, GIF, or AVIF up to 10MB.
                 </p>
 
-                {showPreview ? (
+                {previewSrc ? (
                   <div className="mt-4 rounded-2xl border border-[var(--admin-border)] bg-white/5 p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--admin-muted)]">
                       Preview
@@ -372,7 +414,7 @@ export default function AdminSponsorsForm({
                     <div className="mt-3 flex min-h-28 items-center justify-center rounded-2xl bg-white p-4 shadow-[0_10px_30px_rgba(15,23,42,0.25)]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={previewUrl}
+                        src={previewSrc}
                         alt="Sponsor preview"
                         className="max-h-20 w-full object-contain"
                       />
@@ -386,7 +428,7 @@ export default function AdminSponsorsForm({
                 ) : null}
 
                 <input
-                  ref={imageInputRef}
+                  ref={handleImageInputRef}
                   id="image"
                   name="image"
                   type="file"
@@ -458,6 +500,13 @@ export default function AdminSponsorsForm({
                         No website link
                       </p>
                     )}
+
+                    <p className="mt-4 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--admin-muted)]">
+                      Sort order
+                    </p>
+                    <p className="mt-2 text-sm text-[var(--admin-text)]">
+                      {sponsor.sortOrder}
+                    </p>
                   </div>
 
                   <div className="mt-5 border-t border-[var(--admin-border)] pt-4">

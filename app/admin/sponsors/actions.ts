@@ -47,11 +47,27 @@ export async function createSponsorAction(
   const titleValue = formData.get("title");
   const websiteValue = formData.get("websiteUrl");
   const imageValue = formData.get("image");
+  const sortOrderValue = formData.get("sortOrder");
 
   const title = typeof titleValue === "string" ? titleValue.trim() : "";
+  const rawSortOrder =
+    typeof sortOrderValue === "string" ? sortOrderValue.trim() : "";
 
   if (!title) {
     return buildState("error", "Enter a sponsor title to continue.");
+  }
+
+  if (!rawSortOrder) {
+    return buildState("error", "Enter a sort order to continue.");
+  }
+
+  const sortOrder = Number(rawSortOrder);
+
+  if (!Number.isInteger(sortOrder) || sortOrder < 0) {
+    return buildState(
+      "error",
+      "Sort order must be a whole number greater than or equal to 0.",
+    );
   }
 
   const websiteUrl =
@@ -86,6 +102,7 @@ export async function createSponsorAction(
       title,
       websiteUrl,
       image: imageValue,
+      sortOrder,
     });
   } catch (error) {
     if (error instanceof AppwriteException) {

@@ -3,4 +3,5 @@ export type PublicSponsor = {
   title: string;
   websiteUrl: string | null;
   imageSrc: string;
+  sortOrder: number;
 };
