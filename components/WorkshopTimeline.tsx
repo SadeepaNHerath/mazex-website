@@ -61,6 +61,15 @@ const WorkshopCardContent = ({ event }: { event: (typeof WORKSHOP_EVENTS)[0] }) 
     <p className="text-[12px] leading-relaxed text-[#9e8db3] sm:text-[13px]">
       {event.description}
     </p>
+
+    <div className="mt-5">
+      <a
+        href="#"
+        className="flex w-full items-center justify-center rounded-lg bg-[#F8FAFC] px-5 py-2.5 text-[13px] font-bold text-[#1C1635] shadow-lg transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-[#F8FAFC]/20"
+      >
+        Register
+      </a>
+    </div>
   </div>
 );
 
@@ -99,23 +108,13 @@ export default function WorkshopTimeline() {
 
   const targetProgress = useMotionValue(0);
 
-  // Sync with date progress when in view and not hovering
+  // Stay on the first dot (index 0) for now
   useEffect(() => {
-    if (isInView && hoveredIndex === null) {
-      targetProgress.set(dateProgress);
+    if (isInView) {
+      // (0 * 2 + 1) / (WORKSHOP_EVENTS.length * 2) = 1/8 = 0.125
+      targetProgress.set(0.125);
     }
-  }, [isInView, dateProgress, hoveredIndex, targetProgress]);
-
-  // Sync with hover progress when hovering
-  useEffect(() => {
-    if (hoveredIndex !== null) {
-      const target = (hoveredIndex * 2 + 1) / (WORKSHOP_EVENTS.length * 2);
-      targetProgress.set(target);
-    } else if (isInView) {
-      // Return to date progress when not hovering
-      targetProgress.set(dateProgress);
-    }
-  }, [hoveredIndex, targetProgress, dateProgress, isInView]);
+  }, [isInView, targetProgress]);
 
   const smoothProgress = useSpring(targetProgress, {
     stiffness: 80,
@@ -141,9 +140,8 @@ export default function WorkshopTimeline() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="mb-8 text-center md:mb-16 md:text-left md:ml-4"
+          className="mb-12 text-center md:mb-24 md:text-left md:ml-4"
         >
-          <span className="theme-kicker mb-4">Workshop Series</span>
           <h2 className="text-4xl font-bold uppercase leading-[1.05] tracking-tight text-[#F8FAFC] sm:text-5xl lg:text-7xl">
             <span className="block bg-gradient-to-r from-[#7A6A96] to-[#8A73A6] bg-clip-text text-transparent">
               Workshop
@@ -218,7 +216,7 @@ export default function WorkshopTimeline() {
           </div>
         </div>
 
-        <div className="relative mt-10 w-full px-2 pb-8 sm:px-4 md:mt-16 lg:hidden">
+        <div className="relative mt-20 w-full px-2 pb-8 sm:px-4 md:mt-32 lg:hidden">
           <div className="absolute top-0 bottom-0 left-[36px] w-[24px] -translate-x-1/2 overflow-hidden rounded-full border-x-[1.5px] border-[#6B528F]/25 bg-[#0A1224] shadow-[0_0_18px_rgba(107,82,143,0.18)] sm:left-[44px]">
             <div className="absolute top-0 bottom-0 left-[10.5px] w-[2px] border-l-2 border-dashed border-[#6B528F] opacity-20" />
 

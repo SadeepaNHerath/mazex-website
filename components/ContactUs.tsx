@@ -115,7 +115,7 @@ const Hexagon = ({
 );
 
 export default function ContactUs() {
-  const hexSize = 250;
+  const hexSize = 240; // Reduced slightly for tighter fit
   const gap = 8;
   
   const hexPositions = useMemo(() => {
@@ -133,9 +133,10 @@ export default function ContactUs() {
   }, []);
 
   return (
-    <section id="contact" className="theme-section-alt relative overflow-hidden py-24 lg:py-40">
+    <section id="contact" className="theme-section-alt relative overflow-hidden py-12 lg:py-16">
+      {/* Background Decor */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[800px] w-[800px] rounded-full bg-[#A855F7]/8 opacity-20 blur-[200px] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[700px] w-[700px] rounded-full bg-[#818CF8]/8 opacity-20 blur-[180px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[750px] w-[750px] rounded-full bg-[#818CF8]/8 opacity-20 blur-[180px] pointer-events-none" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 font-heading">
         <motion.div
@@ -143,13 +144,13 @@ export default function ContactUs() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="relative flex flex-col items-center justify-center gap-12 lg:gap-0 lg:h-[800px]"
+          className="relative flex flex-col items-center justify-center gap-8 lg:gap-0 lg:h-[680px]"
         >
           {/* CENTER HUB */}
-          <div className="lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 w-full max-w-[250px] z-30 order-first lg:order-none">
+          <div className="lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 w-full max-w-[240px] z-30 order-first lg:order-none">
             <Hexagon isCenter>
               <div className="flex flex-col items-center">
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 backdrop-blur-md ring-1 ring-white/20">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 backdrop-blur-md ring-1 ring-white/20 shadow-lg">
                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                    </svg>
@@ -163,15 +164,14 @@ export default function ContactUs() {
 
           {/* CONTACT CARDS */}
           {TEAM_MEMBERS.map((member, index) => {
-            // Swap Raneesha Fernando (index 3) with index 5 (Previously Decorative)
             let posIndex = index;
-            if (index === 3) posIndex = 5; // Raneesha moves to Left pos
+            if (index === 3) posIndex = 5; 
             
             const pos = hexPositions[posIndex];
             return (
               <div
                 key={member.email}
-                className="w-full max-w-[250px] lg:absolute lg:top-1/2 lg:left-1/2"
+                className="w-full max-w-[240px] lg:absolute lg:top-1/2 lg:left-1/2"
                 style={{
                   '--tx': `${pos.x}px`,
                   '--ty': `${pos.y}px`
@@ -180,7 +180,7 @@ export default function ContactUs() {
                 <div className="lg:[transform:translate(calc(-50%+var(--tx)),calc(-50%+var(--ty)))]">
                   <Hexagon>
                     <div className="flex flex-col items-center w-full">
-                      <div className="relative mb-3 h-20 w-20 overflow-hidden rounded-full ring-2 ring-maze-border/40 transition-all duration-500 group-hover:ring-[#A855F7]/60 shadow-xl">
+                      <div className="relative mb-3 h-18 w-18 overflow-hidden rounded-full ring-2 ring-maze-border/40 transition-all duration-500 group-hover:ring-[#A855F7]/60 shadow-xl">
                         <Image
                           src={member.image}
                           alt={member.name}
@@ -193,20 +193,20 @@ export default function ContactUs() {
                         {member.name}
                       </h3>
                       
-                      <span className="mb-3 text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.16em] text-[#C084FC]">
+                      <span className="mb-2 text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.16em] text-[#C084FC]">
                         {member.role}
                       </span>
 
                       <div className="flex flex-col gap-0.5 items-center">
                         <a
                           href={`tel:${member.phone}`}
-                          className="text-[9px] sm:text-[10px] font-medium text-[#c9bedb] hover:text-[#F8FAFC] transition-colors"
+                          className="text-[9px] font-medium text-[#c9bedb] hover:text-[#F8FAFC] transition-colors"
                         >
                           {member.phone}
                         </a>
                         <a
                           href={`mailto:${member.email}`}
-                          className="text-[8px] sm:text-[9px] text-[#9e8db3] hover:text-[#F8FAFC] transition-colors truncate max-w-[170px]"
+                          className="text-[8px] text-[#9e8db3] hover:text-[#F8FAFC] transition-colors truncate max-w-[150px]"
                         >
                           {member.email}
                         </a>
@@ -218,7 +218,7 @@ export default function ContactUs() {
             );
           })}
 
-          {/* DECORATIVE HEX (New position: Bottom-Right, index 3) */}
+          {/* DECORATIVE HEX (Bottom-Right, index 3) */}
           <div 
             className="hidden lg:block lg:absolute lg:top-1/2 lg:left-1/2 opacity-10"
             style={{
@@ -226,7 +226,7 @@ export default function ContactUs() {
               '--ty': `${hexPositions[3].y}px`
             } as any}
           >
-            <div className="w-[250px] lg:[transform:translate(calc(-50%+var(--tx)),calc(-50%+var(--ty)))]">
+            <div className="w-[240px] lg:[transform:translate(calc(-50%+var(--tx)),calc(-50%+var(--ty)))]">
                <Hexagon>
                 <div className="h-full w-full flex items-center justify-center">
                   <div className="h-8 w-8 border border-dashed border-[#A855F7]/30 rounded-full animate-pulse" />
