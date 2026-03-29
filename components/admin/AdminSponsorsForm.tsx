@@ -81,6 +81,9 @@ export default function AdminSponsorsForm({
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [dismissedToastId, setDismissedToastId] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [title, setTitle] = useState("");
+  const [websiteUrl, setWebsiteUrl] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewName, setPreviewName] = useState<string | null>(null);
   const [lastSelectionAt, setLastSelectionAt] = useState(0);
@@ -117,6 +120,37 @@ export default function AdminSponsorsForm({
   }, [previewUrl, state.status, state.toastKey]);
 
   useEffect(() => {
+    if (!imageInputRef.current) {
+      return;
+    }
+
+    if (!selectedFile) {
+      imageInputRef.current.value = "";
+      return;
+    }
+
+    const transfer = new DataTransfer();
+    transfer.items.add(selectedFile);
+    imageInputRef.current.files = transfer.files;
+  }, [selectedFile]);
+
+  useEffect(() => {
+    if (state.status !== "success") {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setTitle("");
+      setWebsiteUrl("");
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      setPreviewName(null);
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [state.status, state.toastKey]);
+
+  useEffect(() => {
     return () => {
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
@@ -137,6 +171,7 @@ export default function AdminSponsorsForm({
 
   function handleImageSelection(file: File | null) {
     if (!file) {
+      setSelectedFile(null);
       updatePreview(null);
       return;
     }
@@ -146,6 +181,7 @@ export default function AdminSponsorsForm({
     }
 
     setLastSelectionAt(Date.now());
+    setSelectedFile(file);
     updatePreview(file);
   }
 
@@ -267,6 +303,8 @@ export default function AdminSponsorsForm({
                     id="title"
                     name="title"
                     type="text"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
                     placeholder="Title Partner"
                     className="h-full w-full border-0 bg-transparent py-4 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-muted)]"
                   />
@@ -290,6 +328,8 @@ export default function AdminSponsorsForm({
                     id="websiteUrl"
                     name="websiteUrl"
                     type="url"
+                    value={websiteUrl}
+                    onChange={(event) => setWebsiteUrl(event.target.value)}
                     placeholder="https://example.com"
                     className="h-full w-full border-0 bg-transparent py-4 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-muted)]"
                   />
