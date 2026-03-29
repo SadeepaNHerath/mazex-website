@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { ORGANIZERS } from "@/lib/constants";
 
 export default function Organizers() {
@@ -15,13 +16,12 @@ export default function Organizers() {
           transition={{ duration: 0.6 }}
           className="mb-16 text-center"
         >
-          <span className="theme-kicker mb-5">Command Units</span>
           <h2 className="text-3xl font-bold text-[#F8FAFC] sm:text-4xl lg:text-5xl">
             Organized By
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="mx-auto flex max-w-2xl flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
           {ORGANIZERS.map((org, i) => (
             <motion.div
               key={i}
@@ -29,39 +29,23 @@ export default function Organizers() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.15 }}
-              className="theme-card p-8"
+              className="w-full flex-1"
             >
-              <span className="theme-chip mb-6 text-xs font-semibold uppercase tracking-[0.24em]">
-                {org.tag}
-              </span>
-
-              <div className="mb-6 flex h-24 items-center justify-center rounded-[1.4rem] border border-[#24304d] bg-[#0B1427]/90">
-                <span className="text-sm font-medium text-[#c9bedb]">
-                  {org.tag} Logo
-                </span>
-              </div>
-
-              {org.href ? (
-                <a
-                  href={org.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#C084FC]"
-                >
-                  <h3 className="mb-2 text-xl font-bold text-[#F8FAFC]">
-                    {org.title}
-                  </h3>
-                </a>
-              ) : (
-                <h3 className="mb-2 text-xl font-bold text-[#F8FAFC]">
-                  {org.title}
-                </h3>
-              )}
-
-              <p className="mb-4 text-sm text-[#C084FC]">{org.subtitle}</p>
-              <p className="text-sm leading-relaxed text-[#9e8db3]">
-                {org.description}
-              </p>
+              <a
+                href={org.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex h-24 w-full items-center justify-center overflow-hidden rounded-xl border border-maze-border/20 bg-white p-3 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(168,85,247,0.15)] sm:h-28 md:h-32"
+              >
+                <div className="relative h-full w-full">
+                  <Image
+                    src={(org as any).logo}
+                    alt={org.title}
+                    fill
+                    className="object-contain transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
+              </a>
             </motion.div>
           ))}
         </div>

@@ -19,7 +19,7 @@ export default function WhatIsMicromouse() {
           transition={{ duration: 0.6 }}
           className="mb-14 text-center"
         >
-          <span className="theme-kicker mb-5">Robot Profile</span>
+          
           <h2 className="text-3xl font-bold text-[#F8FAFC] sm:text-4xl lg:text-5xl">
             What is a Micromouse?
           </h2>

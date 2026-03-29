@@ -85,6 +85,7 @@ export const ORGANIZERS = [
         description:
             "Dedicated to advancing robotics and automation through innovation, education, and research. Fostering collaboration through technical events, publications, and research initiatives.",
         tag: "IEEE RAS",
+        logo: "/IEEE_RAS.jpg",
         href: "https://site.ieee.org/sb-moratuwa/chapters/robotics-and-automation-society/",
     },
     {
@@ -93,6 +94,7 @@ export const ORGANIZERS = [
         description:
             "Dedicated to uplifting women engineers by promoting gender diversity in engineering. Connecting over 30,000 members in more than 100 countries.",
         tag: "IEEE WIE",
+        logo: "/IEEE-WIE.png",
         href: "https://site.ieee.org/sb-moratuwa/chapters/women-in-engineering/",
     },
 ];
