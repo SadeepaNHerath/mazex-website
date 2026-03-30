@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Delegates() {
   return (
@@ -68,7 +69,7 @@ export default function Delegates() {
             </div>
 
             <div className="flex-shrink-0">
-              <a
+              <Link
                 href="/resources/delegate-booklet"
                 className="inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 text-base font-bold text-[#3B0764] shadow-[0_12px_32px_rgba(255,255,255,0.18)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#F8F6FF] hover:shadow-[0_18px_48px_rgba(255,255,255,0.25)] active:scale-[0.98]"
               >
@@ -76,7 +77,7 @@ export default function Delegates() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                 </svg>
                 Download Booklet
-              </a>
+              </Link>
             </div>
           </div>
         </motion.div>

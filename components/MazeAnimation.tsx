@@ -433,7 +433,6 @@ export default function MazeAnimation({
     const element = containerRef.current;
 
     if (!element || typeof IntersectionObserver === "undefined") {
-      setIsInViewport(true);
       return;
     }
 

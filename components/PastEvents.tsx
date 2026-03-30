@@ -19,10 +19,9 @@ const itemVariants = {
 export default function PastEvents() {
   const [selectedEventIndex, setSelectedEventIndex] = useState<number | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [mounted, setMounted] = useState(false);
+  const mounted = typeof document !== "undefined";
 
   useEffect(() => {
-    setMounted(true);
     if (selectedEventIndex !== null) {
       document.body.style.overflow = "hidden";
     } else {
