@@ -19,8 +19,7 @@ export default function Sponsorship({
   sponsors: PublicSponsor[];
 }) {
   return (
-    <section id="sponsors" className="theme-section relative py-16 sm:py-20 lg:py-24">
-      <div className="absolute left-[4%] top-[12%] h-[260px] w-[260px] rounded-full bg-[#A855F7]/8 opacity-40 blur-[110px] pointer-events-none" />
+    <section id="sponsors" className="theme-section-alt relative overflow-hidden py-16 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

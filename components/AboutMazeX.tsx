@@ -32,8 +32,7 @@ export default function AboutMazeX() {
               What is MazeX 1.0?
             </h2>
             <p className="theme-copy mb-8 text-lg">
-              MazeX 1.0 is an intra-university Micromouse Robotics Competition
-              organized by IEEE RAS and WIE at the University of Moratuwa. It is
+              MazeX 1.0 is an intra-university Micromouse Robotics Competition. It is
               a technical initiative designed to push the boundaries of robotics
               through hands-on engineering.
             </p>

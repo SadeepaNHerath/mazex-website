@@ -103,7 +103,7 @@ export default function Footer() {
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             <h4 className="mb-6 text-sm font-bold uppercase tracking-[0.28em] text-[#8a73a6]">
-              Organized By
+
             </h4>
 
             <ul className="space-y-3 text-sm text-[#9e8db3]">
@@ -124,7 +124,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-[#f8fafc]"
                 >
-                  IEEE Robotics &amp; Automation Society Chapter
+
                 </a>
               </li>
               <li>

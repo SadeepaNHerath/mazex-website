@@ -7,7 +7,7 @@ export default function RegisterCTA() {
   return (
     <section
       id="register"
-      className="theme-section relative overflow-hidden py-24 sm:py-32"
+      className="theme-section-alt relative overflow-hidden py-24 sm:py-32"
     >
       <div
         className="absolute top-1/2 left-1/2 h-[760px] w-[760px] -translate-x-1/2 -translate-y-1/2 pointer-events-none"

@@ -47,18 +47,30 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
+      staggerChildren: 0.15,
+      delayChildren: 0.3,
     },
   },
 };
 
 const hexVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.8 },
+  hidden: (custom) => ({
+    opacity: 0,
+    scale: 0.5,
+    x: custom?.x ? -custom.x : 0,
+    y: custom?.y ? -custom.y : 0,
+  }),
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { type: "spring", stiffness: 100, damping: 15 },
+    x: 0,
+    y: 0,
+    transition: { 
+      type: "spring", 
+      stiffness: 60, 
+      damping: 20,
+      mass: 1,
+    },
   },
 };
 
@@ -66,13 +78,16 @@ const Hexagon = ({
   children,
   className = "",
   isCenter = false,
+  custom = null,
 }: {
   children: React.ReactNode;
   className?: string;
   isCenter?: boolean;
+  custom?: any;
 }) => (
   <motion.div
     variants={hexVariants}
+    custom={custom}
     className={`relative aspect-[0.866/1] w-full ${className}`}
   >
     <div
@@ -133,7 +148,7 @@ export default function ContactUs() {
   }, []);
 
   return (
-    <section id="contact" className="theme-section-alt relative overflow-hidden py-12 lg:py-16">
+    <section id="contact" className="theme-section relative overflow-hidden py-12 lg:py-16">
       {/* Background Decor */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[800px] w-[800px] rounded-full bg-[#A855F7]/8 opacity-20 blur-[200px] pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[750px] w-[750px] rounded-full bg-[#818CF8]/8 opacity-20 blur-[180px] pointer-events-none" />
@@ -178,7 +193,7 @@ export default function ContactUs() {
                 } as any}
               >
                 <div className="lg:[transform:translate(calc(-50%+var(--tx)),calc(-50%+var(--ty)))]">
-                  <Hexagon>
+                  <Hexagon custom={pos}>
                     <div className="flex flex-col items-center w-full">
                       <div className="relative mb-3 h-18 w-18 overflow-hidden rounded-full ring-2 ring-maze-border/40 transition-all duration-500 group-hover:ring-[#A855F7]/60 shadow-xl">
                         <Image
@@ -227,7 +242,7 @@ export default function ContactUs() {
             } as any}
           >
             <div className="w-[240px] lg:[transform:translate(calc(-50%+var(--tx)),calc(-50%+var(--ty)))]">
-               <Hexagon>
+               <Hexagon custom={hexPositions[3]}>
                 <div className="h-full w-full flex items-center justify-center">
                   <div className="h-8 w-8 border border-dashed border-[#A855F7]/30 rounded-full animate-pulse" />
                 </div>

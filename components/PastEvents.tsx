@@ -90,7 +90,8 @@ export default function PastEvents() {
 
 
   return (
-    <section className="theme-section-alt relative py-24 sm:py-32 overflow-hidden">
+    <section className="theme-section relative py-24 sm:py-32 overflow-hidden">
+      <div className="absolute left-[4%] top-[12%] h-[300px] w-[300px] rounded-full bg-[#A855F7]/10 opacity-30 blur-[120px] pointer-events-none" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <motion.div
@@ -105,27 +106,60 @@ export default function PastEvents() {
           </h2>
         </motion.div>
 
-        {/* Dynamic Event Title */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          className="mb-14 text-center"
-        >
+        {/* Dynamic Event Title & Description Section */}
+        <div className="relative mb-14 text-center px-4 min-h-[120px] flex flex-col items-center">
+          {/* Ghost Title Background */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none overflow-hidden w-full h-full flex items-center justify-center -z-10">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeSlide}
+                initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+                animate={{ opacity: 0.045, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="text-[12vw] font-black uppercase tracking-widest text-[#8a73a6] whitespace-nowrap"
+              >
+                {PAST_EVENTS[activeSlide].title}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
           <AnimatePresence mode="wait">
-            <motion.p
+            <motion.div
               key={activeSlide}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="text-lg sm:text-xl font-semibold text-[#8a73a6]"
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="flex flex-col items-center"
             >
-              {PAST_EVENTS[activeSlide].title}
-            </motion.p>
+              {/* Main Dynamic Title */}
+              <h3 className="text-xl sm:text-2xl font-bold text-[#8a73a6] mb-4 tracking-wide">
+                {PAST_EVENTS[activeSlide].title}
+              </h3>
+
+              {/* Decorative Accent Path Line */}
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: "40px" }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="h-[2px] bg-[#6b528f] mb-4 rounded-full" 
+              />
+
+              {/* Terminal Style Description */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.6 }}
+                className="max-w-xl text-sm sm:text-base text-gray-400/90 leading-relaxed font-mono"
+              >
+                {/* Minimalist 'Typewriter' effect simulation via simple fade & container slide */}
+                <span className="text-[#6b528f] mr-2 opacity-50">{">"}</span>
+                {PAST_EVENTS[activeSlide].description}
+              </motion.p>
+            </motion.div>
           </AnimatePresence>
-        </motion.div>
+        </div>
 
         {/* Carousel */}
         <motion.div

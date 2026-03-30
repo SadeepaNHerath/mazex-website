@@ -5,7 +5,7 @@ import AboutMazeX from "@/components/AboutMazeX";
 import WhatIsMicromouse from "@/components/WhatIsMicromouse";
 import WorkshopTimeline from "@/components/WorkshopTimeline";
 import Delegates from "@/components/Delegates";
-import Organizers from "@/components/Organizers";
+
 import PastEvents from "@/components/PastEvents";
 import RegisterCTA from "@/components/RegisterCTA";
 import ContactUs from "@/components/ContactUs";
@@ -33,7 +33,7 @@ export default async function Home() {
         <WhatIsMicromouse />
         <WorkshopTimeline />
         <Delegates />
-        <Organizers />
+
         <Sponsorship sponsors={sponsors} />
         <PastEvents />
         <RegisterCTA />
