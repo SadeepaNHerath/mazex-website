@@ -69,7 +69,7 @@ export default function SubmissionDrawer({
               // Intercept clicks on links that act as the close button inside the children
               const target = e.target as HTMLElement;
               const link = target.closest("a");
-              if (link && link.getAttribute("href") === onCloseHref) {
+              if (link && link.getAttribute("aria-label") === "Close") {
                 handleClose(e);
               }
             }}

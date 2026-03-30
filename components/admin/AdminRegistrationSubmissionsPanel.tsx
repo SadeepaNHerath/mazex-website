@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import type {
   FormDefinition,
   FormWithFields,
@@ -11,7 +14,7 @@ import FormSelectorDropdown from "@/components/admin/FormSelectorDropdown";
 import SubmissionDrawer from "@/components/admin/SubmissionDrawer";
 import { OptimisticSubmissionDrawer } from "@/components/admin/OptimisticSubmissionDrawer";
 import SubmissionRowInteractive from "@/components/admin/SubmissionRowInteractive";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 function formatValue(value: unknown) {
   if (value === null || value === undefined || value === "") {
@@ -43,12 +46,18 @@ export function buildPageHref({
   from,
   to,
   submissionId,
+  pageSize,
+  searchField,
+  searchQuery,
 }: {
   slug: string;
   page?: number;
   from?: string | null;
   to?: string | null;
   submissionId?: string | null;
+  pageSize?: number | "all" | null;
+  searchField?: string | null;
+  searchQuery?: string | null;
 }) {
   const params = new URLSearchParams();
 
@@ -58,17 +67,12 @@ export function buildPageHref({
     params.set("page", String(page));
   }
 
-  if (from) {
-    params.set("from", from);
-  }
-
-  if (to) {
-    params.set("to", to);
-  }
-
-  if (submissionId) {
-    params.set("submission", submissionId);
-  }
+  if (from) params.set("from", from);
+  if (to) params.set("to", to);
+  if (submissionId) params.set("submission", submissionId);
+  if (pageSize && pageSize !== 15) params.set("pageSize", String(pageSize));
+  if (searchField) params.set("searchField", searchField);
+  if (searchQuery) params.set("searchQuery", searchQuery);
 
   return `/admin/registrations?${params.toString()}`;
 }
@@ -250,6 +254,9 @@ export default function AdminRegistrationSubmissionsPanel({
   selectedSubmission,
   from,
   to,
+  pageSize,
+  searchField,
+  searchQuery,
 }: {
   forms: FormDefinition[];
   form: FormWithFields;
@@ -257,8 +264,39 @@ export default function AdminRegistrationSubmissionsPanel({
   selectedSubmission: SubmissionDetail | null;
   from?: string | null;
   to?: string | null;
+  pageSize?: number | "all" | null;
+  searchField?: string | null;
+  searchQuery?: string | null;
 }) {
-  const totalPages = Math.max(1, Math.ceil(submissionPage.total / submissionPage.pageSize));
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Load preferred page size on mount if omitted
+  useEffect(() => {
+    if (!pageSize) {
+      const stored = localStorage.getItem("mazex_admin_page_size");
+      if (stored) {
+        const parsed = stored === "all" ? "all" : parseInt(stored, 10);
+        if (parsed === "all" || (Number.isInteger(parsed) && parsed > 0)) {
+          const href = buildPageHref({
+            slug: form.slug,
+             page: 1,
+            from,
+            to,
+            pageSize: parsed,
+            searchField,
+            searchQuery,
+          });
+          router.replace(href, { scroll: false });
+        }
+      }
+    }
+  }, [pageSize, router, form.slug, from, to, searchField, searchQuery]);
+
+  const totalPages =
+    submissionPage.pageSize === "all"
+      ? 1
+      : Math.max(1, Math.ceil(submissionPage.total / (submissionPage.pageSize as number)));
   const exportParams = new URLSearchParams();
 
   exportParams.set("form", form.slug);
@@ -306,39 +344,131 @@ export default function AdminRegistrationSubmissionsPanel({
           </a>
         </div>
 
-        <form className="mt-6 flex flex-col md:flex-row md:items-end gap-4">
+        <form 
+          className="mt-6 flex flex-col gap-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            const f = formData.get("from") as string;
+            const t = formData.get("to") as string;
+            const ps = formData.get("pageSize") as string;
+            const sf = formData.get("searchField") as string;
+            const sq = formData.get("searchQuery") as string;
+            
+            if (ps) {
+              localStorage.setItem("mazex_admin_page_size", ps);
+            }
+            
+            const href = buildPageHref({
+              slug: form.slug,
+              page: 1,
+              from: f || null,
+              to: t || null,
+              pageSize: ps === "all" ? "all" : (ps ? parseInt(ps, 10) : null),
+              searchField: sf || null,
+              searchQuery: sq || null,
+            });
+            router.push(href);
+          }}
+        >
           <input type="hidden" name="form" value={form.slug} />
-           <div className="flex-1 space-y-1">
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-              From date
-            </label>
-            <input
-              type="date"
-              name="from"
-              defaultValue={from ?? ""}
-              className="block h-10 w-full rounded-md border border-zinc-300 bg-white px-3 text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 sm:text-sm dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
-            />
+          
+          <div className="flex flex-col md:flex-row md:items-end gap-4">
+            <div className="flex-1 space-y-1">
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                Search field
+              </label>
+              <select
+                name="searchField"
+                defaultValue={searchField ?? ""}
+                className="block h-10 w-full rounded-md border border-zinc-300 bg-white pl-3 text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 sm:text-sm dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
+                style={{ paddingRight: "2.5rem" }}
+              >
+                <option value="">All fields</option>
+                <option value="teamName">Team Name</option>
+                {form.fields.map((f) => (
+                  <option key={f.key} value={f.key}>
+                    {f.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex-[2] space-y-1">
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                Search query
+              </label>
+              <input
+                type="search"
+                name="searchQuery"
+                placeholder="Search..."
+                defaultValue={searchQuery ?? ""}
+                className="block h-10 w-full rounded-md border border-zinc-300 bg-white px-3 text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 sm:text-sm dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
+              />
+            </div>
+            
+            <div className="flex items-end">
+              <button
+                type="submit"
+                className="inline-flex h-10 items-center justify-center rounded-md bg-zinc-900 px-4 text-sm font-medium text-white shadow-sm hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 transition-colors dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+              >
+                Search
+              </button>
+            </div>
           </div>
 
-           <div className="flex-1 space-y-1">
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
-              To date
-            </label>
-            <input
-              type="date"
-              name="to"
-              defaultValue={to ?? ""}
-             className="block h-10 w-full rounded-md border border-zinc-300 bg-white px-3 text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 sm:text-sm dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
-            />
-          </div>
+          <div className="flex flex-col md:flex-row md:items-end gap-4 pt-2 border-t border-zinc-100 dark:border-zinc-800">
+             <div className="w-full md:w-48 space-y-1">
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                From date
+              </label>
+              <input
+                type="date"
+                name="from"
+                defaultValue={from ?? ""}
+                className="block h-10 w-full rounded-md border border-zinc-300 bg-white px-3 text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 sm:text-sm dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
+              />
+            </div>
 
-          <div className="flex items-end">
-            <button
-              type="submit"
-               className="inline-flex h-10 items-center justify-center rounded-md border border-zinc-300 bg-white px-4 text-sm font-medium text-zinc-700 shadow-sm hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:focus:ring-zinc-300 transition-colors"
-            >
-              Apply filters
-            </button>
+             <div className="w-full md:w-48 space-y-1">
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                To date
+              </label>
+              <input
+                type="date"
+                name="to"
+                defaultValue={to ?? ""}
+               className="block h-10 w-full rounded-md border border-zinc-300 bg-white px-3 text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 sm:text-sm dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
+              />
+            </div>
+            
+             <div className="w-full md:w-32 space-y-1">
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                Per page
+              </label>
+              <select
+                name="pageSize"
+                defaultValue={pageSize === "all" ? "all" : (pageSize?.toString() ?? "15")}
+               className="block h-10 w-full rounded-md border border-zinc-300 bg-white pl-3 text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 sm:text-sm dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
+               style={{ paddingRight: "2.5rem" }}
+              >
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="all">All</option>
+              </select>
+            </div>
+
+            <div className="flex items-end">
+              <button
+                type="submit"
+                 className="inline-flex h-10 items-center justify-center rounded-md border border-zinc-300 bg-white px-4 text-sm font-medium text-zinc-700 shadow-sm hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:focus:ring-zinc-300 transition-colors"
+              >
+                Apply filters
+              </button>
+            </div>
           </div>
         </form>
 
@@ -346,7 +476,8 @@ export default function AdminRegistrationSubmissionsPanel({
             <div className="space-y-3">
             {submissionPage.submissions.length > 0 ? (
                 submissionPage.submissions.map((submission, index) => {
-                  const sequenceNumber = submissionPage.total - ((submissionPage.page - 1) * submissionPage.pageSize) - index;
+                  const currentOffset = submissionPage.pageSize === "all" ? 0 : (submissionPage.page - 1) * submissionPage.pageSize;
+                  const sequenceNumber = submissionPage.total - currentOffset - index;
                   return (
                     <SubmissionRow
                         key={submission.id}
@@ -370,7 +501,7 @@ export default function AdminRegistrationSubmissionsPanel({
                 </div>
             )}
             
-            {submissionPage.total > submissionPage.pageSize ? (
+            {submissionPage.total > (submissionPage.pageSize === "all" ? submissionPage.total + 1 : (submissionPage.pageSize as number)) ? (
               <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-zinc-100 pt-4 dark:border-zinc-800/80">
                 <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
                   Page {submissionPage.page} of {totalPages}
@@ -383,6 +514,9 @@ export default function AdminRegistrationSubmissionsPanel({
                       page: Math.max(1, submissionPage.page - 1),
                       from,
                       to,
+                      pageSize,
+                      searchField,
+                      searchQuery,
                     })}
                     className={`inline-flex items-center justify-center rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-300 ${
                       submissionPage.page <= 1 ? "pointer-events-none opacity-50" : ""
@@ -396,6 +530,9 @@ export default function AdminRegistrationSubmissionsPanel({
                       page: Math.min(totalPages, submissionPage.page + 1),
                       from,
                       to,
+                      pageSize,
+                      searchField,
+                      searchQuery,
                     })}
                     className={`inline-flex items-center justify-center rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-300 ${
                       submissionPage.page >= totalPages
@@ -412,11 +549,11 @@ export default function AdminRegistrationSubmissionsPanel({
             </div>
 
             {selectedSubmission && (
-              <SubmissionDrawer onCloseHref={buildPageHref({ slug: form.slug, from, to, page: submissionPage.page })}>
+              <SubmissionDrawer onCloseHref={buildPageHref({ slug: form.slug, from, to, page: submissionPage.page, pageSize, searchField, searchQuery })}>
                 <SubmissionDetailPanel 
                   form={form} 
                   submission={selectedSubmission} 
-                  onCloseHref={buildPageHref({ slug: form.slug, from, to, page: submissionPage.page })} 
+                  onCloseHref={buildPageHref({ slug: form.slug, from, to, page: submissionPage.page, pageSize, searchField, searchQuery })} 
                 />
               </SubmissionDrawer>
             )}

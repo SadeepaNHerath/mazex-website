@@ -817,6 +817,11 @@ function normalizePositiveInteger(value: number | undefined, fallback: number) {
   return value;
 }
 
+function normalizePageSize(value: number | "all" | undefined, fallback: number) {
+  if (value === "all") return "all";
+  return normalizePositiveInteger(value, fallback);
+}
+
 function normalizeDateFilter(value: string | null | undefined, endOfDay = false) {
   if (!value?.trim()) return null;
   const suffix = endOfDay ? "T23:59:59.999+05:30" : "T00:00:00.000+05:30";
@@ -853,14 +858,19 @@ export async function listRegistrationSubmissions(
       submissions: [],
       total: 0,
       page: normalizePositiveInteger(filters.page, 1),
-      pageSize: normalizePositiveInteger(filters.pageSize, PAGE_SIZE_DEFAULT),
+      pageSize: normalizePageSize(filters.pageSize, PAGE_SIZE_DEFAULT),
     };
   }
 
   try {
     const { databaseId, submissionsCollectionId } = getRegistrationsConfig();
-    const pageSize = normalizePositiveInteger(filters.pageSize, PAGE_SIZE_DEFAULT);
+    const pageSize = normalizePageSize(filters.pageSize, PAGE_SIZE_DEFAULT);
     const page = normalizePositiveInteger(filters.page, 1);
+    const isSearchActive = Boolean(filters.searchQuery?.trim());
+    
+    // If search active or page size is all, we fetch a large batch to filter/paginate in memory
+    const fetchLimit = (isSearchActive || pageSize === "all") ? 5000 : (pageSize as number);
+
     const queries: string[] = [Query.orderDesc("$createdAt")];
 
     if (filters.formId) queries.push(Query.equal("formId", filters.formId));
@@ -870,8 +880,11 @@ export async function listRegistrationSubmissions(
     if (from) queries.push(Query.greaterThanEqual("$createdAt", from));
     if (to) queries.push(Query.lessThanEqual("$createdAt", to));
 
-    queries.push(Query.limit(pageSize));
-    queries.push(Query.offset((page - 1) * pageSize));
+    queries.push(Query.limit(fetchLimit));
+    
+    if (!isSearchActive && pageSize !== "all") {
+      queries.push(Query.offset((page - 1) * (pageSize as number)));
+    }
 
     const [result, formsById] = await Promise.all([
       createDatabasesService().listDocuments<SubmissionDoc>(
@@ -882,13 +895,66 @@ export async function listRegistrationSubmissions(
       getFormsByIdMap(),
     ]);
 
-    const submissions = result.documents
+    let submissions = result.documents
       .map((doc) => mapSubmissionDoc(doc, formsById))
       .filter((s): s is SubmissionDetail => s !== null);
 
+    if (isSearchActive) {
+      const queryLower = filters.searchQuery!.trim().toLowerCase();
+      const scope = filters.searchField?.trim();
+
+      submissions = submissions.filter((sub) => {
+        if (!scope || scope === "all") {
+          const rawValues = [
+            sub.displayTitle,
+            sub.displaySubtitle,
+            sub.teamName,
+            ...Object.values(sub.answers),
+            ...sub.memberAnswers.flatMap((m) => Object.values(m)),
+          ];
+          return rawValues.some(
+            (v) =>
+              v !== null &&
+              v !== undefined &&
+              String(v).toLowerCase().includes(queryLower)
+          );
+        } else {
+          if (scope === "teamName") {
+            return sub.teamName?.toLowerCase().includes(queryLower);
+          }
+          const val = sub.answers[scope];
+          if (
+            val !== undefined &&
+            val !== null &&
+            String(val).toLowerCase().includes(queryLower)
+          ) {
+            return true;
+          }
+          const memberMatch = sub.memberAnswers.some(
+            (m) =>
+              m[scope] !== undefined &&
+              m[scope] !== null &&
+              String(m[scope]).toLowerCase().includes(queryLower)
+          );
+          if (memberMatch) return true;
+          return false;
+        }
+      });
+    }
+
+    const total = isSearchActive ? submissions.length : result.total;
+
+    if (isSearchActive || pageSize === "all") {
+      if (pageSize !== "all") {
+        const size = pageSize as number;
+        const start = (page - 1) * size;
+        submissions = submissions.slice(start, start + size);
+      }
+    }
+
     return {
       submissions,
-      total: result.total,
+      total,
       page,
       pageSize,
     };
@@ -897,7 +963,7 @@ export async function listRegistrationSubmissions(
       submissions: [],
       total: 0,
       page: normalizePositiveInteger(filters.page, 1),
-      pageSize: normalizePositiveInteger(filters.pageSize, PAGE_SIZE_DEFAULT),
+      pageSize: normalizePageSize(filters.pageSize, PAGE_SIZE_DEFAULT),
     };
   }
 }
