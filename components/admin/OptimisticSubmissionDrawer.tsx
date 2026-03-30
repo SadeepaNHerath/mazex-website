@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import type { FormWithFields, SubmissionDetail } from "@/lib/registration-types";
+import { SubmissionDetailPanel, buildPageHref } from "./AdminRegistrationSubmissionsPanel";
 
 // Global emitter to let Server Components with Client children trigger this
 let dispatchOptimisticOpen: ((id: string | null) => void) | null = null;
@@ -12,7 +13,13 @@ export const openOptimisticDrawer = (id: string | null) => {
   if (dispatchOptimisticOpen) dispatchOptimisticOpen(id);
 };
 
-export function OptimisticSubmissionDrawer() {
+export function OptimisticSubmissionDrawer({
+  form,
+  submissions,
+}: {
+  form: FormWithFields;
+  submissions: SubmissionDetail[];
+}) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
@@ -39,6 +46,7 @@ export function OptimisticSubmissionDrawer() {
   if (!portalRoot) return null;
 
   const isOpen = loadingId !== null;
+  const submissionToRender = submissions.find((s) => s.id === loadingId);
 
   return createPortal(
     <AnimatePresence>
@@ -56,19 +64,35 @@ export function OptimisticSubmissionDrawer() {
             aria-label="Cancel loading"
           />
 
-          {/* Skeleton Drawer Container */}
+          {/* Skeleton/Actual Drawer Container */}
           <motion.div
             key="optimistic-drawer"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="absolute bottom-0 w-full z-[60] bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 rounded-t-2xl shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.1)] flex flex-col h-[95vh] max-h-[95vh] overflow-hidden items-center justify-center pointer-events-auto"
+            className="absolute bottom-0 w-full z-[60] bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 rounded-t-2xl shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.1)] flex flex-col h-[95vh] max-h-[95vh] overflow-hidden items-center pointer-events-auto"
           >
-             <Loader2 className="h-8 w-8 animate-spin text-zinc-400 dark:text-zinc-600 mb-4" />
-             <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 animate-pulse">
-               Loading submission details...
-             </p>
+            {submissionToRender ? (
+              <div className="overflow-y-auto w-full text-left self-start">
+                <SubmissionDetailPanel
+                  form={form}
+                  submission={submissionToRender}
+                  onCloseHref={buildPageHref({
+                    slug: form.slug,
+                    from: searchParams.get("from"),
+                    to: searchParams.get("to"),
+                    page: Number(searchParams.get("page") ?? "1"),
+                  })}
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center w-full h-full">
+                <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 animate-pulse">
+                  Loading submission details...
+                </p>
+              </div>
+            )}
           </motion.div>
         </div>
       )}

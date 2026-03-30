@@ -108,7 +108,7 @@ export type RegistrationOverviewItem = {
 export type RegistrationOverview = {
   forms: RegistrationOverviewItem[];
   totalSubmissions: number;
-  recentSubmissions: SubmissionSummary[];
+  recentSubmissions: SubmissionDetail[];
 };
 
 export type SubmissionFilters = {
@@ -120,7 +120,7 @@ export type SubmissionFilters = {
 };
 
 export type SubmissionPage = {
-  submissions: SubmissionSummary[];
+  submissions: SubmissionDetail[];
   total: number;
   page: number;
   pageSize: number;

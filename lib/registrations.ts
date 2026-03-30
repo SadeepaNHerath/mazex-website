@@ -884,17 +884,7 @@ export async function listRegistrationSubmissions(
 
     const submissions = result.documents
       .map((doc) => mapSubmissionDoc(doc, formsById))
-      .filter((s): s is SubmissionDetail => s !== null)
-      .map<SubmissionSummary>((s) => ({
-        id: s.id,
-        formId: s.formId,
-        formSlug: s.formSlug,
-        formTitle: s.formTitle,
-        createdAt: s.createdAt,
-        displayTitle: s.displayTitle,
-        displaySubtitle: s.displaySubtitle,
-        teamName: s.teamName,
-      }));
+      .filter((s): s is SubmissionDetail => s !== null);
 
     return {
       submissions,

@@ -71,16 +71,23 @@ export default async function AdminRegistrationsPage({
   const page = Number(readQuery(params.page) ?? "1");
   const submissionId = readQuery(params.submission) ?? "";
 
-  const [submissionPage, selectedSubmission] = await Promise.all([
+  const [submissionPage] = await Promise.all([
     listRegistrationSubmissions({
       formId: selectedForm.id,
       from,
       to,
       page: Number.isInteger(page) && page > 0 ? page : 1,
       pageSize: 15,
-    }),
-    submissionId ? getRegistrationSubmissionById(submissionId) : Promise.resolve(null),
+    })
   ]);
+
+  let selectedSubmission = submissionId
+    ? submissionPage.submissions.find(s => s.id === submissionId) || null
+    : null;
+
+  if (submissionId && !selectedSubmission) {
+    selectedSubmission = await getRegistrationSubmissionById(submissionId);
+  }
 
   return (
     <AdminDashboardShell>

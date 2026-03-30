@@ -6,7 +6,7 @@ import type {
   SubmissionPage,
   SubmissionSummary,
 } from "@/lib/registration-types";
-import { getFieldLabelMap } from "@/lib/registrations";
+
 import FormSelectorDropdown from "@/components/admin/FormSelectorDropdown";
 import SubmissionDrawer from "@/components/admin/SubmissionDrawer";
 import { OptimisticSubmissionDrawer } from "@/components/admin/OptimisticSubmissionDrawer";
@@ -37,7 +37,7 @@ function formatTimestamp(value: string) {
   }
 }
 
-function buildPageHref({
+export function buildPageHref({
   slug,
   page,
   from,
@@ -73,7 +73,7 @@ function buildPageHref({
   return `/admin/registrations?${params.toString()}`;
 }
 
-function SubmissionDetailPanel({
+export function SubmissionDetailPanel({
   form,
   submission,
   onCloseHref,
@@ -82,7 +82,7 @@ function SubmissionDetailPanel({
   submission: SubmissionDetail;
   onCloseHref: string;
 }) {
-  const labelMap = getFieldLabelMap(form.fields);
+  const labelMap = new Map(form.fields.map((f) => [f.key, f.label] as const));
 
   return (
     <div className="w-full bg-white dark:bg-zinc-900">
@@ -273,7 +273,7 @@ export default function AdminRegistrationSubmissionsPanel({
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 sm:px-0 pb-10">
-      <OptimisticSubmissionDrawer />
+      <OptimisticSubmissionDrawer form={form} submissions={submissionPage.submissions} />
       <FormSelectorDropdown
         items={forms.map((f) => ({
           id: f.id,
