@@ -40,6 +40,13 @@ const TEAM_MEMBERS = [
     email: "wellagesasindu@gmail.com",
     image: "/images/team/Finance_committee_lead_DP.jpeg",
   },
+  {
+    name: "M.A.N.S.Mewanya",
+    role: "Team handling lead",
+    phone: "0772042592",
+    email: "", // User did not provide email
+    image: "/images/team/Team_handling_lead_DP.png",
+  },
 ];
 
 const containerVariants: Variants = {
@@ -179,8 +186,8 @@ export default function ContactUs() {
 
           {/* CONTACT CARDS */}
           {TEAM_MEMBERS.map((member, index) => {
-            let posIndex = index;
-            if (index === 3) posIndex = 5; 
+            const posIndexMap = [0, 1, 2, 5, 4, 3]; 
+            const posIndex = posIndexMap[index] ?? index;
             
             const pos = hexPositions[posIndex];
             return (
@@ -219,12 +226,14 @@ export default function ContactUs() {
                         >
                           {member.phone}
                         </a>
-                        <a
-                          href={`mailto:${member.email}`}
-                          className="text-[8px] text-[#9e8db3] hover:text-[#F8FAFC] transition-colors truncate max-w-[150px]"
-                        >
-                          {member.email}
-                        </a>
+                        {member.email && (
+                          <a
+                            href={`mailto:${member.email}`}
+                            className="text-[8px] text-[#9e8db3] hover:text-[#F8FAFC] transition-colors truncate max-w-[150px]"
+                          >
+                            {member.email}
+                          </a>
+                        )}
                       </div>
                     </div>
                   </Hexagon>
@@ -233,22 +242,6 @@ export default function ContactUs() {
             );
           })}
 
-          {/* DECORATIVE HEX (Bottom-Right, index 3) */}
-          <div 
-            className="hidden lg:block lg:absolute lg:top-1/2 lg:left-1/2 opacity-10"
-            style={{
-              '--tx': `${hexPositions[3].x}px`,
-              '--ty': `${hexPositions[3].y}px`
-            } as any}
-          >
-            <div className="w-[240px] lg:[transform:translate(calc(-50%+var(--tx)),calc(-50%+var(--ty)))]">
-               <Hexagon custom={hexPositions[3]}>
-                <div className="h-full w-full flex items-center justify-center">
-                  <div className="h-8 w-8 border border-dashed border-[#A855F7]/30 rounded-full animate-pulse" />
-                </div>
-               </Hexagon>
-            </div>
-          </div>
         </motion.div>
       </div>
     </section>
