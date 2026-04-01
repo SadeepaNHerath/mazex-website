@@ -25,15 +25,35 @@ type AdminDashboardShellProps = {
   children?: React.ReactNode;
 };
 
-const navigationItems = [
-  { href: "/admin", label: "Analytics", icon: BarChart3 },
-  { href: "/admin/resources", label: "Resources", icon: BookOpenText },
-  { href: "/admin/events", label: "Events", icon: CalendarDays },
-  { href: "/admin/registrations", label: "Registrations", icon: ClipboardList },
-  { href: "/admin/contacts", label: "Contacts", icon: Mail },
-  { href: "/admin/sponsors", label: "Sponsors", icon: Handshake },
-  { href: "/admin/form-builder", label: "Form Builder", icon: LayoutTemplate },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+const navigationGroups = [
+  {
+    label: "Dashboard",
+    items: [
+      { href: "/admin", label: "Analytics", icon: BarChart3 },
+    ],
+  },
+  {
+    label: "Data & Activity",
+    items: [
+      { href: "/admin/registrations", label: "Registrations", icon: ClipboardList },
+      { href: "/admin/mail-list", label: "Mail List", icon: Mail },
+    ],
+  },
+  {
+    label: "Site Content",
+    items: [
+      { href: "/admin/events", label: "Events", icon: CalendarDays },
+      { href: "/admin/resources", label: "Resources", icon: BookOpenText },
+      { href: "/admin/sponsors", label: "Sponsors", icon: Handshake },
+    ],
+  },
+  {
+    label: "System",
+    items: [
+      { href: "/admin/form-builder", label: "Form Builder", icon: LayoutTemplate },
+      { href: "/admin/settings", label: "Settings", icon: Settings },
+    ],
+  },
 ];
 
 function cn(...parts: Array<string | false | null | undefined>) {
@@ -86,7 +106,8 @@ export default function AdminDashboardShell({
             <img src="/images/brand/logo-white.svg" alt="MazeX Logo" className="hidden h-10 w-auto dark:block" />
           </Link>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
             <button
               type="button"
               className={cn("hidden lg:inline-flex p-1 text-zinc-500 hover:bg-purple-100 hover:text-purple-600 dark:text-zinc-400 dark:hover:bg-purple-500/10 dark:hover:text-purple-200 rounded-md transition-colors", sidebarCollapsed ? "" : "-mr-2")}
@@ -109,54 +130,55 @@ export default function AdminDashboardShell({
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 py-6">
-          <p
-            className={cn(
-              "px-2 mb-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500",
-              sidebarCollapsed && "lg:text-center lg:px-0"
-            )}
-          >
-            {sidebarCollapsed ? "—" : "Menu"}
-          </p>
+        <div className="flex-1 overflow-y-auto px-4 py-6 flex flex-col gap-6">
+          {navigationGroups.map((group, index) => (
+            <div key={index}>
+              <p
+                className={cn(
+                  "px-2 mb-2 text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500",
+                  sidebarCollapsed && "text-center px-0 lg:text-center lg:px-0"
+                )}
+                aria-hidden="true"
+              >
+                {sidebarCollapsed ? "—" : group.label}
+              </p>
 
-          <nav className="space-y-1">
-            {navigationItems.map((item) => {
-              const Icon = item.icon;
-              const isActive =
-                item.href === "/admin"
-                  ? pathname === item.href
-                  : pathname === item.href ||
-                    pathname.startsWith(`${item.href}/`);
+              <nav className="space-y-1">
+                {group.items.map((item) => {
+                  const Icon = item.icon;
+                  const isActive =
+                    item.href === "/admin"
+                      ? pathname === item.href
+                      : pathname === item.href ||
+                        pathname.startsWith(`${item.href}/`);
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-4 rounded-lg px-4 py-2 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-purple-600 dark:focus-visible:ring-purple-900",
-                    isActive
-                      ? "bg-purple-100 text-purple-600 dark:bg-purple-500/10 dark:text-purple-200 font-semibold shadow-sm"
-                      : "text-zinc-600 hover:bg-purple-100/50 hover:text-purple-600 dark:text-zinc-400 dark:hover:bg-purple-500/5 dark:hover:text-purple-200",
-                    sidebarCollapsed && "lg:justify-center lg:px-0"
-                  )}
-                  onClick={() => setMobileSidebarOpen(false)}
-                  title={sidebarCollapsed ? item.label : undefined}
-                >
-                  <Icon className="h-5 w-5 shrink-0" />
-                  <span className={cn(sidebarCollapsed && "lg:hidden")}>
-                    {item.label}
-                  </span>
-                </Link>
-              );
-            })}
-          </nav>
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        "flex items-center gap-4 rounded-lg px-4 py-2 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-purple-600 dark:focus-visible:ring-purple-900",
+                        isActive
+                          ? "bg-purple-100 text-purple-600 dark:bg-purple-500/10 dark:text-purple-200 font-semibold shadow-sm"
+                          : "text-zinc-600 hover:bg-purple-100/50 hover:text-purple-600 dark:text-zinc-400 dark:hover:bg-purple-500/5 dark:hover:text-purple-200",
+                        sidebarCollapsed && "lg:justify-center lg:px-0"
+                      )}
+                      onClick={() => setMobileSidebarOpen(false)}
+                      title={sidebarCollapsed ? item.label : undefined}
+                    >
+                      <Icon className="h-5 w-5 shrink-0" />
+                      <span className={cn(sidebarCollapsed && "lg:hidden")}>
+                        {item.label}
+                      </span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          ))}
         </div>
 
         <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
-          <div className={cn("flex items-center mb-4 px-2", sidebarCollapsed ? "justify-center" : "justify-between")}>
-             <ThemeToggle />
-          </div>
-          
           <form action={logoutAdminAction}>
             <button
               type="submit"

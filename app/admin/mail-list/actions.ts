@@ -29,7 +29,7 @@ const initialState: AdminContactMailActionState = {
   message: null,
   toastKey: 0,
 };
-const CONTACTS_ADMIN_PATH = "/admin/contacts";
+const CONTACTS_ADMIN_PATH = "/admin/mail-list";
 const BACKFILL_BATCH_SIZE = 5;
 const MAX_BACKFILL_BATCHES = 10;
 

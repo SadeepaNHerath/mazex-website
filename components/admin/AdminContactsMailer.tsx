@@ -18,7 +18,7 @@ import {
   sendContactEmailAction,
   syncPendingContactsAction,
   type AdminContactMailActionState,
-} from "@/app/admin/contacts/actions";
+} from "@/app/admin/mail-list/actions";
 import {
   contactBelongsToSegment,
   countRegistrationContactsForSegment,
@@ -39,7 +39,9 @@ function ContactMailNotice({
 }: {
   state: AdminContactMailActionState;
 }) {
-  if (state.status === "idle" || !state.message) {
+  const [dismissedKey, setDismissedKey] = useState<number | null>(null);
+
+  if (state.status === "idle" || !state.message || state.toastKey === dismissedKey) {
     return null;
   }
 
@@ -47,7 +49,7 @@ function ContactMailNotice({
 
   return (
     <div
-      className={`rounded-xl border px-4 py-3 text-sm shadow-sm ${
+      className={`relative rounded-xl border px-4 py-3 pr-10 text-sm shadow-sm ${
         isSuccess
           ? "border-emerald-500/20 bg-emerald-50 text-emerald-900 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100"
           : "border-rose-500/20 bg-rose-50 text-rose-900 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-100"
@@ -61,6 +63,18 @@ function ContactMailNotice({
         )}
         <p className="leading-6">{state.message}</p>
       </div>
+      <button
+        type="button"
+        aria-label="Dismiss message"
+        onClick={() => setDismissedKey(state.toastKey)}
+        className={`absolute right-2 top-2.5 rounded-lg p-1 transition-colors ${
+          isSuccess
+            ? "text-emerald-600 hover:bg-emerald-100 dark:text-emerald-400 dark:hover:bg-emerald-500/20"
+            : "text-rose-600 hover:bg-rose-100 dark:text-rose-400 dark:hover:bg-rose-500/20"
+        }`}
+      >
+        <X className="h-4 w-4" />
+      </button>
     </div>
   );
 }
@@ -216,15 +230,11 @@ function ContactSegmentBadges({
           Workshop
         </span>
       ) : null}
-      {isRegistrationContactSyncedToResend(contact) ? (
-        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
-          Resend synced
-        </span>
-      ) : (
+      {!isRegistrationContactSyncedToResend(contact) ? (
         <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
           Pending Resend sync
         </span>
-      )}
+      ) : null}
     </div>
   );
 }
