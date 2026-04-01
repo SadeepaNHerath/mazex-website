@@ -39,6 +39,57 @@
             }
         }
     },
+    "functions": [
+        {
+            "$id": "registration_confirmation_email",
+            "name": "Registration Confirmation Email",
+            "runtime": "node-22",
+            "execute": [],
+            "events": [
+                "databases.*.collections.*.documents.*.create"
+            ],
+            "scopes": [
+                "databases.read",
+                "databases.write",
+                "documents.read",
+                "documents.write",
+                "users.read",
+                "users.write",
+                "targets.read",
+                "targets.write",
+                "messages.write",
+                "topics.write",
+                "subscribers.write"
+            ],
+            "schedule": "",
+            "timeout": 30,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "commands": "npm install --omit=dev",
+            "path": "functions/send-registration-confirmation-email"
+        },
+        {
+            "$id": "registration_google_sheets_sync",
+            "name": "Registration Google Sheets Sync",
+            "runtime": "node-22",
+            "execute": [],
+            "events": [
+                "databases.*.collections.*.documents.*.create"
+            ],
+            "scopes": [
+                "databases.read",
+                "documents.read"
+            ],
+            "schedule": "",
+            "timeout": 30,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "commands": "npm install --omit=dev",
+            "path": "functions/sync-registration-to-google-sheets"
+        }
+    ],
     "databases": [
         {
             "$id": "mazex_data",
@@ -78,7 +129,9 @@
                 {
                     "key": "resource_key_unique",
                     "type": "unique",
-                    "attributes": ["key"],
+                    "attributes": [
+                        "key"
+                    ],
                     "orders": []
                 }
             ]
@@ -310,7 +363,9 @@
                 {
                     "key": "slug_unique",
                     "type": "unique",
-                    "attributes": ["slug"],
+                    "attributes": [
+                        "slug"
+                    ],
                     "orders": []
                 }
             ]
@@ -430,7 +485,9 @@
                 {
                     "key": "by_form",
                     "type": "key",
-                    "attributes": ["formId"],
+                    "attributes": [
+                        "formId"
+                    ],
                     "orders": []
                 }
             ]
@@ -493,7 +550,9 @@
                 {
                     "key": "by_form",
                     "type": "key",
-                    "attributes": ["formId"],
+                    "attributes": [
+                        "formId"
+                    ],
                     "orders": []
                 }
             ]
@@ -556,19 +615,26 @@
                 {
                     "key": "by_form",
                     "type": "key",
-                    "attributes": ["formId"],
+                    "attributes": [
+                        "formId"
+                    ],
                     "orders": []
                 },
                 {
                     "key": "by_field",
                     "type": "key",
-                    "attributes": ["fieldId"],
+                    "attributes": [
+                        "fieldId"
+                    ],
                     "orders": []
                 },
                 {
                     "key": "unique_field_value",
                     "type": "unique",
-                    "attributes": ["fieldId", "valueHash"],
+                    "attributes": [
+                        "fieldId",
+                        "valueHash"
+                    ],
                     "orders": []
                 }
             ]
@@ -658,25 +724,35 @@
                 {
                     "key": "email_unique",
                     "type": "unique",
-                    "attributes": ["email"],
-                    "orders": []
+                    "attributes": [
+                        "email"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
                 },
                 {
                     "key": "user_unique",
                     "type": "unique",
-                    "attributes": ["userId"],
-                    "orders": []
+                    "attributes": [
+                        "userId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
                 },
                 {
                     "key": "target_unique",
                     "type": "unique",
-                    "attributes": ["targetId"],
-                    "orders": []
+                    "attributes": [
+                        "targetId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
                 }
             ]
-        }
-    ],
-    "buckets": [
+        },
         {
             "$id": "google_sheets_form_syncs",
             "$permissions": [],
@@ -708,7 +784,9 @@
                 {
                     "key": "by_form",
                     "type": "unique",
-                    "attributes": ["formId"],
+                    "attributes": [
+                        "formId"
+                    ],
                     "orders": []
                 }
             ]
@@ -768,6 +846,29 @@
                 }
             ],
             "indexes": []
+        }
+    ],
+    "buckets": [
+        {
+            "$id": "email_assets",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "fileSecurity": false,
+            "name": "Email Assets",
+            "enabled": true,
+            "maximumFileSize": 1048576,
+            "allowedFileExtensions": [
+                "png",
+                "jpg",
+                "jpeg",
+                "webp",
+                "svg",
+                "gif"
+            ],
+            "compression": "none",
+            "encryption": false,
+            "antivirus": true
         },
         {
             "$id": "sponsor_assets",
@@ -776,19 +877,35 @@
             "name": "Sponsor Assets",
             "enabled": true,
             "maximumFileSize": 10485760,
-            "allowedFileExtensions": ["png", "jpg", "jpeg", "webp", "svg", "gif", "avif"],
+            "allowedFileExtensions": [
+                "png",
+                "jpg",
+                "jpeg",
+                "webp",
+                "svg",
+                "gif",
+                "avif"
+            ],
             "compression": "none",
             "encryption": true,
             "antivirus": true
         },
         {
             "$id": "form_banners",
-            "$permissions": ["read(\"any\")"],
+            "$permissions": [
+                "read(\"any\")"
+            ],
             "fileSecurity": false,
             "name": "Form Banners",
             "enabled": true,
             "maximumFileSize": 5242880,
-            "allowedFileExtensions": ["png", "jpg", "jpeg", "webp", "avif"],
+            "allowedFileExtensions": [
+                "png",
+                "jpg",
+                "jpeg",
+                "webp",
+                "avif"
+            ],
             "compression": "gzip",
             "encryption": true,
             "antivirus": true
@@ -800,57 +917,18 @@
             "name": "Registration Files",
             "enabled": true,
             "maximumFileSize": 10485760,
-            "allowedFileExtensions": ["png", "jpg", "jpeg", "webp", "pdf", "doc", "docx"],
+            "allowedFileExtensions": [
+                "png",
+                "jpg",
+                "jpeg",
+                "webp",
+                "pdf",
+                "doc",
+                "docx"
+            ],
             "compression": "gzip",
             "encryption": true,
             "antivirus": true
-        }
-    ],
-    "functions": [
-        {
-            "$id": "registration_confirmation_email",
-            "name": "Registration Confirmation Email",
-            "runtime": "node-22",
-            "execute": [],
-            "events": ["databases.*.collections.*.documents.*.create"],
-            "scopes": [
-                "databases.read",
-                "databases.write",
-                "documents.read",
-                "documents.write",
-                "users.read",
-                "users.write",
-                "targets.read",
-                "targets.write",
-                "messages.write",
-                "topics.write",
-                "subscribers.write"
-            ],
-            "schedule": "",
-            "timeout": 30,
-            "enabled": true,
-            "logging": true,
-            "entrypoint": "src/main.js",
-            "commands": "npm install --omit=dev",
-            "path": "functions/send-registration-confirmation-email"
-        },
-        {
-            "$id": "registration_google_sheets_sync",
-            "name": "Registration Google Sheets Sync",
-            "runtime": "node-22",
-            "execute": [],
-            "events": ["databases.*.collections.*.documents.*.create"],
-            "scopes": [
-                "databases.read",
-                "documents.read"
-            ],
-            "schedule": "",
-            "timeout": 30,
-            "enabled": true,
-            "logging": true,
-            "entrypoint": "src/main.js",
-            "commands": "npm install --omit=dev",
-            "path": "functions/sync-registration-to-google-sheets"
         }
     ],
     "teams": [],

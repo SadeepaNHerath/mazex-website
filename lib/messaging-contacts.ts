@@ -450,7 +450,25 @@ function sortContacts(contacts: RegistrationEmailContact[]) {
   });
 }
 
+// Email asset URLs from Appwrite storage bucket
+function getEmailAssetUrls() {
+  const endpoint = process.env.APPWRITE_ENDPOINT?.trim().replace(/\/+$/, "") ?? "";
+  const projectId = process.env.APPWRITE_PROJECT_ID?.trim() ?? "";
+  const bucketId = process.env.APPWRITE_BUCKET_EMAIL_ASSETS?.trim() ?? "email_assets";
+  
+  const baseUrl = `${endpoint}/storage/buckets/${bucketId}/files`;
+  const projectParam = `project=${projectId}`;
+  
+  return {
+    mazexLogo: `${baseUrl}/mazex-logo/view?${projectParam}`,
+    mazexLogoWhite: `${baseUrl}/mazex-logo-white/view?${projectParam}`,
+    knurdzPoweredBy: `${baseUrl}/knurdz-poweredby/view?${projectParam}`,
+    knurdzPoweredByLight: `${baseUrl}/knurdz-poweredby-light/view?${projectParam}`,
+  };
+}
+
 function buildCustomEmailHtml(content: string) {
+  const assets = getEmailAssetUrls();
   const blocks = content
     .trim()
     .split(/\n\s*\n/gu)
@@ -467,31 +485,144 @@ function buildCustomEmailHtml(content: string) {
       ? blocks
           .map(
             (block) =>
-              `<p style="margin: 0 0 16px; line-height: 1.7; color: #27272a; font-size: 15px;">${block}</p>`,
+              `<p style="margin: 0 0 16px; line-height: 1.7; font-size: 15px; color: #27272a;">${block}</p>`,
           )
           .join("")
-      : `<p style="margin: 0; line-height: 1.7; color: #27272a; font-size: 15px;"></p>`;
+      : `<p style="margin: 0; line-height: 1.7; font-size: 15px; color: #27272a;"></p>`;
 
   return `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MazeX</title>
-  </head>
-  <body style="margin: 0; padding: 32px 16px; background: #f4f4f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
-    <div style="max-width: 640px; margin: 0 auto; background: #ffffff; border: 1px solid #e4e4e7; border-radius: 18px; overflow: hidden;">
-      <div style="padding: 28px 32px; background: #18181b;">
-        <p style="margin: 0; color: #fafafa; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;">MazeX</p>
-      </div>
-      <div style="padding: 32px;">
-        ${paragraphs}
-        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid #e4e4e7;">
-          <p style="margin: 0; color: #71717a; font-size: 13px; line-height: 1.6;">Sent from the MazeX admin panel.</p>
-        </div>
-      </div>
-    </div>
-  </body>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="supported-color-schemes" content="light dark" />
+  <title>MazeX</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    /* Reset */
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+    
+    /* Base */
+    body { margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #f4f4f5; }
+    
+    /* Responsive */
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; margin: 0 auto !important; }
+      .email-wrapper { padding: 16px !important; }
+      .content-cell { padding: 24px 20px !important; }
+      .header-cell { padding: 20px !important; }
+      .responsive-table { width: 100% !important; }
+    }
+    
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+      body, .body-bg { background-color: #09090b !important; }
+      .email-container { background-color: #18181b !important; border-color: #27272a !important; }
+      .header-cell { background-color: #18181b !important; border-color: #27272a !important; }
+      .content-cell { background-color: #18181b !important; }
+      .text-dark { color: #f4f4f5 !important; }
+      .text-muted { color: #a1a1aa !important; }
+      .border-color { border-color: #27272a !important; }
+      .dark-logo { display: inline-block !important; max-height: 40px !important; }
+      .light-logo { display: none !important; max-height: 0 !important; overflow: hidden !important; }
+      .footer-dark-logo { display: inline-block !important; max-height: 24px !important; }
+      .footer-light-logo { display: none !important; max-height: 0 !important; overflow: hidden !important; }
+    }
+
+    /* Ensure dark mode logos are hidden by default (light mode) */
+    .dark-logo, .footer-dark-logo {
+      display: none !important;
+      max-height: 0 !important;
+      overflow: hidden !important;
+    }
+
+    /* Gmail-specific dark mode */
+    [data-ogsc] .dark-logo, 
+    [data-ogsc] .footer-dark-logo { display: inline-block !important; max-height: none !important; }
+    [data-ogsc] .light-logo,
+    [data-ogsc] .footer-light-logo { display: none !important; }
+  </style>
+</head>
+<body class="body-bg" style="margin: 0; padding: 0; background-color: #f4f4f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+  
+  <!-- Preheader text (hidden) -->
+  <div style="display: none; font-size: 1px; color: #f4f4f5; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+    Message from MazeX
+  </div>
+
+  <!-- Email wrapper table -->
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class="body-bg" style="background-color: #f4f4f5;">
+    <tr>
+      <td class="email-wrapper" style="padding: 40px 20px;">
+        
+        <!-- Main container -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center" class="email-container" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; overflow: hidden;">
+          
+          <!-- Header with Logo -->
+          <tr>
+            <td class="header-cell border-color" style="padding: 28px 32px; text-align: center; background-color: #ffffff; border-bottom: 1px solid #e4e4e7;">
+              <!-- Light mode logo -->
+              <img class="light-logo" src="${assets.mazexLogo}" alt="MazeX" width="120" style="display: inline-block; height: auto; max-height: 40px; width: auto; max-width: 120px;" />
+              <!-- Dark mode logo -->
+              <img class="dark-logo" src="${assets.mazexLogoWhite}" alt="MazeX" width="120" style="display: none; height: auto; max-height: 40px; width: auto; max-width: 120px;" />
+            </td>
+          </tr>
+          
+          <!-- Content -->
+          <tr>
+            <td class="content-cell" style="padding: 32px 40px;">
+              ${paragraphs}
+              
+              <!-- Footer note -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-top: 28px;">
+                <tr>
+                  <td class="border-color" style="padding-top: 20px; border-top: 1px solid #e4e4e7;">
+                    <p class="text-muted" style="margin: 0; font-size: 13px; line-height: 1.6; color: #71717a;">
+                      Sent from the MazeX admin panel.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        
+        <!-- Footer with Knurdz logo -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center" class="email-container" style="max-width: 600px; margin: 0 auto;">
+          <tr>
+            <td style="padding: 24px 0; text-align: center;">
+              <!-- Light mode footer logo -->
+              <img class="footer-light-logo" src="${assets.knurdzPoweredByLight}" alt="Powered by Knurdz" height="24" style="display: inline-block; height: 24px; width: auto;" />
+              <!-- Dark mode footer logo -->
+              <img class="footer-dark-logo" src="${assets.knurdzPoweredBy}" alt="Powered by Knurdz" height="24" style="display: none; height: 24px; width: auto;" />
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: center; padding-bottom: 16px;">
+              <p class="text-muted" style="margin: 0; font-size: 12px; color: #71717a;">
+                This is an automated message from MazeX.
+              </p>
+            </td>
+          </tr>
+        </table>
+        
+      </td>
+    </tr>
+  </table>
+</body>
 </html>`;
 }
 

@@ -53,13 +53,20 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="mb-6 flex items-center">
+            <div className="mb-6 flex items-center gap-6">
               <Image
                 src="/images/brand/logo-white.svg"
                 alt="MazeX Logo"
                 width={140}
                 height={78}
-                className="h-12 w-auto object-contain"
+                className="h-16 w-auto object-contain"
+              />
+              <Image
+                src="/images/knurdz/knurdz-poweredby.svg"
+                alt="Powered by Knurdz"
+                width={140}
+                height={78}
+                className="h-14 w-auto object-contain"
               />
             </div>
 
@@ -103,41 +110,41 @@ export default function Footer() {
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             <h4 className="mb-6 text-sm font-bold uppercase tracking-[0.28em] text-[#8a73a6]">
-
+              Organized By
             </h4>
 
-            <ul className="space-y-3 text-sm text-[#9e8db3]">
-              <li>
-                <a
-                  href="https://site.ieee.org/sb-moratuwa/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#f8fafc]"
-                >
-                  University of Moratuwa IEEE Student Branch
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://site.ieee.org/sb-moratuwa/chapters/robotics-and-automation-society/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#f8fafc]"
-                >
-
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://site.ieee.org/sb-moratuwa/chapters/women-in-engineering/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#f8fafc]"
-                >
-                  IEEE WIE Affinity Group
-                </a>
-              </li>
-            </ul>
+            <div className="flex flex-wrap items-center gap-6">
+              <a
+                href="https://site.ieee.org/sb-moratuwa/chapters/robotics-and-automation-society/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-opacity hover:opacity-80"
+                aria-label="IEEE Robotics and Automation Society"
+              >
+                <Image
+                  src="/images/logos/ieee-ras-white.png"
+                  alt="IEEE RAS Logo"
+                  width={240}
+                  height={100}
+                  className="h-16 w-auto object-contain object-left"
+                />
+              </a>
+              <a
+                href="https://site.ieee.org/sb-moratuwa/chapters/women-in-engineering/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-opacity hover:opacity-80"
+                aria-label="IEEE Women in Engineering"
+              >
+                <Image
+                  src="/images/logos/ieee-wie-white.png"
+                  alt="IEEE WIE Logo"
+                  width={220}
+                  height={90}
+                  className="h-14 w-auto object-contain object-left"
+                />
+              </a>
+            </div>
           </motion.div>
         </div>
 

@@ -5,12 +5,11 @@ import {
   ID,
   Messaging,
   Query,
-  Storage,
   Users,
 } from "node-appwrite";
 
 const DEFAULT_SUBMISSIONS_COLLECTION_ID = "registration_submissions";
-const DEFAULT_REGISTRATION_FILES_BUCKET_ID = "registration_files";
+const DEFAULT_EMAIL_ASSETS_BUCKET_ID = "email_assets";
 const DEFAULT_CONTACTS_COLLECTION_ID = "registration_contacts";
 const DEFAULT_CONTACTS_TOPIC_ID = "registration_contacts";
 const DEFAULT_CONTACTS_TOPIC_NAME = "MazeX Registration Contacts";
@@ -19,6 +18,7 @@ const CONTACT_ID_PREFIX = "contact_";
 const CONTACT_SUBSCRIBER_PREFIX = "sub_";
 const CONTACT_HASH_LENGTH = 28;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
+const FILE_FIELD_LABEL = "file";
 
 function getHeader(req, key) {
   const headers = req?.headers ?? {};
@@ -106,23 +106,12 @@ function createDatabasesService(req) {
   return new Databases(createClient(req));
 }
 
-function createStorageService(req) {
-  return new Storage(createClient(req));
-}
-
 function createUsersService(req) {
   return new Users(createClient(req));
 }
 
 function createMessagingService(req) {
   return new Messaging(createClient(req));
-}
-
-function getRegistrationFilesBucketId() {
-  return (
-    process.env.APPWRITE_BUCKET_REGISTRATION_FILES?.trim() ||
-    DEFAULT_REGISTRATION_FILES_BUCKET_ID
-  );
 }
 
 function getContactsCollectionId() {
@@ -141,6 +130,43 @@ function getContactsTopicId() {
 
 function getEmailProviderId() {
   return process.env.APPWRITE_MESSAGING_EMAIL_PROVIDER_ID?.trim() || "";
+}
+
+function getEmailAssetUrls() {
+  const endpoint = (
+    process.env.APPWRITE_ENDPOINT ||
+    process.env.APPWRITE_FUNCTION_API_ENDPOINT ||
+    ""
+  )
+    .trim()
+    .replace(/\/+$/, "");
+  const projectId = (
+    process.env.APPWRITE_PROJECT_ID ||
+    process.env.APPWRITE_FUNCTION_PROJECT_ID ||
+    ""
+  ).trim();
+  const bucketId =
+    process.env.APPWRITE_BUCKET_EMAIL_ASSETS?.trim() ||
+    DEFAULT_EMAIL_ASSETS_BUCKET_ID;
+
+  if (!endpoint || !projectId) {
+    return {
+      mazexLogo: "",
+      mazexLogoWhite: "",
+      knurdzPoweredBy: "",
+      knurdzPoweredByLight: "",
+    };
+  }
+
+  const baseUrl = `${endpoint}/storage/buckets/${bucketId}/files`;
+  const projectParam = `project=${encodeURIComponent(projectId)}`;
+
+  return {
+    mazexLogo: `${baseUrl}/mazex-logo/view?${projectParam}`,
+    mazexLogoWhite: `${baseUrl}/mazex-logo-white/view?${projectParam}`,
+    knurdzPoweredBy: `${baseUrl}/knurdz-poweredby/view?${projectParam}`,
+    knurdzPoweredByLight: `${baseUrl}/knurdz-poweredby-light/view?${projectParam}`,
+  };
 }
 
 function escapeHtml(value) {
@@ -198,57 +224,13 @@ function getStoredFileName(value) {
   return "";
 }
 
-async function resolveUploadedFileNames(req, fields, answers, memberAnswers, log) {
-  const fileIds = new Set();
-  const fileFields = fields.filter((field) => field.type === "file");
-
-  const collectFileIds = (record) => {
-    if (!record || typeof record !== "object") return;
-
-    for (const field of fileFields) {
-      const fileId = getStoredFileId(record[field.key]);
-      if (fileId) fileIds.add(fileId);
-    }
-  };
-
-  collectFileIds(answers);
-  for (const member of memberAnswers) {
-    collectFileIds(member);
-  }
-
-  if (fileIds.size === 0) {
-    return new Map();
-  }
-
-  const storage = createStorageService(req);
-  const bucketId = getRegistrationFilesBucketId();
-  const entries = await Promise.all(
-    [...fileIds].map(async (fileId) => {
-      try {
-        const file = await storage.getFile(bucketId, fileId);
-        const fileName = typeof file?.name === "string" ? file.name.trim() : "";
-        return fileName ? [fileId, fileName] : null;
-      } catch (fetchError) {
-        const message =
-          fetchError instanceof Error ? fetchError.message : "Unknown Appwrite storage error.";
-        log(`Unable to resolve uploaded file name for ${fileId}: ${message}`);
-        return null;
-      }
-    }),
-  );
-
-  return new Map(entries.filter(Boolean));
+function hasUploadedFileValue(value) {
+  return Boolean(getStoredFileName(value) || getStoredFileId(value));
 }
 
-function formatAnswerValueForEmail(field, value, fileNamesById) {
+function formatAnswerValueForEmail(field, value) {
   if (field.type === "file") {
-    const fileName = getStoredFileName(value);
-    if (fileName) return fileName;
-
-    const fileId = getStoredFileId(value);
-    if (fileId) return fileNamesById.get(fileId) || fileId;
-
-    return "-";
+    return hasUploadedFileValue(value) ? FILE_FIELD_LABEL : "-";
   }
 
   if (Array.isArray(value)) {
@@ -266,6 +248,15 @@ function formatAnswerValueForEmail(field, value, fileNamesById) {
   return normalized || "-";
 }
 
+function formatAnswerHtmlForEmail(field, value) {
+  const displayVal = formatAnswerValueForEmail(field, value);
+  if (field.type === "file" && displayVal !== "-") {
+    return `<span style="display: inline-block; padding: 3px 8px; border-radius: 999px; background-color: #f4f4f5; border: 1px solid #e4e4e7; color: #3f3f46; font-size: 12px; font-weight: 600; line-height: 1.4;">${FILE_FIELD_LABEL}</span>`;
+  }
+
+  return escapeHtml(displayVal);
+}
+
 function buildEmail(
   recipientName,
   formTitle,
@@ -273,10 +264,10 @@ function buildEmail(
   fields,
   answers,
   memberAnswers,
-  fileNamesById,
 ) {
   const greeting = recipientName ? `Hi ${recipientName},` : "Hello,";
   const formLine = formTitle ? `Form: ${formTitle}` : null;
+  const assets = getEmailAssetUrls();
 
   const defaultText = [
     "Your MazeX registration was received successfully.",
@@ -301,22 +292,25 @@ function buildEmail(
   if (submissionFields.length > 0) {
     inputsText.push("--- Submission Details ---");
     inputsHtml.push(
-      `<h3 style="margin-top: 32px; margin-bottom: 16px; color: #18181b; font-size: 18px; font-weight: 600; border-bottom: 1px solid #e4e4e7; padding-bottom: 8px;">Submission Details</h3>`,
+      `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-top: 32px;">
+        <tr>
+          <td class="border-color" style="padding-bottom: 16px; border-bottom: 1px solid #e4e4e7;">
+            <h3 class="text-dark" style="margin: 0; font-size: 18px; font-weight: 600; color: #18181b;">Submission Details</h3>
+          </td>
+        </tr>
+      </table>`,
     );
 
-    inputsHtml.push(`<table style="width: 100%; border-collapse: collapse;">`);
+    inputsHtml.push(`<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class="responsive-table" style="border-collapse: collapse;">`);
     for (const field of submissionFields) {
-      const displayVal = formatAnswerValueForEmail(
-        field,
-        answers[field.key],
-        fileNamesById,
-      );
+      const displayVal = formatAnswerValueForEmail(field, answers[field.key]);
+      const displayHtml = formatAnswerHtmlForEmail(field, answers[field.key]);
       inputsText.push(`${field.label}: ${displayVal}`);
 
       inputsHtml.push(`
         <tr>
-          <td style="padding: 12px 0; border-bottom: 1px solid #f4f4f5; width: 40%; color: #71717a; font-size: 14px; vertical-align: top;">${escapeHtml(field.label)}</td>
-          <td style="padding: 12px 0; border-bottom: 1px solid #f4f4f5; color: #18181b; font-size: 14px; font-weight: 500; vertical-align: top;">${escapeHtml(displayVal)}</td>
+          <td class="text-muted data-label border-color" style="padding: 12px 8px 12px 0; width: 40%; font-size: 14px; vertical-align: top; color: #71717a; border-bottom: 1px solid #e4e4e7;">${escapeHtml(field.label)}</td>
+          <td class="text-dark border-color" style="padding: 12px 0; font-size: 14px; font-weight: 500; vertical-align: top; color: #18181b; border-bottom: 1px solid #e4e4e7;">${displayHtml}</td>
         </tr>
       `);
     }
@@ -328,35 +322,42 @@ function buildEmail(
     inputsText.push("--- Team Members ---");
 
     inputsHtml.push(
-      `<h3 style="margin-top: 32px; margin-bottom: 16px; color: #18181b; font-size: 18px; font-weight: 600; border-bottom: 1px solid #e4e4e7; padding-bottom: 8px;">Team Members</h3>`,
+      `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-top: 32px;">
+        <tr>
+          <td class="border-color" style="padding-bottom: 16px; border-bottom: 1px solid #e4e4e7;">
+            <h3 class="text-dark" style="margin: 0; font-size: 18px; font-weight: 600; color: #18181b;">Team Members</h3>
+          </td>
+        </tr>
+      </table>`,
     );
 
     memberAnswers.forEach((member, index) => {
       inputsText.push(`Member ${index + 1}:`);
       inputsHtml.push(
-        `<div style="margin-bottom: 24px; background-color: #fafafa; border: 1px solid #f4f4f5; border-radius: 8px; padding: 16px;">`,
+        `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class="sub-box member-box" style="margin: 16px 0; border-radius: 8px; background-color: #fafafa; border: 1px solid #f4f4f5;">
+          <tr>
+            <td style="padding: 16px;">
+              <h4 class="text-muted" style="margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a;">Member ${index + 1}</h4>
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class="responsive-table" style="border-collapse: collapse;">`,
       );
-      inputsHtml.push(
-        `<h4 style="margin: 0 0 12px 0; color: #52525b; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em;">Member ${index + 1}</h4>`,
-      );
-      inputsHtml.push(`<table style="width: 100%; border-collapse: collapse;">`);
 
       for (const field of memberFields) {
-        const displayVal = formatAnswerValueForEmail(
-          field,
-          member[field.key],
-          fileNamesById,
-        );
+        const displayVal = formatAnswerValueForEmail(field, member[field.key]);
+        const displayHtml = formatAnswerHtmlForEmail(field, member[field.key]);
         inputsText.push(`  ${field.label}: ${displayVal}`);
 
         inputsHtml.push(`
-          <tr>
-            <td style="padding: 8px 0; border-bottom: 1px solid #e4e4e7; width: 40%; color: #71717a; font-size: 14px; vertical-align: top;">${escapeHtml(field.label)}</td>
-            <td style="padding: 8px 0; border-bottom: 1px solid #e4e4e7; color: #18181b; font-size: 14px; font-weight: 500; vertical-align: top;">${escapeHtml(displayVal)}</td>
-          </tr>
+                <tr>
+                  <td class="text-muted data-label border-color" style="padding: 8px 8px 8px 0; width: 40%; font-size: 14px; vertical-align: top; color: #71717a; border-bottom: 1px solid #e4e4e7;">${escapeHtml(field.label)}</td>
+                  <td class="text-dark border-color" style="padding: 8px 0; font-size: 14px; font-weight: 500; vertical-align: top; color: #18181b; border-bottom: 1px solid #e4e4e7;">${displayHtml}</td>
+                </tr>
         `);
       }
-      inputsHtml.push(`</table></div>`);
+      inputsHtml.push(`
+              </table>
+            </td>
+          </tr>
+        </table>`);
     });
   }
 
@@ -365,48 +366,164 @@ function buildEmail(
         .split("\n")
         .map(
           (line) =>
-            `<p style="margin-top: 0; margin-bottom: 16px; line-height: 1.6; color: #3f3f46;">${escapeHtml(line)}</p>`,
+            `<p style="margin: 0 0 16px; line-height: 1.7; font-size: 15px; color: #27272a;">${escapeHtml(line)}</p>`,
         )
         .join("")
-    : `<p style="margin-top: 0; margin-bottom: 16px; line-height: 1.6; color: #3f3f46;">Your MazeX registration was received successfully.</p>
-       ${formLine ? `<p style="margin-top: 0; margin-bottom: 16px; line-height: 1.6; color: #3f3f46;"><strong>${escapeHtml(formLine)}</strong></p>` : ""}
-       <p style="margin-top: 0; margin-bottom: 16px; line-height: 1.6; color: #3f3f46;">Our team will contact you if any additional steps are required.</p>`;
+    : `<p style="margin: 0 0 16px; line-height: 1.7; font-size: 15px; color: #27272a;">Your MazeX registration was received successfully.</p>
+       ${formLine ? `<p style="margin: 0 0 16px; line-height: 1.7; font-size: 15px; color: #27272a;"><strong>${escapeHtml(formLine)}</strong></p>` : ""}
+       <p style="margin: 0 0 16px; line-height: 1.7; font-size: 15px; color: #27272a;">Our team will contact you if any additional steps are required.</p>`;
 
-  const finalHtml = `
-<!DOCTYPE html>
-<html>
+  const finalHtml = `<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="supported-color-schemes" content="light dark" />
   <title>MazeX Registration</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    /* Reset */
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+    
+    /* Base */
+    body { margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #f4f4f5; }
+    
+    /* Responsive */
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; margin: 0 auto !important; }
+      .email-wrapper { padding: 16px !important; }
+      .content-cell { padding: 24px 20px !important; }
+      .header-cell { padding: 20px !important; }
+      .responsive-table { width: 100% !important; }
+      .data-label { width: 35% !important; }
+      .member-box { padding: 12px !important; }
+    }
+    
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+      body, .body-bg { background-color: #09090b !important; }
+      .email-container { background-color: #18181b !important; border-color: #27272a !important; }
+      .header-cell { background-color: #18181b !important; border-color: #27272a !important; }
+      .content-cell { background-color: #18181b !important; }
+      .text-dark, h3, h4, p, td, strong { color: #f4f4f5 !important; }
+      .text-muted { color: #a1a1aa !important; }
+      .border-color { border-color: #27272a !important; }
+      .sub-box { background-color: #27272a !important; border-color: #3f3f46 !important; }
+      .dark-logo { display: inline-block !important; max-height: 50px !important; }
+      .light-logo { display: none !important; max-height: 0 !important; overflow: hidden !important; }
+      .footer-dark-logo { display: inline-block !important; max-height: 24px !important; }
+      .footer-light-logo { display: none !important; max-height: 0 !important; overflow: hidden !important; }
+    }
+
+    /* Ensure dark mode logos are hidden by default (light mode) */
+    .dark-logo, .footer-dark-logo {
+      display: none !important;
+      max-height: 0 !important;
+      overflow: hidden !important;
+    }
+
+    /* Gmail-specific dark mode */
+    [data-ogsc] .dark-logo,
+    [data-ogsc] .footer-dark-logo { display: inline-block !important; max-height: none !important; }
+    [data-ogsc] .light-logo,
+    [data-ogsc] .footer-light-logo { display: none !important; }
+    [data-ogsc] .text-dark, [data-ogsc] h3, [data-ogsc] h4, [data-ogsc] p, [data-ogsc] td { color: #f4f4f5 !important; }
+    [data-ogsc] .text-muted { color: #a1a1aa !important; }
+    [data-ogsc] .body-bg { background-color: #09090b !important; }
+    [data-ogsc] .email-container { background-color: #18181b !important; }
+    [data-ogsc] .sub-box { background-color: #27272a !important; }
+  </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f4f4f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
-  <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
-    <div style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
-      <div style="background-color: #18181b; padding: 32px 40px; text-align: center;">
-        <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.025em;">MazeX Registration</h1>
-      </div>
-      <div style="padding: 40px;">
-        <p style="margin-top: 0; margin-bottom: 24px; font-size: 16px; color: #18181b; font-weight: 600;">${escapeHtml(greeting)}</p>
-
-        <div style="margin-bottom: 32px;">
-          ${templateHtml}
-        </div>
-
-        ${inputsHtml.join("")}
-
-        <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #e4e4e7;">
-          <p style="margin: 0; color: #71717a; font-size: 14px; line-height: 1.6;">
-            Thank you,<br/>
-            <strong>MazeX Team</strong>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div style="text-align: center; margin-top: 24px;">
-      <p style="color: #a1a1aa; font-size: 12px; margin: 0;">This is an automated message from MazeX. Please do not reply directly to this email.</p>
-    </div>
+<body class="body-bg" style="margin: 0; padding: 0; background-color: #f4f4f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+  
+  <!-- Preheader text (hidden) -->
+  <div style="display: none; font-size: 1px; color: #f4f4f5; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+    Your MazeX registration has been confirmed
   </div>
+
+  <!-- Email wrapper table -->
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class="body-bg" style="background-color: #f4f4f5;">
+    <tr>
+      <td class="email-wrapper" style="padding: 40px 20px;">
+        
+        <!-- Main container -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center" class="email-container" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; overflow: hidden;">
+          
+          <!-- Header with Logo -->
+          <tr>
+            <td class="header-cell border-color" style="padding: 28px 32px; text-align: center; background-color: #ffffff; border-bottom: 1px solid #e4e4e7;">
+              <!-- Light mode logo -->
+              <img class="light-logo" src="${assets.mazexLogo}" alt="MazeX" width="140" style="display: inline-block; height: auto; max-height: 50px; width: auto; max-width: 140px;" />
+              <!-- Dark mode logo -->
+              <img class="dark-logo" src="${assets.mazexLogoWhite}" alt="MazeX" width="140" style="display: none; height: auto; max-height: 50px; width: auto; max-width: 140px;" />
+            </td>
+          </tr>
+          
+          <!-- Content -->
+          <tr>
+            <td class="content-cell" style="padding: 32px 40px;">
+              
+              <!-- Greeting -->
+              <p class="text-dark" style="margin: 0 0 24px; font-size: 16px; font-weight: 600; color: #18181b;">${escapeHtml(greeting)}</p>
+              
+              <!-- Template text -->
+              <div style="margin-bottom: 32px;">
+                ${templateHtml}
+              </div>
+              
+              <!-- Form data tables -->
+              ${inputsHtml.join("")}
+              
+              <!-- Signature -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-top: 40px;">
+                <tr>
+                  <td class="border-color" style="padding-top: 24px; border-top: 1px solid #e4e4e7;">
+                    <p class="text-muted" style="margin: 0; font-size: 14px; line-height: 1.6; color: #71717a;">
+                      Thank you,<br/>
+                      <strong class="text-dark" style="color: #18181b;">MazeX Team</strong>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        
+        <!-- Footer with Knurdz logo -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center" class="email-container" style="max-width: 600px; margin: 0 auto;">
+          <tr>
+            <td style="padding: 24px 0; text-align: center;">
+              <!-- Light mode footer logo -->
+              <img class="footer-light-logo" src="${assets.knurdzPoweredByLight}" alt="Powered by Knurdz" height="24" style="display: inline-block; height: 24px; width: auto;" />
+              <!-- Dark mode footer logo -->
+              <img class="footer-dark-logo" src="${assets.knurdzPoweredBy}" alt="Powered by Knurdz" height="24" style="display: none; height: 24px; width: auto;" />
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: center; padding-bottom: 16px;">
+              <p class="text-muted" style="margin: 0; font-size: 12px; color: #71717a;">
+                This is an automated message from MazeX. Please do not reply directly to this email.
+              </p>
+            </td>
+          </tr>
+        </table>
+        
+      </td>
+    </tr>
+  </table>
 </body>
 </html>`;
 
@@ -774,13 +891,6 @@ async function sendRegistrationConfirmationEmail(context) {
   const sortedFields = [...fieldsResult.documents].sort(
     (a, b) => a.sortOrder - b.sortOrder,
   );
-  const fileNamesById = await resolveUploadedFileNames(
-    req,
-    sortedFields,
-    answers,
-    memberAnswers,
-    log,
-  );
   const contact = await syncRegistrationContact(req, {
     email: recipientEmail,
     name: recipientName,
@@ -796,7 +906,6 @@ async function sendRegistrationConfirmationEmail(context) {
     sortedFields,
     answers,
     memberAnswers,
-    fileNamesById,
   );
 
   try {

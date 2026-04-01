@@ -100,6 +100,8 @@ const sharedRegistrationEnv = {
 
 const confirmationFunctionEnv = {
   ...sharedRegistrationEnv,
+  APPWRITE_BUCKET_EMAIL_ASSETS:
+    rootEnv.APPWRITE_BUCKET_EMAIL_ASSETS?.trim() || "email_assets",
 };
 
 for (const key of CONFIRMATION_OPTIONAL_KEYS) {
