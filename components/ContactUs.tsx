@@ -240,17 +240,17 @@ export default function ContactUs() {
                         {member.role}
                       </span>
 
-                      <div className="flex flex-col gap-0.5 items-center">
+                      <div className="flex flex-col items-center gap-1">
                         <a
                           href={`tel:${member.phone}`}
-                          className="text-[9px] font-medium text-[#c9bedb] hover:text-[#F8FAFC] transition-colors"
+                          className="text-xs sm:text-sm font-semibold leading-tight text-[#d8cee8] hover:text-[#F8FAFC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A855F7]/70 rounded px-1 py-0.5 transition-colors"
                         >
                           {member.phone}
                         </a>
                         {member.email && (
                           <a
                             href={`mailto:${member.email}`}
-                            className="text-[8px] text-[#9e8db3] hover:text-[#F8FAFC] transition-colors truncate max-w-[150px]"
+                            className="text-[10px] sm:text-[10px] leading-tight text-[#b9accd] hover:text-[#F8FAFC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A855F7]/70 rounded px-1 py-0.5 transition-colors break-all text-center max-w-[170px]"
                           >
                             {member.email}
                           </a>

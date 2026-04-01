@@ -111,7 +111,7 @@ export default function Footer() {
                 href="https://site.ieee.org/sb-moratuwa/chapters/robotics-and-automation-society/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-opacity hover:opacity-80"
+                className="w-[220px] sm:w-[240px] transition-opacity hover:opacity-80"
                 aria-label="IEEE Robotics and Automation Society"
               >
                 <Image
@@ -119,14 +119,14 @@ export default function Footer() {
                   alt="IEEE RAS Logo"
                   width={240}
                   height={100}
-                  className="h-16 w-auto object-contain object-left"
+                  className="h-auto w-full object-contain object-left"
                 />
               </a>
               <a
                 href="https://site.ieee.org/sb-moratuwa/chapters/women-in-engineering/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-opacity hover:opacity-80"
+                className="w-[220px] sm:w-[240px] transition-opacity hover:opacity-80"
                 aria-label="IEEE Women in Engineering"
               >
                 <Image
@@ -134,7 +134,7 @@ export default function Footer() {
                   alt="IEEE WIE Logo"
                   width={220}
                   height={90}
-                  className="h-14 w-auto object-contain object-left"
+                  className="h-auto w-full object-contain object-left"
                 />
               </a>
             </div>
