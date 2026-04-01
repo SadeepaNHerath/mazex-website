@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useFormStatus, createPortal } from "react-dom";
 import Link from "next/link";
 import FormattedPickerInput from "@/components/FormattedPickerInput";
@@ -149,23 +149,59 @@ function ChoiceField({
 
 function ClientFileField({
   name,
-  field,
   error,
   label,
+  selectedFile,
+  onFileChange,
+  restoreKey,
 }: {
   name: string;
-  field: FieldDefinition;
   error?: string;
   label: React.ReactNode;
+  selectedFile: File | null;
+  onFileChange: (file: File | null) => void;
+  restoreKey: number;
 }) {
-  const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-    };
-  }, [previewUrl]);
+    if (!selectedFile || !selectedFile.type.startsWith("image/")) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    const nextPreviewUrl = URL.createObjectURL(selectedFile);
+    setPreviewUrl(nextPreviewUrl);
+    return () => URL.revokeObjectURL(nextPreviewUrl);
+  }, [selectedFile]);
+
+  useEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
+
+    if (!selectedFile) {
+      if (input.value) input.value = "";
+      return;
+    }
+
+    const existingFile = input.files?.[0];
+    const isSynced =
+      existingFile &&
+      existingFile.name === selectedFile.name &&
+      existingFile.size === selectedFile.size &&
+      existingFile.lastModified === selectedFile.lastModified;
+
+    if (isSynced) return;
+
+    try {
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(selectedFile);
+      input.files = dataTransfer.files;
+    } catch {
+      // If the browser refuses programmatic file assignment, we still retain the file in client state.
+    }
+  }, [selectedFile, restoreKey]);
 
   return (
     <div>
@@ -176,28 +212,24 @@ function ClientFileField({
         }`}
       >
         <input
+          ref={inputRef}
           id={name}
           name={name}
           type="file"
           accept="image/jpeg,image/png,image/webp,application/pdf,.doc,.docx"
           onChange={(e) => {
             const selectedFile = e.target.files?.[0] ?? null;
-            setFile(selectedFile);
-            if (selectedFile && selectedFile.type.startsWith("image/")) {
-              setPreviewUrl(URL.createObjectURL(selectedFile));
-            } else {
-              setPreviewUrl(null);
-            }
+            onFileChange(selectedFile);
           }}
           className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
         />
         <div className="pointer-events-none flex flex-col items-center justify-center">
-          {file ? (
+          {selectedFile ? (
             <>
               {previewUrl ? (
                 <div className="relative mb-4 h-28 w-28 overflow-hidden rounded-xl border border-white/10 shadow-lg ring-1 ring-white/20 sm:h-32 sm:w-32">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={previewUrl} alt={file.name} className="h-full w-full object-cover transition-transform group-hover:scale-110" />
+                  <img src={previewUrl} alt={selectedFile.name} className="h-full w-full object-cover transition-transform group-hover:scale-110" />
                 </div>
               ) : (
                 <div className="mb-4 rounded-full bg-emerald-500/10 p-3.5 text-emerald-400 ring-1 ring-emerald-500/30 transition-transform group-hover:scale-105">
@@ -205,7 +237,7 @@ function ClientFileField({
                 </div>
               )}
               <p className="truncate px-4 text-[15px] font-medium text-slate-200">
-                {file.name}
+                {selectedFile.name}
               </p>
               <p className="mt-1 text-[13px] text-emerald-500/80">
                 File attached successfully
@@ -236,11 +268,17 @@ function RenderField({
   name,
   error,
   defaultValue,
+  selectedFile,
+  onFileChange,
+  restoreKey,
 }: {
   field: FieldDefinition;
   name: string;
   error?: string;
   defaultValue?: string | string[];
+  selectedFile?: File | null;
+  onFileChange?: (file: File | null) => void;
+  restoreKey: number;
 }) {
   const label = (
     <label
@@ -290,8 +328,10 @@ function RenderField({
     return (
       <ClientFileField
         name={name}
-        field={field}
         error={error}
+        selectedFile={selectedFile ?? null}
+        onFileChange={onFileChange ?? (() => undefined)}
+        restoreKey={restoreKey}
         label={
           <>
             {label}
@@ -356,6 +396,7 @@ export default function PublicRegistrationForm({
   const [currentPage, setCurrentPage] = useState(0);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<Record<string, File | null>>({});
 
   useEffect(() => {
     setIsMounted(true);
@@ -442,9 +483,8 @@ export default function PublicRegistrationForm({
           if (checks.length === 0) hasError = true;
         } else if (f.type === "file") {
           const input = formEl.elements.namedItem(name) as HTMLInputElement;
-          const previouslyUploaded = state.fields?.[name]; // Has a previous valid file? (Appwrite doesn't pass back file inputs in state, so we just check input)
-          if (!input || !input.files?.length) {
-            // Note: client side state retention for files gets tricky, so this simple check suffices for new submissions
+          const retainedFile = selectedFiles[name];
+          if (!input || (!input.files?.length && !retainedFile)) {
             hasError = true;
           }
         } else {
@@ -478,6 +518,19 @@ export default function PublicRegistrationForm({
     setTimeout(() => {
       document.getElementById("registration-form-top")?.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 10);
+  };
+
+  const handleFileChange = (name: string, file: File | null) => {
+    setSelectedFiles((current) => {
+      if (!file) {
+        if (!(name in current)) return current;
+        const next = { ...current };
+        delete next[name];
+        return next;
+      }
+
+      return { ...current, [name]: file };
+    });
   };
 
   if (state.status === "success") {
@@ -595,6 +648,9 @@ export default function PublicRegistrationForm({
                             name={name}
                             error={state.fieldErrors[name]}
                             defaultValue={state.fields?.[name]}
+                            selectedFile={selectedFiles[name] ?? null}
+                            onFileChange={(file) => handleFileChange(name, file)}
+                            restoreKey={state.toastKey}
                           />
                         </div>
                       );
@@ -676,6 +732,9 @@ export default function PublicRegistrationForm({
                                 name={name}
                                 error={state.fieldErrors[name]}
                                 defaultValue={state.fields?.[name]}
+                                selectedFile={selectedFiles[name] ?? null}
+                                onFileChange={(file) => handleFileChange(name, file)}
+                                restoreKey={state.toastKey}
                               />
                             </div>
                           );
