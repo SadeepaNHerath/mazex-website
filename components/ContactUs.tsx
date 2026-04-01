@@ -44,7 +44,7 @@ const TEAM_MEMBERS = [
     name: "M.A.N.S.Mewanya",
     role: "Team handling lead",
     phone: "0772042592",
-    email: "", // User did not provide email
+    email: "niyumimewanya00@gmail.com",
     image: "/images/team/Team_handling_lead_DP.png",
   },
 ];
