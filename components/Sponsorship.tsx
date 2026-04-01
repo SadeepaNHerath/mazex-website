@@ -145,7 +145,7 @@ export default function Sponsorship({
           </h3>
           
           <a
-            href="mailto:contact@mazex.lk"
+            href="mailto:mazex@knurdz.org"
             className="inline-flex items-center justify-center rounded-full bg-[#F8FAFC] px-7 py-3 font-bold text-[#3b0764] shadow-[0_4px_14px_0_rgba(255,255,255,0.2)] transition-all hover:scale-105 hover:bg-white active:scale-95"
           >
             Contact Us
