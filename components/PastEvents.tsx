@@ -32,12 +32,12 @@ export default function PastEvents() {
     setActiveSlide(index);
   }, []);
 
-  // Auto-advance carousel every 2s, pause on hover or when modal is open
+  // Auto-advance carousel every 5s, pause on hover or when modal is open
   useEffect(() => {
     if (isCarouselHovered || selectedEventIndex !== null) return;
     const timer = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % PAST_EVENTS.length);
-    }, 2000);
+    }, 5000);
     return () => clearInterval(timer);
   }, [isCarouselHovered, selectedEventIndex]);
 
@@ -203,7 +203,7 @@ export default function PastEvents() {
                   }}
                   transition={{
                     type: "tween",
-                    duration: 0.8,
+                    duration: 1,
                     ease: "easeInOut",
                   }}
                   onClick={() => {
@@ -340,7 +340,7 @@ export default function PastEvents() {
                     key={activeImageIndex}
                     initial={{ opacity: 0, scale: 0.98 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.45 }}
                     className="relative aspect-[3/2] w-full max-w-5xl max-h-[55vh] sm:max-h-[70vh] overflow-hidden rounded-xl shadow-2xl shadow-black/80 border border-white/10"
                   >
                     <img
