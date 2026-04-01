@@ -95,10 +95,10 @@ const Hexagon = ({
   <motion.div
     variants={hexVariants}
     custom={custom}
-    className={`relative aspect-[0.866/1] w-full ${className}`}
+    className={`group relative aspect-[0.866/1] w-full pointer-events-none ${className}`}
   >
     <div
-      className={`absolute inset-0 bg-gradient-to-br transition-all duration-500 ${
+      className={`absolute inset-0 bg-gradient-to-br transition-all duration-500 pointer-events-none ${
         isCenter
           ? "from-[#A855F7] to-[#818CF8] opacity-25 blur-[30px]"
           : "from-[#A855F7]/30 to-[#818CF8]/30 opacity-0 group-hover:opacity-100 blur-[20px]"
@@ -108,8 +108,8 @@ const Hexagon = ({
       }}
     />
     <div
-      className={`group relative h-full w-full transition-all duration-500 ${
-        !isCenter ? "hover:-translate-y-2" : ""
+      className={`relative h-full w-full transition-all duration-500 pointer-events-auto ${
+        !isCenter ? "group-hover:-translate-y-2" : ""
       }`}
       style={{
         clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
@@ -169,7 +169,7 @@ export default function ContactUs() {
           className="relative flex flex-col items-center justify-center gap-8 lg:gap-0 lg:h-[680px]"
         >
           {/* CENTER HUB */}
-          <div className="lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 w-full max-w-[240px] z-30 order-first lg:order-none">
+          <div className="lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 w-full max-w-[240px] z-30 order-first lg:order-none pointer-events-none">
             <Hexagon isCenter>
               <div className="flex flex-col items-center">
                 <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 backdrop-blur-md ring-1 ring-white/20 shadow-lg">
@@ -193,7 +193,7 @@ export default function ContactUs() {
             return (
               <div
                 key={member.email}
-                className="w-full max-w-[240px] lg:absolute lg:top-1/2 lg:left-1/2"
+                className="w-full max-w-[240px] lg:absolute lg:top-1/2 lg:left-1/2 lg:z-10 pointer-events-none"
                 style={{
                   '--tx': `${pos.x}px`,
                   '--ty': `${pos.y}px`
