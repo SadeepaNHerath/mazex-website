@@ -7,6 +7,7 @@ import {
   Loader2,
   Mail,
   Radio,
+  RefreshCw,
   Search,
   Send,
   ShieldAlert,
@@ -14,6 +15,7 @@ import {
 } from "lucide-react";
 import {
   sendContactEmailAction,
+  syncPendingContactsAction,
   type AdminContactMailActionState,
 } from "@/app/admin/contacts/actions";
 import {
@@ -73,6 +75,25 @@ function SendEmailButton({ disabled }: { disabled: boolean }) {
     >
       {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
       {pending ? "Sending broadcast..." : "Send broadcast"}
+    </button>
+  );
+}
+
+function SyncPendingButton({ disabled }: { disabled: boolean }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={disabled || pending}
+      className="inline-flex items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-900 shadow-sm transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900"
+    >
+      {pending ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <RefreshCw className="h-4 w-4" />
+      )}
+      {pending ? "Syncing contacts..." : "Sync pending contacts"}
     </button>
   );
 }
@@ -184,7 +205,8 @@ export default function AdminContactsMailer({
 }: {
   contacts: RegistrationEmailContact[];
 }) {
-  const [state, dispatch] = useActionState(sendContactEmailAction, IDLE);
+  const [sendState, sendDispatch] = useActionState(sendContactEmailAction, IDLE);
+  const [syncState, syncDispatch] = useActionState(syncPendingContactsAction, IDLE);
   const [search, setSearch] = useState("");
   const deferredSearch = useDeferredValue(search);
   const [segmentKey, setSegmentKey] = useState<RegistrationContactSegmentKey>("all");
@@ -195,6 +217,10 @@ export default function AdminContactsMailer({
   const visibleContacts = filteredContacts.filter((contact) =>
     contactBelongsToSegment(contact, segmentKey),
   );
+  const syncedContactsCount = countRegistrationContactsForSegment(contacts, "all", {
+    syncedOnly: true,
+  });
+  const pendingContactsCount = contacts.length - syncedContactsCount;
   const segmentSummaries = REGISTRATION_CONTACT_SEGMENTS.map((segment) => ({
     ...segment,
     totalCount: countRegistrationContactsForSegment(contacts, segment.key),
@@ -227,9 +253,7 @@ export default function AdminContactsMailer({
   }
 
   return (
-    <form action={dispatch} className="space-y-6">
-      <input type="hidden" name="segmentKey" value={segmentKey} />
-
+    <div className="space-y-6">
       <div className="space-y-3">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
@@ -240,7 +264,8 @@ export default function AdminContactsMailer({
             that audience.
           </p>
         </div>
-        <ContactMailNotice state={state} />
+        <ContactMailNotice state={syncState} />
+        <ContactMailNotice state={sendState} />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
@@ -256,24 +281,31 @@ export default function AdminContactsMailer({
                     Registered contacts
                   </p>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {contacts.length} total,{" "}
-                    {countRegistrationContactsForSegment(contacts, "all", {
-                      syncedOnly: true,
-                    })}{" "}
-                    synced to Resend
+                    {contacts.length} total, {syncedContactsCount} synced to Resend
                   </p>
                 </div>
               </div>
-              <label className="relative block">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
-                <input
-                  type="search"
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Search contacts or forms"
-                  className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-3 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 lg:w-72 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
-                />
-              </label>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                {pendingContactsCount > 0 ? (
+                  <form action={syncDispatch}>
+                    <SyncPendingButton disabled={false} />
+                  </form>
+                ) : (
+                  <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
+                    All contacts synced
+                  </span>
+                )}
+                <label className="relative block">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+                  <input
+                    type="search"
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder="Search contacts or forms"
+                    className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-3 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 lg:w-72 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
+                  />
+                </label>
+              </div>
             </div>
           </div>
 
@@ -359,7 +391,9 @@ export default function AdminContactsMailer({
             </div>
           </div>
 
-          <div className="mt-6 space-y-5">
+          <form action={sendDispatch} className="mt-6 space-y-5">
+            <input type="hidden" name="segmentKey" value={segmentKey} />
+
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                 Segment
@@ -422,9 +456,9 @@ export default function AdminContactsMailer({
             </div>
 
             <SendEmailButton disabled={!canSend} />
-          </div>
+          </form>
         </section>
       </div>
-    </form>
+    </div>
   );
 }

@@ -72,7 +72,7 @@ const client = new Client().setEndpoint(endpoint).setProject(projectId).setKey(a
 const functions = new Functions(client);
 
 function isSecretVariable(key) {
-  return key === "RESEND_API_KEY";
+  return key === "RESEND_API_KEY" || key === "RESEND_MARKETING_API_KEY";
 }
 
 async function ensureFunction() {

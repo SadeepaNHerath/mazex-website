@@ -6,12 +6,24 @@ import type { RegistrationContactSegmentKey } from "@/lib/registration-contact-s
 
 const DEFAULT_RESEND_CONTACTS_FUNCTION_ID = "registration_resend_contacts";
 
-type ContactBroadcastExecutionResponse = {
+type ResendContactsExecutionResponse = {
   ok?: boolean;
+  message?: string;
+};
+
+type ContactBroadcastExecutionResponse = ResendContactsExecutionResponse & {
   broadcastId?: string;
   segmentKey?: RegistrationContactSegmentKey;
   segmentName?: string;
-  message?: string;
+};
+
+type ContactBackfillExecutionResponse = ResendContactsExecutionResponse & {
+  processedCount?: number;
+  syncedCount?: number;
+  skippedCount?: number;
+  failedCount?: number;
+  nextCursor?: string | null;
+  hasMore?: boolean;
 };
 
 export class ContactBroadcastConfigError extends Error {
@@ -33,9 +45,9 @@ function getContactBroadcastConfig() {
   };
 }
 
-function parseExecutionResponseBody(
+function parseExecutionResponseBody<T extends ResendContactsExecutionResponse>(
   responseBody: string,
-): ContactBroadcastExecutionResponse | null {
+): T | null {
   const normalized = trim(responseBody);
   if (!normalized) return null;
 
@@ -45,7 +57,7 @@ function parseExecutionResponseBody(
       return null;
     }
 
-    return parsed as ContactBroadcastExecutionResponse;
+    return parsed as T;
   } catch {
     return null;
   }
@@ -65,6 +77,43 @@ function getExecutionErrorMessage(error: unknown) {
     : "Unable to send the marketing broadcast right now.";
 }
 
+function getNumericValue(value: unknown) {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
+async function executeResendContactsFunction<T extends ResendContactsExecutionResponse>(
+  body: Record<string, unknown>,
+) {
+  const { functionId } = getContactBroadcastConfig();
+  const functions = new Functions(createAppwriteAdminClient());
+  const execution = await functions.createExecution({
+    functionId,
+    async: false,
+    method: ExecutionMethod.POST,
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  const response = parseExecutionResponseBody<T>(execution.responseBody);
+  const fallbackMessage =
+    response?.message ||
+    trim(execution.errors) ||
+    trim(execution.responseBody) ||
+    "The Resend contact function did not return a usable response.";
+
+  if (
+    execution.status !== "completed" ||
+    execution.responseStatusCode >= 400 ||
+    !response?.ok
+  ) {
+    throw new Error(fallbackMessage);
+  }
+
+  return response;
+}
+
 export async function sendRegistrationContactBroadcast(params: {
   segmentKey: RegistrationContactSegmentKey;
   subject: string;
@@ -81,42 +130,37 @@ export async function sendRegistrationContactBroadcast(params: {
     throw new Error("Enter the email content.");
   }
 
-  const { functionId } = getContactBroadcastConfig();
-  const functions = new Functions(createAppwriteAdminClient());
-  const execution = await functions.createExecution({
-    functionId,
-    async: false,
-    method: ExecutionMethod.POST,
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      action: "send-broadcast",
-      segmentKey: params.segmentKey,
-      subject,
-      content,
-    }),
+  const response = await executeResendContactsFunction<ContactBroadcastExecutionResponse>({
+    action: "send-broadcast",
+    segmentKey: params.segmentKey,
+    subject,
+    content,
   });
-
-  const response = parseExecutionResponseBody(execution.responseBody);
-  const fallbackMessage =
-    response?.message ||
-    trim(execution.errors) ||
-    trim(execution.responseBody) ||
-    "The Resend contact function did not return a usable response.";
-
-  if (
-    execution.status !== "completed" ||
-    execution.responseStatusCode >= 400 ||
-    !response?.ok
-  ) {
-    throw new Error(fallbackMessage);
-  }
 
   return {
     broadcastId: trim(response.broadcastId),
     segmentKey: (response.segmentKey || params.segmentKey) as RegistrationContactSegmentKey,
     segmentName: trim(response.segmentName) || null,
+  };
+}
+
+export async function syncExistingRegistrationContacts(params?: {
+  batchSize?: number;
+  cursorAfter?: string | null;
+}) {
+  const response = await executeResendContactsFunction<ContactBackfillExecutionResponse>({
+    action: "sync-existing-submissions",
+    batchSize: params?.batchSize ?? 100,
+    cursorAfter: trim(params?.cursorAfter),
+  });
+
+  return {
+    processedCount: getNumericValue(response.processedCount),
+    syncedCount: getNumericValue(response.syncedCount),
+    skippedCount: getNumericValue(response.skippedCount),
+    failedCount: getNumericValue(response.failedCount),
+    nextCursor: trim(response.nextCursor) || null,
+    hasMore: Boolean(response.hasMore),
   };
 }
 

@@ -89,11 +89,28 @@ function normalizeEmailAddress(value) {
 
 function normalizeRegistrationKind(value) {
   const normalized = trim(value).toLowerCase();
-  if (normalized === "competition" || normalized === "workshop") {
-    return normalized;
+  if (normalized.includes("competition")) {
+    return "competition";
+  }
+
+  if (normalized.includes("workshop")) {
+    return "workshop";
   }
 
   return null;
+}
+
+function clampInteger(value, options = {}) {
+  const min = Number.isInteger(options.min) ? options.min : 1;
+  const max = Number.isInteger(options.max) ? options.max : 100;
+  const fallback = Number.isInteger(options.fallback) ? options.fallback : min;
+  const parsed = Number.parseInt(trim(value), 10);
+
+  if (!Number.isFinite(parsed)) {
+    return fallback;
+  }
+
+  return Math.min(max, Math.max(min, parsed));
 }
 
 function getRequiredEnv(key) {
@@ -128,6 +145,13 @@ function createUsersService(req) {
   return new Users(createClient(req));
 }
 
+function getSubmissionsCollectionId() {
+  return (
+    process.env.APPWRITE_COLLECTION_REGISTRATION_SUBMISSIONS?.trim() ||
+    DEFAULT_SUBMISSIONS_COLLECTION_ID
+  );
+}
+
 function getContactsCollectionId() {
   return (
     process.env.APPWRITE_COLLECTION_REGISTRATION_CONTACTS?.trim() ||
@@ -140,11 +164,24 @@ function getEmailProviderId() {
 }
 
 function getResendApiKey() {
-  return getRequiredEnv("RESEND_API_KEY");
+  const value =
+    process.env.RESEND_MARKETING_API_KEY?.trim() ||
+    process.env.RESEND_API_KEY?.trim() ||
+    "";
+
+  if (!value) {
+    throw new Error(
+      "Missing required function environment variable: RESEND_MARKETING_API_KEY or RESEND_API_KEY",
+    );
+  }
+
+  return value;
 }
 
 function hasResendApiKey() {
-  return Boolean(getOptionalEnv("RESEND_API_KEY"));
+  return Boolean(
+    getOptionalEnv("RESEND_MARKETING_API_KEY") || getOptionalEnv("RESEND_API_KEY"),
+  );
 }
 
 function getResendMarketingFrom() {
@@ -228,11 +265,23 @@ function getContactUserId(email) {
   return buildScopedId(CONTACT_ID_PREFIX, email);
 }
 
-function resolveNameProperty(name) {
+function resolveResendContactName(name) {
   const normalized = trimNullable(name);
-  if (!normalized) return null;
+  if (!normalized) {
+    return null;
+  }
 
-  return { name: normalized };
+  const [firstName, ...rest] = normalized.split(/\s+/u).filter(Boolean);
+  if (!firstName) {
+    return null;
+  }
+
+  const lastName = rest.join(" ").trim();
+
+  return {
+    firstName,
+    lastName: lastName || null,
+  };
 }
 
 function getBroadcastSegmentKey(value) {
@@ -264,6 +313,14 @@ async function resendRequest(path, params = {}) {
       data?.error?.message ||
       text ||
       `Resend API request failed with status ${response.status}.`;
+
+    if (trim(message).toLowerCase().includes("restricted to only send emails")) {
+      throw new ResendRequestError(
+        "The configured Resend API key has sending-only access. Use a full_access key in RESEND_MARKETING_API_KEY or RESEND_API_KEY.",
+        response.status,
+        data,
+      );
+    }
 
     throw new ResendRequestError(message, response.status, data);
   }
@@ -350,25 +407,16 @@ async function createResendContact(params) {
     segments: params.segmentIds.map((segmentId) => ({ id: segmentId })),
   };
 
-  if (params.properties) {
-    body.properties = params.properties;
+  if (params.firstName) {
+    body.firstName = params.firstName;
+  }
+
+  if (params.lastName) {
+    body.lastName = params.lastName;
   }
 
   return resendRequest("/contacts", {
     method: "POST",
-    body,
-  });
-}
-
-async function updateResendContact(params) {
-  const body = {};
-
-  if (params.properties) {
-    body.properties = params.properties;
-  }
-
-  return resendRequest(`/contacts/${encodeURIComponent(params.email)}`, {
-    method: "PATCH",
     body,
   });
 }
@@ -426,7 +474,7 @@ async function syncResendContact(params) {
   }
 
   const uniqueSegmentIds = [...new Set(desiredSegmentIds.filter(Boolean))];
-  const properties = resolveNameProperty(params.name);
+  const resendContactName = resolveResendContactName(params.name);
   let contact = await getResendContactByEmail(params.email);
 
   if (!contact) {
@@ -434,7 +482,8 @@ async function syncResendContact(params) {
       contact = await createResendContact({
         email: params.email,
         segmentIds: uniqueSegmentIds,
-        properties,
+        firstName: resendContactName?.firstName,
+        lastName: resendContactName?.lastName,
       });
     } catch (error) {
       if (
@@ -450,13 +499,6 @@ async function syncResendContact(params) {
 
   if (!contact) {
     throw new Error(`Unable to create or retrieve the Resend contact for ${params.email}.`);
-  }
-
-  if (properties) {
-    await updateResendContact({
-      email: params.email,
-      properties,
-    });
   }
 
   for (const segmentId of uniqueSegmentIds) {
@@ -815,6 +857,25 @@ async function upsertContactDocument(req, params) {
   return databases.updateDocument(databaseId, collectionId, documentId, data);
 }
 
+async function listSubmissionDocuments(req, options = {}) {
+  const databases = createDatabasesService(req);
+  const databaseId = getRequiredEnv("APPWRITE_DB_ID");
+  const collectionId = getSubmissionsCollectionId();
+  const limit = clampInteger(options.limit, {
+    min: 1,
+    max: 100,
+    fallback: 50,
+  });
+  const cursorAfter = trim(options.cursorAfter);
+  const queries = [Query.orderAsc("$createdAt"), Query.limit(limit)];
+
+  if (cursorAfter) {
+    queries.push(Query.cursorAfter(cursorAfter));
+  }
+
+  return databases.listDocuments(databaseId, collectionId, queries);
+}
+
 function pickSubmissionEmailField(form, fields) {
   const submissionFields = fields.filter(
     (field) => field.scope === "submission" && field.type !== "page_break",
@@ -854,18 +915,17 @@ function pickSubmissionNameField(form, fields) {
   );
 }
 
-async function syncSubmissionContact(context) {
-  const { req, res, log } = context;
-  const payload = readPayload(req);
+async function syncSubmissionPayload(context, payload) {
+  const { req, log } = context;
   if (!payload || typeof payload !== "object") {
     log("Resend contacts function received an invalid submission payload.");
-    return res.json({ ok: true, skipped: "invalid_payload" });
+    return { ok: true, skipped: "invalid_payload" };
   }
 
   const formId = trim(payload.formId);
   if (!formId) {
     log("Resend contacts function received a submission without formId.");
-    return res.json({ ok: true, skipped: "missing_form_id" });
+    return { ok: true, skipped: "missing_form_id" };
   }
 
   const databases = createDatabasesService(req);
@@ -884,7 +944,7 @@ async function syncSubmissionContact(context) {
   const registrationKind = normalizeRegistrationKind(form.kind);
   if (!registrationKind) {
     log(`Skipping contact sync because form ${formId} has an unsupported kind.`);
-    return res.json({ ok: true, skipped: "unsupported_form_kind" });
+    return { ok: true, skipped: "unsupported_form_kind" };
   }
 
   const parsedAnswers = parseJson(payload.answersJson, {});
@@ -895,13 +955,13 @@ async function syncSubmissionContact(context) {
   const emailField = pickSubmissionEmailField(form, fieldsResult.documents);
   if (!emailField) {
     log(`Skipping contact sync because form ${formId} has no submission email field.`);
-    return res.json({ ok: true, skipped: "missing_email_field" });
+    return { ok: true, skipped: "missing_email_field" };
   }
 
   const recipientEmail = normalizeEmailAddress(answers[emailField.key]);
   if (!recipientEmail || !EMAIL_PATTERN.test(recipientEmail)) {
     log(`Skipping contact sync because the submission email is invalid: ${recipientEmail}`);
-    return res.json({ ok: true, skipped: "invalid_recipient_email" });
+    return { ok: true, skipped: "invalid_recipient_email" };
   }
 
   const nameField = pickSubmissionNameField(form, fieldsResult.documents);
@@ -943,7 +1003,7 @@ async function syncSubmissionContact(context) {
     log(
       `Skipping Resend sync for ${recipientEmail} because RESEND_API_KEY is not configured.`,
     );
-    return res.json({ ok: true, skipped: "missing_resend_api_key" });
+    return { ok: true, skipped: "missing_resend_api_key" };
   }
 
   const resendContactId = await syncResendContact({
@@ -970,7 +1030,71 @@ async function syncSubmissionContact(context) {
   });
 
   log(`Synced ${recipientEmail} to Resend for the ${registrationKind} segment(s).`);
-  return res.json({ ok: true, resendContactId });
+  return { ok: true, resendContactId };
+}
+
+async function syncSubmissionContact(context) {
+  const { req, res } = context;
+  return res.json(await syncSubmissionPayload(context, readPayload(req)));
+}
+
+async function backfillExistingSubmissions(context) {
+  const { req, res, log } = context;
+  const payload = readPayload(req);
+  const batchSize = clampInteger(payload?.batchSize, {
+    min: 1,
+    max: 100,
+    fallback: 100,
+  });
+  const cursorAfter = trim(payload?.cursorAfter);
+
+  if (!hasResendApiKey()) {
+    throw new Error("Missing required function environment variable: RESEND_API_KEY");
+  }
+
+  const page = await listSubmissionDocuments(req, {
+    limit: batchSize,
+    cursorAfter,
+  });
+  let processedCount = 0;
+  let syncedCount = 0;
+  let skippedCount = 0;
+  let failedCount = 0;
+  let nextCursor = "";
+
+  for (const submission of page.documents) {
+    processedCount += 1;
+    nextCursor = trim(submission?.$id) || nextCursor;
+
+    try {
+      const result = await syncSubmissionPayload(context, submission);
+      if (result?.skipped) {
+        skippedCount += 1;
+      } else {
+        syncedCount += 1;
+      }
+    } catch (caughtError) {
+      failedCount += 1;
+      const message =
+        caughtError instanceof Error ? caughtError.message : "Unknown submission backfill error.";
+      log(
+        `Failed to backfill submission ${trim(submission?.$id) || "(unknown id)"}: ${message}`,
+      );
+    }
+  }
+
+  const hasMore = page.documents.length === batchSize;
+
+  return res.json({
+    ok: true,
+    action: "sync-existing-submissions",
+    processedCount,
+    syncedCount,
+    skippedCount,
+    failedCount,
+    nextCursor: hasMore ? nextCursor || null : null,
+    hasMore,
+  });
 }
 
 async function sendBroadcastToSegment(context) {
@@ -1024,6 +1148,10 @@ export default async function syncRegistrationContactsToResend(context) {
     }
 
     const payload = readPayload(req);
+    if (payload?.action === "sync-existing-submissions") {
+      return await backfillExistingSubmissions(context);
+    }
+
     if (payload?.action === "send-broadcast") {
       return await sendBroadcastToSegment(context);
     }

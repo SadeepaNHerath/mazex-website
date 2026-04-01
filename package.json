@@ -7,6 +7,7 @@
     "appwrite:functions:push": "npm run appwrite:functions:prepare-env && appwrite push functions --with-variables",
     "appwrite:functions:deploy-confirmation": "npm run appwrite:functions:prepare-env && node scripts/deploy-registration-confirmation-function.mjs",
     "appwrite:functions:deploy-resend-contacts": "npm run appwrite:functions:prepare-env && node scripts/deploy-resend-contacts-function.mjs",
+    "appwrite:functions:backfill-resend-contacts": "node scripts/backfill-registration-resend-contacts.mjs",
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
