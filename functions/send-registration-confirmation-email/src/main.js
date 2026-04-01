@@ -412,21 +412,14 @@ function buildEmail(
     @media (prefers-color-scheme: dark) {
       body, .body-bg { background-color: #0a0a0f !important; }
       .email-container { background-color: #13131a !important; border-color: #1e1e2e !important; }
-      .header-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important; }
+      .header-bg { background-color: #000102 !important; }
       .content-cell { background-color: #13131a !important; }
       .text-dark, h3, h4, p, td, strong { color: #f1f5f9 !important; }
       .text-muted { color: #94a3b8 !important; }
       .border-color { border-color: #1e1e2e !important; }
       .sub-box { background-color: #1e1e2e !important; border-color: #27272a !important; }
-      .dark-logo { display: inline-block !important; max-height: 64px !important; }
-      .light-logo { display: none !important; max-height: 0 !important; overflow: hidden !important; }
-      .footer-dark-logo { display: inline-block !important; max-height: 34px !important; }
-      .footer-light-logo { display: none !important; max-height: 0 !important; overflow: hidden !important; }
     }
 
-    .dark-logo, .footer-dark-logo { display: none !important; max-height: 0 !important; overflow: hidden !important; }
-    [data-ogsc] .dark-logo, [data-ogsc] .footer-dark-logo { display: inline-block !important; max-height: none !important; }
-    [data-ogsc] .light-logo, [data-ogsc] .footer-light-logo { display: none !important; }
     [data-ogsc] .text-dark, [data-ogsc] h3, [data-ogsc] h4, [data-ogsc] p, [data-ogsc] td { color: #f1f5f9 !important; }
     [data-ogsc] .text-muted { color: #94a3b8 !important; }
     [data-ogsc] .body-bg { background-color: #0a0a0f !important; }
@@ -446,11 +439,10 @@ function buildEmail(
         
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center" class="email-container" style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); overflow: hidden; text-align: left;">
           
-          <!-- Gradient Header -->
+          <!-- Header -->
           <tr>
-            <td class="header-bg" style="padding: 36px 40px; text-align: center; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);">
-              <img class="light-logo header-logo" src="${assets.mazexLogo}" alt="MazeX" width="200" style="display: inline-block; height: auto; max-height: 64px; width: auto; max-width: 200px;" />
-              <img class="dark-logo header-logo" src="${assets.mazexLogoWhite}" alt="MazeX" width="200" style="display: none; height: auto; max-height: 64px; width: auto; max-width: 200px;" />
+            <td class="header-bg" style="padding: 36px 40px; text-align: center; background-color: #000102;">
+              <img src="${assets.mazexLogoWhite}" alt="MazeX" width="200" style="display: inline-block; height: auto; max-height: 64px; width: auto; max-width: 200px;" />
             </td>
           </tr>
           
@@ -482,10 +474,9 @@ function buildEmail(
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center" style="width: 100%; max-width: 600px; margin: 0 auto;">
           <tr>
             <td style="padding: 24px 0 8px; text-align: center;">
-              <!-- Light mode footer logo -->
-              <img class="footer-light-logo" src="${assets.knurdzPoweredByLight}" alt="Powered by Knurdz" height="34" style="display: inline-block; height: 34px; width: auto; opacity: 0.7;" />
-              <!-- Dark mode footer logo -->
-              <img class="footer-dark-logo" src="${assets.knurdzPoweredBy}" alt="Powered by Knurdz" height="34" style="display: none; height: 34px; width: auto; opacity: 0.7;" />
+              <div style="display: inline-block; background-color: #ffffff; padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; opacity: 0.85;">
+                <img src="${assets.knurdzPoweredByLight}" alt="Powered by Knurdz" height="34" style="display: block; height: 34px; width: auto;" />
+              </div>
             </td>
           </tr>
           <tr>

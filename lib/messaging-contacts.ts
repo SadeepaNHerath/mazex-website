@@ -529,17 +529,12 @@ function buildCustomEmailHtml(content: string) {
       .text-muted { color: #94a3b8 !important; }
       .divider-line { border-color: #1e1e2e !important; }
       .footer-note { color: #64748b !important; }
-      .footer-dark-logo { display: inline-block !important; max-height: 34px !important; }
-      .footer-light-logo { display: none !important; max-height: 0 !important; overflow: hidden !important; }
     }
 
-    .footer-dark-logo { display: none !important; max-height: 0 !important; overflow: hidden !important; }
     [data-ogsc] p { color: #f1f5f9 !important; }
     [data-ogsc] .text-muted { color: #94a3b8 !important; }
     [data-ogsc] .body-bg { background-color: #0a0a0f !important; }
     [data-ogsc] .email-container { background-color: #13131a !important; }
-    [data-ogsc] .footer-dark-logo { display: inline-block !important; max-height: none !important; }
-    [data-ogsc] .footer-light-logo { display: none !important; }
   </style>
 </head>
 <body class="body-bg" style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased;">
@@ -588,10 +583,9 @@ function buildCustomEmailHtml(content: string) {
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center" style="width: 100%; max-width: 600px; margin: 0 auto;">
           <tr>
             <td style="padding: 24px 0 8px; text-align: center;">
-              <!-- Light mode footer logo -->
-              <img class="footer-light-logo" src="${assets.knurdzPoweredByLight}" alt="Powered by Knurdz" height="34" style="display: inline-block; height: 34px; width: auto; opacity: 0.7;" />
-              <!-- Dark mode footer logo -->
-              <img class="footer-dark-logo" src="${assets.knurdzPoweredBy}" alt="Powered by Knurdz" height="34" style="display: none; height: 34px; width: auto; opacity: 0.7;" />
+              <div style="display: inline-block; background-color: #ffffff; padding: 10px 20px; border-radius: 12px; border: 1px solid #e2e8f0; opacity: 0.85;">
+                <img src="${assets.knurdzPoweredByLight}" alt="Powered by Knurdz" height="34" style="display: block; height: 34px; width: auto;" />
+              </div>
             </td>
           </tr>
         </table>
