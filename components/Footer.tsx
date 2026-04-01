@@ -61,18 +61,26 @@ export default function Footer() {
                 height={78}
                 className="h-16 w-auto object-contain"
               />
-              <Image
-                src="/images/knurdz/knurdz-poweredby.svg"
-                alt="Powered by Knurdz"
-                width={140}
-                height={78}
-                className="h-14 w-auto object-contain"
-              />
+              <a
+                href="https://knurdz.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-opacity hover:opacity-80"
+                aria-label="Powered by Knurdz"
+              >
+                <Image
+                  src="/images/knurdz/knurdz-poweredby.svg"
+                  alt="Powered by Knurdz"
+                  width={140}
+                  height={78}
+                  className="h-14 w-auto object-contain"
+                />
+              </a>
             </div>
 
             <p className="mb-6 max-w-xl text-sm leading-relaxed text-[#9e8db3]">
-              Micromouse Workshop Series &amp; Competition organized by IEEE
-              RAS and WIE at the University of Moratuwa.
+              Micromouse Workshop Series &amp; Competition organized by IEEE RAS
+              and WIE at the University of Moratuwa.
             </p>
 
             <a
