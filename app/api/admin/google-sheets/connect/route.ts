@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
   const state = crypto.randomUUID();
   const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
   const protocol = request.headers.get("x-forwarded-proto") || (host?.includes("localhost") ? "http" : "https");
-  const origin = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || (host ? `${protocol}://${host}` : request.nextUrl.origin);
+  const origin = (host ? `${protocol}://${host}` : null) || process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || request.nextUrl.origin;
   const redirectUri = new URL("/api/admin/google-sheets/callback", origin).toString();
   const response = NextResponse.redirect(
     buildGoogleSheetsOAuthUrl({
