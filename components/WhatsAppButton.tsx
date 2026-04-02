@@ -1,6 +1,6 @@
 import { FaWhatsapp } from "react-icons/fa";
 
-const whatsappLink = "https://wa.me/94751579262";
+const whatsappLink = "https://whatsapp.com/channel/0029Vb7eiSyDTkJwKt2PQT2W";
 
 export default function WhatsAppButton() {
   return (
