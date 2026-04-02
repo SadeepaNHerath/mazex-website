@@ -71,13 +71,16 @@ async function isSameOriginSubmission() {
   const origin = requestHeaders.get("origin");
   if (!origin) return true;
 
-  const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
-  const protocol = requestHeaders.get("x-forwarded-proto");
-  if (!host) return false;
+  const hostHeader = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
+  const protocolHeader = requestHeaders.get("x-forwarded-proto");
+  if (!hostHeader) return false;
 
   try {
+    const host = hostHeader.split(",")[0].trim().split(":")[0];
+    const protocol = protocolHeader ? protocolHeader.split(",")[0].trim() : null;
+    
     const requestOrigin = new URL(origin);
-    return requestOrigin.host === host && (!protocol || requestOrigin.protocol === `${protocol}:`);
+    return requestOrigin.hostname === host && (!protocol || requestOrigin.protocol === `${protocol}:`);
   } catch {
     return false;
   }
