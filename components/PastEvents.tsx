@@ -123,7 +123,7 @@ export default function PastEvents() {
         </motion.h2>
 
         {/* Dynamic Event Title & Description Section */}
-        <div className="relative mb-14 text-center px-4 min-h-[120px] flex flex-col items-center">
+        <div className="relative mb-14 text-center px-4 h-[240px] sm:h-[180px] md:h-[160px] flex flex-col items-center justify-start">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSlide}
@@ -131,7 +131,7 @@ export default function PastEvents() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              className="flex flex-col items-center relative"
+              className="flex flex-col items-center relative h-full w-full justify-start"
             >
               {/* Ghost Text */}
               <motion.span
@@ -143,8 +143,9 @@ export default function PastEvents() {
               >
                 {(() => {
                   const title = PAST_EVENTS[activeSlide].title.toLowerCase();
-                  if (title.includes("gammaddata")) return "Gammedda";
+                  if (title.includes("naturenook")) return "Naturenook";
                   if (title.includes("robotics day")) return "Robotics";
+                  if (title.includes("hackelite")) return "Hackelite";
                   return PAST_EVENTS[activeSlide].title;
                 })()}
               </motion.span>

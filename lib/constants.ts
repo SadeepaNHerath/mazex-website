@@ -198,9 +198,9 @@ export const PAST_EVENTS = [
         images: ["/1.jpg", "/1-1.jpg", "/1-2.jpg"],
     },
     {
-        title: "Gammaddata IEEE Api",
+        title: "Naturenook 2024",
         description:
-            "A school workshop series introducing students to robotics and basic STEM concepts through interactive sessions and demonstrations.",
+            "A community-driven initiative by the IEEE Women in Engineering Affinity Group of University of Moratuwa focused on supporting underprivileged preschoolers through engaging activities, educational sessions, and collaborative efforts to nurture young minds and create a lasting positive impact",
         images: ["/2.jpg", "/2-1.jpg", "/2-2.jpg"],
     },
     {
@@ -208,6 +208,12 @@ export const PAST_EVENTS = [
         description:
             "An exhibition showcasing University of Moratuwa robotics projects, with keynote sessions from RoboticGen and Zone24 featuring live robot demonstrations.",
         images: ["/3.jpg", "/3-1.jpg", "/3-2.jpeg"],
+    },
+    {
+        title: "Hackelite 2.0",
+        description:
+            "innovation challenge by the IEEE WIE Student Branch Affinity Group of University of Moratuwa that brings together aspiring developers and innovators to collaborate, showcase their skills, and build impactful technological solutions.",
+        images: ["/4.jpeg", "/4-1.jpg"],
     },
 ];
 
