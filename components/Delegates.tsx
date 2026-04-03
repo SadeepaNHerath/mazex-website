@@ -37,11 +37,12 @@ export default function Delegates() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="theme-card p-8 sm:p-12"
+          className="maze-card p-8 sm:p-12 group"
         >
+          <div className="maze-card-scan" />
           <div className="relative z-10 flex flex-col items-center gap-8 md:flex-row">
             <div className="flex-shrink-0">
-              <div className="flex h-28 w-24 flex-col items-center justify-center rounded-[1.5rem] border border-[#2D374F] bg-[#111A31]/90 shadow-[0_0_1.875rem_rgba(168,85,247,0.12)] sm:h-32 sm:w-28">
+              <div className="flex h-28 w-24 flex-col items-center justify-center rounded-none border border-[#2D374F] bg-[#0d0914] shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all group-hover:border-[#A855F7]/40 sm:h-32 sm:w-28">
                 <svg fill="currentColor" className="h-16 w-16 text-[#C084FC] sm:h-22 sm:w-22" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 335.08 335.079" xmlSpace="preserve">
                   <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                   <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
@@ -71,7 +72,7 @@ export default function Delegates() {
             <div className="flex-shrink-0">
               <Link
                 href="/resources/delegate-booklet"
-                className="inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 text-base font-bold text-[#3B0764] shadow-[0_0.75rem_2rem_rgba(255,255,255,0.18)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#F8F6FF] hover:shadow-[0_1.125rem_3rem_rgba(255,255,255,0.25)] active:scale-[0.98]"
+                className="theme-button theme-button-register inline-flex items-center gap-3 rounded-full px-8 py-4 text-base font-bold"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.4}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />

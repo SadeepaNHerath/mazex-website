@@ -126,7 +126,7 @@ export default function Navbar({
 
   const theme = NAV_THEMES[navTheme];
   const adminButtonClassName =
-    "inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/16 bg-white/6 text-white shadow-[0_0.75rem_2rem_rgba(2,4,12,0.34)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-white/28 hover:bg-white/10";
+    "inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/16 bg-white/6 text-white shadow-[0_0.75rem_2rem_rgba(2,4,12,0.34)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-[#A855F7]/50 hover:bg-[#A855F7]/10";
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50">
@@ -230,7 +230,7 @@ export default function Navbar({
                 <a
                   href={registerHref}
                   onClick={() => setIsOpen(false)}
-                  className="theme-button theme-button-register mt-4 block rounded-full px-3.5 py-2 text-center font-medium"
+                  className="theme-button theme-button-register mt-4 block rounded-2xl px-3.5 py-2 text-center font-medium"
                 >
                   Register Now
                 </a>

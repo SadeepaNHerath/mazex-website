@@ -53,7 +53,7 @@ export default function Sponsorship({
                   href={partner.websiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative flex h-16 w-48 sm:h-20 sm:w-64 overflow-hidden items-center justify-center rounded bg-white p-1 sm:p-2 shadow-[0_0.5rem_1.875rem_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0.5rem_1.875rem_rgba(168,85,247,0.3)] hover:ring-2 hover:ring-[#A855F7]/50"
+                  className="relative flex h-16 w-48 sm:h-20 sm:w-64 overflow-hidden items-center justify-center rounded-none bg-white p-1 sm:p-2 shadow-[0_0.5rem_1.875rem_rgba(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]"
                 >
                   <motion.div
                     animate={{ translateX: ["-150%", "150%"] }}
@@ -77,7 +77,7 @@ export default function Sponsorship({
                   />
                 </a>
               ) : (
-                <div className="relative flex h-16 w-48 sm:h-20 sm:w-64 overflow-hidden items-center justify-center rounded bg-white p-1 sm:p-2 shadow-[0_0.5rem_1.875rem_rgba(0,0,0,0.12)]">
+                <div className="relative flex h-16 w-48 sm:h-20 sm:w-64 overflow-hidden items-center justify-center rounded-none bg-white p-1 sm:p-2 shadow-[0_0.5rem_1.875rem_rgba(0,0,0,0.12)]">
                   <motion.div
                     animate={{ translateX: ["-150%", "150%"] }}
                     transition={{
@@ -113,7 +113,7 @@ export default function Sponsorship({
                     rel="noopener noreferrer"
                     className="mt-2 flex items-center gap-2 text-sm font-medium tracking-wide text-[#9e8db3] transition-colors duration-300 hover:text-white"
                   >
-                    Visit Website
+                    View Site
                     <svg className="h-4 w-4 opacity-50 transition-opacity duration-300 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
@@ -152,7 +152,7 @@ export default function Sponsorship({
           
           <a
             href="mailto:mazex@knurdz.org"
-            className="inline-flex items-center justify-center rounded-full bg-[#F8FAFC] px-7 py-3 font-bold text-[#3b0764] shadow-[0_0.25rem_0.875rem_0_rgba(255,255,255,0.2)] transition-all hover:scale-105 hover:bg-white active:scale-95"
+            className="theme-button theme-button-register inline-flex items-center justify-center rounded-full px-7 py-3 font-bold"
           >
             Contact Us
           </a>

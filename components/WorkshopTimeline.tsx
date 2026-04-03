@@ -25,12 +25,15 @@ const MicromouseRobot = () => (
   </svg>
 );
 
-const WorkshopCardContent = ({ event }: { event: ResolvedWorkshopEvent }) => (
-  <div className="relative z-30 w-full overflow-hidden rounded-[18px] border border-[#2f2540] bg-[#0e0a14]/95 p-5 shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[24px] transition-colors duration-300 group hover:border-[#3b3150] sm:p-6">
-    <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-[#8A73A6] via-[#6B528F] to-transparent" />
+const WorkshopCardContent = ({ event, index = 0 }: { event: ResolvedWorkshopEvent; index?: number }) => (
+  <div className="maze-card relative z-30 w-full p-5 sm:p-6 !bg-[#07050d]/95 hover:!bg-[#07050d]">
+    <div 
+      className="maze-card-scan" 
+      style={{ animationDelay: `${index * 1.2}s` }}
+    />
     <div className="absolute top-0 left-0 bottom-0 w-[1.5px] bg-gradient-to-b from-[#8A73A6] via-[#6B528F] to-transparent" />
 
-    <div className="mb-3 inline-flex items-center gap-2 rounded-md border border-[#403357] bg-[#1C1635] px-2.5 py-1.5 shadow-sm sm:mb-4">
+    <div className="mb-3 inline-flex items-center gap-2 rounded-none border border-[#403357] bg-[#1C1635] px-2.5 py-1.5 shadow-sm sm:mb-4">
       <svg
         className="h-3.5 w-3.5 text-[#8A73A6]"
         fill="none"
@@ -66,17 +69,17 @@ const WorkshopCardContent = ({ event }: { event: ResolvedWorkshopEvent }) => (
       {event.isRegisterEnabled && event.registerHref ? (
         <a
           href={event.registerHref}
-          className="flex w-full items-center justify-center rounded-lg bg-[#F8FAFC] px-5 py-2.5 text-[13px] font-bold text-[#1C1635] shadow-lg transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-[#F8FAFC]/20"
+          className="theme-button theme-button-register flex w-full items-center justify-center rounded-none px-5 py-2.5 text-[13px] font-bold"
         >
-          Register
+          Register Now
         </a>
       ) : (
         <button
           type="button"
           disabled
-          className="flex w-full cursor-not-allowed items-center justify-center rounded-lg border border-[#403357] bg-[#1C1635] px-5 py-2.5 text-[13px] font-bold text-[#8A73A6] opacity-70"
+          className="theme-button-secondary flex w-full cursor-not-allowed items-center justify-center rounded-none px-5 py-2.5 text-[13px] font-bold opacity-70"
         >
-          Register
+          Locked
         </button>
       )}
     </div>
@@ -85,9 +88,9 @@ const WorkshopCardContent = ({ event }: { event: ResolvedWorkshopEvent }) => (
 
 const WorkshopPinMarker = () => (
   <div className="relative flex items-center justify-center">
-    <div className="pointer-events-none absolute -inset-3 rounded-full bg-[#6B528F]/20 blur-md animate-pulse" />
-    <div className="pointer-events-auto box-border flex h-[32px] w-[32px] items-center justify-center rounded-full border-[2.5px] border-[#8A73A6] bg-[#1C1635] shadow-[0_0_15px_rgba(107,82,143,0.35)] sm:h-[36px] sm:w-[36px]">
-      <div className="h-[10px] w-[10px] rounded-full bg-[#E2E8F0]" />
+    <div className="pointer-events-none absolute -inset-2 bg-[#6B528F]/20 blur-md animate-pulse" />
+    <div className="pointer-events-auto box-border flex h-[24px] w-[24px] rotate-45 items-center justify-center border-2 border-[#8A73A6] bg-[#1C1635] shadow-[0_0_15px_rgba(107,82,143,0.35)] sm:h-[28px] sm:w-[28px]">
+      <div className="h-[6px] w-[6px] bg-[#E2E8F0]" />
     </div>
   </div>
 );
@@ -167,7 +170,7 @@ export default function WorkshopTimeline({
         </motion.div>
 
         <div className="hidden lg:block relative w-full h-[600px] mt-12 mx-auto">
-          <div className="absolute top-1/2 left-4 right-4 h-[24px] -translate-y-1/2 overflow-hidden rounded-full border-y-[1.5px] border-[#6B528F]/25 bg-[#0A1224] shadow-[0_0_18px_rgba(107,82,143,0.18)]">
+          <div className="absolute top-1/2 left-4 right-4 h-[12px] -translate-y-1/2 overflow-hidden border-y border-[#6B528F]/25 bg-[#0A1224]/50">
             <div className="absolute top-1/2 left-0 right-0 h-[2px] -translate-y-1/2 border-t-[2px] border-dashed border-[#6B528F] opacity-20" />
             <motion.div
               className="absolute top-1/2 left-0 h-[3px] -translate-y-1/2 w-full bg-gradient-to-r from-[#6B528F] via-[#D8DEE9] to-[#7A6A96]"
@@ -211,7 +214,7 @@ export default function WorkshopTimeline({
                       isTop ? "bottom-[calc(50%+65px)]" : "top-[calc(50%+65px)]"
                     }`}
                   >
-                    <WorkshopCardContent event={event} />
+                    <WorkshopCardContent event={event} index={index} />
                   </motion.div>
                 </div>
               );
@@ -229,7 +232,7 @@ export default function WorkshopTimeline({
         <div className="relative mt-20 w-full px-2 pb-8 sm:px-4 md:mt-32 lg:hidden">
           
           <div className="absolute left-0 top-0 bottom-0 z-0 w-[72px] pointer-events-none sm:w-[88px]">
-            <div className="absolute left-1/2 top-0 bottom-0 w-[24px] -translate-x-1/2 overflow-hidden rounded-full border-x-[1.5px] border-[#6B528F]/25 bg-[#0A1224] shadow-[0_0_18px_rgba(107,82,143,0.18)]">
+            <div className="absolute left-1/2 top-0 bottom-0 w-[12px] -translate-x-1/2 overflow-hidden border-x border-[#6B528F]/25 bg-[#0A1224]/50">
               <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 border-l-[2px] border-dashed border-[#6B528F] opacity-20" />
               <motion.div
                 className="absolute left-1/2 top-0 h-full w-[3px] -translate-x-1/2 bg-gradient-to-b from-[#6B528F] via-[#D8DEE9] to-[#7A6A96]"
@@ -270,7 +273,7 @@ export default function WorkshopTimeline({
                   transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
                   className="relative w-full"
                 >
-                  <WorkshopCardContent event={event} />
+                  <WorkshopCardContent event={event} index={index} />
                 </motion.div>
               </div>
             ))}

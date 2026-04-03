@@ -296,7 +296,7 @@ export default function AdminSponsorsForm({
                 </p>
                 <p className="mt-1 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
                   Upload a logo image, add the sponsor title shown under it, and
-                  optionally include a website link for the Visit Website action.
+                  optionally include a website link for the View Site action.
                 </p>
               </div>
             </div>
@@ -490,7 +490,7 @@ export default function AdminSponsorsForm({
                     </p>
 
                     <p className="mt-3 text-[0.625rem] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                      Website
+                      View Site
                     </p>
                     {sponsor.websiteUrl ? (
                       <a
