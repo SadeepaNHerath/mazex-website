@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import FlipUnit from "./FlipUnit";
 import {
   resolveCompetitionCta,
   type ResolvedCompetitionEvent,
@@ -46,20 +47,9 @@ function CountdownGrid({ targetDate }: { targetDate: string }) {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-6">
+    <div className="flex flex-wrap justify-center gap-4 sm:gap-8">
       {units.map((unit) => (
-        <div key={unit.label} className="theme-card-soft p-4 text-center sm:p-6">
-          <div className="mx-auto mb-3 h-1 w-14 rounded-full bg-gradient-to-r from-[#A855F7] to-[#818CF8]" />
-          <div
-            className="font-[family-name:var(--font-space-grotesk)] text-3xl font-bold tabular-nums text-[#F8FAFC] sm:text-5xl"
-            suppressHydrationWarning
-          >
-            {String(unit.value).padStart(2, "0")}
-          </div>
-          <div className="mt-2 text-xs uppercase tracking-[0.24em] text-[#c9bedb] sm:text-sm">
-            {unit.label}
-          </div>
-        </div>
+        <FlipUnit key={unit.label} value={unit.value} label={unit.label} />
       ))}
     </div>
   );

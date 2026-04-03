@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { REGISTRATION_OPEN_DATE, COMPETITION_DATE } from "@/lib/constants";
+import FlipUnit from "./FlipUnit";
 
 interface TimeLeft {
   days: number;
@@ -101,20 +102,9 @@ export default function Countdown({
 
       <div className="min-h-[16.25rem] sm:min-h-[13.75rem] flex flex-col justify-center">
         {showCompetition || registrationMode === "countdown" ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-6">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-8">
             {units.map((unit, i) => (
-              <div key={i} className="theme-card-soft p-4 text-center sm:p-6">
-                <div className="mb-3 h-1 w-14 rounded-full bg-gradient-to-r from-[#A855F7] to-[#818CF8] mx-auto" />
-                <div
-                  className="font-[family-name:var(--font-space-grotesk)] text-3xl font-bold tabular-nums text-[#F8FAFC] sm:text-5xl"
-                  suppressHydrationWarning
-                >
-                  {String(unit.value).padStart(2, "0")}
-                </div>
-                <div className="mt-2 text-xs uppercase tracking-[0.24em] text-[#c9bedb] sm:text-sm">
-                  {unit.label}
-                </div>
-              </div>
+              <FlipUnit key={i} value={unit.value} label={unit.label} />
             ))}
           </div>
         ) : (
