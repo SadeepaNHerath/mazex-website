@@ -577,7 +577,6 @@ export default function MazeAnimation({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        overflow: "hidden",
         boxSizing: "border-box",
         padding: "0", // Removed padding to allow the maze to take up more space as requested
         width: "100%",
@@ -585,9 +584,15 @@ export default function MazeAnimation({
       }}
     >
       {interactive && statusMessage ? (
-        <div className="pointer-events-none absolute -top-2 left-1/2 z-20 flex w-full -translate-x-1/2 justify-center px-3 sm:-top-7">
-          <div className="max-w-[calc(100%-1.5rem)] rounded-full border border-rose-400/40 bg-rose-950/70 px-4 py-2 text-center text-[0.6875rem] font-semibold uppercase tracking-[0.18em] text-rose-100 shadow-[0_0_1.5rem_rgba(251,113,133,0.14)] backdrop-blur-sm sm:text-xs">
-            {statusMessage}
+        <div className="pointer-events-none absolute -top-4 inset-x-0 z-20 flex justify-center px-5 sm:-top-11">
+          <div className="w-full max-w-[480px]">
+            <div className="relative w-full rounded-none border border-rose-500/30 bg-rose-950/90 px-6 py-3 text-center text-[0.7rem] font-bold uppercase tracking-[0.2em] text-rose-50 shadow-[0_0_2rem_rgba(159,18,57,0.15)] backdrop-blur-md sm:text-xs font-heading">
+              {/* Corner Accents - integrated directly into the box to ensure perfectly matched widths */}
+              <div className="absolute -top-[1.5px] -left-[1.5px] h-3 w-3 border-l-2 border-t-2 border-rose-500/80" />
+              <div className="absolute -bottom-[1.5px] -right-[1.5px] h-3 w-3 border-r-2 border-b-2 border-rose-500/80" />
+              
+              {statusMessage}
+            </div>
           </div>
         </div>
       ) : null}

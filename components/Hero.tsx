@@ -102,15 +102,15 @@ export default function Hero() {
             transition={{ duration: 0.9, delay: 0.4, ease: "easeOut" }}
             className="flex items-center justify-center"
           >
-            <div className="theme-card p-2 sm:p-2.5">
-              <div className="bg-[#040811]/95 p-4 sm:p-6">
+            <div className="maze-card p-2 sm:p-2.5">
+              <div className="maze-card-scan" />
+              <div className="relative z-10 bg-[#040811]/95 p-4 sm:p-6">
                 <div
                   className="w-full"
                   style={{
                     maxWidth: "500px",
                     aspectRatio: "1 / 1",
                     boxSizing: "border-box",
-                    overflow: "hidden",
                   }}
                 >
                   <MazeAnimation

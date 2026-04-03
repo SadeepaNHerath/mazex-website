@@ -31,9 +31,10 @@ export default function WhatIsMicromouse() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="theme-card mx-auto w-full max-w-[260px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[380px] p-2 justify-self-center"
+            className="maze-card mx-auto w-full max-w-[260px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[380px] p-2 justify-self-center"
           >
-            <div className="flex items-center justify-center bg-[#040811]/95 p-4 sm:p-5 aspect-square">
+            <div className="maze-card-scan" />
+            <div className="relative z-10 flex items-center justify-center bg-[#040811]/95 p-4 sm:p-5 aspect-square">
               <MazeAnimation size={360} className="w-full h-full" />
             </div>
           </motion.div>
@@ -60,13 +61,28 @@ export default function WhatIsMicromouse() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="theme-card-soft p-5"
+                  className="maze-card border-t-2 border-t-[#818CF8]/20 group"
                 >
-                  <div className="mb-3 h-1 w-14 rounded-full bg-gradient-to-r from-[#A855F7] to-[#818CF8]" />
-                  <h4 className="mb-2 text-sm font-bold uppercase tracking-[0.18em] text-[#F8FAFC]">
+                  <div className="maze-card-scan" />
+                  
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="h-1.5 w-1.5 rounded-full bg-[#A855F7] shadow-[0_0_8px_rgba(168,85,247,0.6)] animate-pulse" />
+                    <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-[#A855F7]/80 uppercase">
+                      Sensor_S{String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+
+                  <h3 className="mb-2 text-sm font-bold uppercase tracking-[0.15em] text-[#F8FAFC] group-hover:text-[#A855F7] transition-colors duration-300">
                     {stat.title}
-                  </h4>
-                  <p className="text-sm text-[#9e8db3]">{stat.description}</p>
+                  </h3>
+                  <p className="text-sm leading-relaxed text-[#94a3b8] group-hover:text-[#cbd5e1] transition-colors duration-300">
+                    {stat.description}
+                  </p>
+
+                  <div className="absolute top-0 right-0 h-8 w-8 opacity-0 transition-opacity duration-500 group-hover:opacity-40">
+                    <div className="absolute top-3 right-3 h-px w-4 bg-[#A855F7]" />
+                    <div className="absolute top-3 right-3 h-4 w-px bg-[#A855F7]" />
+                  </div>
                 </motion.div>
               ))}
             </div>

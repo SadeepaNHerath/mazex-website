@@ -245,9 +245,9 @@ export default function PastEvents() {
                   }}
                 >
                   <div
-                    className={`relative h-full w-full overflow-hidden rounded-2xl border transition-all duration-300 ${
+                    className={`relative h-full w-full overflow-hidden rounded-none border transition-all duration-300 ${
                       isActive
-                        ? "border-[#6b528f]/40 shadow-2xl shadow-purple-900/20"
+                        ? "border-[#A855F7]/60 shadow-[0_0_30px_rgba(168,85,247,0.2)]"
                         : "border-white/5"
                     }`}
                   >
@@ -270,7 +270,7 @@ export default function PastEvents() {
                         <motion.div
                           initial={{ opacity: 0, y: -8 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="absolute left-4 top-4 z-10 rounded-full border border-white/30 bg-black/55 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-md"
+                          className="absolute left-4 top-4 z-10 rounded-none border border-white/30 bg-black/55 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-md"
                         >
                           {event.images.length} Photos
                         </motion.div>
@@ -279,7 +279,7 @@ export default function PastEvents() {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.1 }}
-                          className="absolute bottom-4 right-4 z-10 rounded-md border border-white/15 bg-black/45 px-2 py-1 text-[11px] font-medium text-gray-100"
+                          className="absolute bottom-4 right-4 z-10 rounded-none border border-white/15 bg-black/45 px-2 py-1 text-[11px] font-medium text-gray-100"
                         >
                           Tap image to open
                         </motion.div>
@@ -313,10 +313,10 @@ export default function PastEvents() {
               <button
                 key={i}
                 onClick={() => goToSlide(i)}
-                className={`rounded-full transition-all duration-300 ${
+                className={`rounded-none transition-all duration-300 ${
                   i === activeSlide
-                    ? "h-3 w-8 bg-[#8a73a6] shadow-lg shadow-purple-500/30"
-                    : "h-3 w-3 bg-white/20 hover:bg-white/40"
+                    ? "h-2 w-8 bg-[#A855F7] shadow-lg shadow-purple-500/30"
+                    : "h-2 w-2 bg-white/20 hover:bg-white/40"
                 }`}
                 aria-label={`Go to event ${i + 1}`}
               />
@@ -339,7 +339,7 @@ export default function PastEvents() {
                 {/* Close Button */}
                 <button
                   onClick={() => setSelectedEventIndex(null)}
-                  className="fixed top-6 right-6 z-[10000] rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20 backdrop-blur-sm border border-white/10"
+                  className="fixed top-6 right-6 z-[10000] rounded-none bg-white/10 p-2 text-white transition-colors hover:bg-white/20 backdrop-blur-sm border border-white/10"
                 >
                   <X size={24} />
                 </button>
@@ -374,7 +374,7 @@ export default function PastEvents() {
                           prev > 0 ? prev - 1 : selectedEvent.images.length - 1,
                         );
                       }}
-                      className="hidden sm:flex absolute left-0 lg:-left-6 z-[10000] rounded-full bg-white/10 p-2.5 text-white transition-all hover:bg-white/20 hover:scale-110 border border-white/10"
+                      className="hidden sm:flex absolute left-0 lg:-left-6 z-[10000] rounded-none bg-white/10 p-2.5 text-white transition-all hover:bg-white/20 hover:scale-110 border border-white/10"
                     >
                       <ChevronLeft size={28} />
                     </button>
@@ -384,7 +384,7 @@ export default function PastEvents() {
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.45 }}
-                      className="relative aspect-[3/2] w-full max-w-5xl max-h-[55vh] sm:max-h-[70vh] overflow-hidden rounded-none sm:rounded-xl shadow-2xl shadow-black/80 border-y border-white/10 sm:border"
+                      className="relative aspect-[3/2] w-full max-w-5xl max-h-[55vh] sm:max-h-[70vh] overflow-hidden rounded-none shadow-2xl shadow-black/80 border-y border-white/10 sm:border"
                     >
                       <ImageWithSkeleton
                         src={selectedEvent.images[activeImageIndex]}
@@ -402,7 +402,7 @@ export default function PastEvents() {
                           prev < selectedEvent.images.length - 1 ? prev + 1 : 0,
                         );
                       }}
-                      className="hidden sm:flex absolute right-0 lg:-right-4 z-[10000] rounded-full bg-white/10 p-2.5 text-white transition-all hover:bg-white/20 hover:scale-110 border border-white/10"
+                      className="hidden sm:flex absolute right-0 lg:-right-4 z-[10000] rounded-none bg-white/10 p-2.5 text-white transition-all hover:bg-white/20 hover:scale-110 border border-white/10"
                     >
                       <ChevronRight size={28} />
                     </button>
@@ -415,9 +415,9 @@ export default function PastEvents() {
                         <button
                           key={idx}
                           onClick={() => setActiveImageIndex(idx)}
-                          className={`relative h-12 w-18 sm:h-16 sm:w-24 flex-shrink-0 overflow-hidden rounded-lg border transition-all duration-300 ${
+                          className={`relative h-12 w-18 sm:h-16 sm:w-24 flex-shrink-0 overflow-hidden rounded-none border transition-all duration-300 ${
                             activeImageIndex === idx
-                              ? "border-[#8a73a6] scale-105 shadow-md shadow-purple-500/40 opacity-100"
+                              ? "border-[#A855F7] scale-105 shadow-md shadow-purple-500/40 opacity-100"
                               : "border-white/10 opacity-50 hover:opacity-100"
                           }`}
                         >

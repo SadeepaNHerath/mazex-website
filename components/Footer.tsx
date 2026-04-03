@@ -59,7 +59,7 @@ export default function Footer() {
                 href="https://knurdz.org/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-md transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-maze-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-maze-bg-soft"
+                className="rounded-none transition-opacity hover:opacity-80"
                 aria-label="Powered by Knurdz"
               >
                 <Image
@@ -86,8 +86,12 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#3a3150] bg-white/3 text-[#d8cfeb] transition-colors hover:border-maze-accent/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-maze-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-maze-bg-soft"
+                    className="group relative flex h-11 w-11 items-center justify-center rounded-none border border-[#3a3150] bg-white/3 text-[#d8cfeb] transition-all hover:border-[#A855F7] hover:text-white"
                   >
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                      <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#A855F7]" />
+                      <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#A855F7]" />
+                    </div>
                     <Icon className="h-4.5 w-4.5" />
                   </a>
                 );
