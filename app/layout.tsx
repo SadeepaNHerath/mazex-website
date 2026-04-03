@@ -33,6 +33,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} antialiased`}
+        suppressHydrationWarning
       >
         <HashScrollManager />
         {children}

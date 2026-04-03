@@ -243,7 +243,7 @@ export default function WorkshopTimeline({
             {events.map((event, index) => (
               <div key={event.key} className="relative z-10 pl-[72px] pr-2 sm:pl-[88px]">
                 
-                <div className="absolute left-0 top-1/2 z-30 w-[72px] sm:w-[88px] -translate-y-1/2">
+                <div className="absolute -left-2 top-1/2 z-30 w-[72px] -translate-y-1/2 sm:-left-4 sm:w-[88px]">
                   <motion.div
                     initial={{ scale: 0, opacity: 0, x: "-50%", y: "-50%" }}
                     whileInView={{ scale: 1, opacity: 1, x: "-50%", y: "-50%" }}
@@ -260,7 +260,7 @@ export default function WorkshopTimeline({
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
-                  className="absolute left-[36px] top-1/2 z-[-1] w-[36px] origin-left -translate-y-1/2 border-t-2 border-dashed border-[#6B528F] opacity-60 sm:left-[44px] sm:w-[44px]"
+                  className="absolute left-[28px] top-1/2 z-[-1] w-[44px] origin-left -translate-y-1/2 border-t-2 border-dashed border-[#6B528F] opacity-60 sm:left-[28px] sm:w-[60px]"
                 />
 
                 <motion.div

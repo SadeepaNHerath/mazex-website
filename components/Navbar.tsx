@@ -148,20 +148,20 @@ export default function Navbar({
                   alt="MazeX Logo"
                   width={156}
                   height={88}
-                  className="h-[3.5rem] w-auto object-contain sm:h-[4rem]"
+                  className="h-[3.5rem] w-auto object-contain sm:h-[3.5rem] lg:h-[4rem]"
                   priority
                 />
               </Link>
 
-              <div className="hidden items-center gap-4 md:flex">
+              <div className="hidden items-center gap-2 lg:gap-4 md:flex">
                 <div
-                  className={`flex items-center gap-2 rounded-full border px-3 py-2 transition-[background-color,border-color] duration-500 ${theme.linkGroup}`}
+                  className={`flex items-center gap-1 lg:gap-2 rounded-full border px-2 py-1.5 lg:px-3 lg:py-2 transition-[background-color,border-color] duration-500 ${theme.linkGroup}`}
                 >
                   {NAV_LINKS.map((link) => (
                     <a
                       key={link.href}
                       href={getHomeSectionHref(link.href)}
-                      className={`rounded-full px-4 py-2 text-sm font-medium transition-[background-color,color,box-shadow] duration-300 ${
+                      className={`rounded-full px-3 py-1.5 lg:px-4 lg:py-2 text-sm font-medium transition-[background-color,color,box-shadow] duration-300 ${
                         activeHref === link.href ? theme.linkActive : theme.linkIdle
                       }`}
                     >
@@ -171,7 +171,7 @@ export default function Navbar({
                 </div>
                 <a
                   href={registerHref}
-                  className="theme-button theme-button-register rounded-full px-6 py-2.5 text-sm font-medium"
+                  className="theme-button theme-button-register whitespace-nowrap rounded-full px-4 py-2 lg:px-6 lg:py-2.5 text-sm font-medium"
                 >
                   Register Now
                 </a>

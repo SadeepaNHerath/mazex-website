@@ -72,7 +72,7 @@ export default function Footer() {
               </a>
             </div>
 
-            <h4 className="mb-3 text-[0.8rem] font-bold uppercase tracking-[0.22em] text-maze-accent-soft">
+            <h4 className="mb-3 text-[0.8rem] font-bold uppercase tracking-[0.22em] text-maze-accent-soft hidden lg:block">
               Connect
             </h4>
             <div className="mt-4 flex flex-wrap items-center justify-center lg:justify-start gap-2">
@@ -102,9 +102,12 @@ export default function Footer() {
             transition={{ duration: 0.6, delay: 0.05 }}
             className="lg:col-span-7 lg:border-l lg:border-[#2f2540]/65 lg:pl-8 text-center lg:text-left"
           >
-            <h4 className="mb-4 text-[0.8rem] font-bold uppercase tracking-[0.22em] text-maze-accent-soft">
+            <h4 className="mb-4 text-[0.8rem] font-bold uppercase tracking-[0.22em] text-maze-accent-soft hidden lg:block">
               Organized By
             </h4>
+
+            {/* Mobile horizontal break */}
+            <div className="mx-auto mb-8 h-px w-35 bg-white/10 lg:hidden" />
 
             <div className="grid grid-cols-1 items-center justify-items-center lg:justify-items-start gap-5 sm:grid-cols-2">
               <a

@@ -331,7 +331,7 @@ export default function PastEvents() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/98 p-4 backdrop-blur-md overflow-y-auto no-scrollbar"
+                className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/98 p-0 sm:p-4 backdrop-blur-md overflow-y-auto no-scrollbar"
               >
                 {/* Close Button */}
                 <button
@@ -362,7 +362,7 @@ export default function PastEvents() {
                   </div>
 
                   {/* Main Image View */}
-                  <div className="relative flex w-full items-center justify-center mb-6 gap-4 px-10">
+                  <div className="relative flex w-full items-center justify-center mb-6 gap-4 px-0 sm:px-10">
                     {/* Desktop Nav Arrows */}
                     <button
                       onClick={(e) => {
@@ -381,43 +381,13 @@ export default function PastEvents() {
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.45 }}
-                      className="relative aspect-[3/2] w-full max-w-5xl max-h-[55vh] sm:max-h-[70vh] overflow-hidden rounded-xl shadow-2xl shadow-black/80 border border-white/10"
+                      className="relative aspect-[3/2] w-full max-w-5xl max-h-[55vh] sm:max-h-[70vh] overflow-hidden rounded-none sm:rounded-xl shadow-2xl shadow-black/80 border-y border-white/10 sm:border"
                     >
                       <img
                         src={selectedEvent.images[activeImageIndex]}
                         alt={`${selectedEvent.title} - ${activeImageIndex + 1}`}
                         className="h-full w-full object-cover"
                       />
-
-                      {/* Mobile Nav Overlay */}
-                      <div className="sm:hidden absolute inset-0 flex items-center justify-between p-2 pointer-events-none">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveImageIndex((prev) =>
-                              prev > 0
-                                ? prev - 1
-                                : selectedEvent.images.length - 1,
-                            );
-                          }}
-                          className="pointer-events-auto rounded-full bg-black/40 p-1.5 text-white border border-white/10"
-                        >
-                          <ChevronLeft size={20} />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveImageIndex((prev) =>
-                              prev < selectedEvent.images.length - 1
-                                ? prev + 1
-                                : 0,
-                            );
-                          }}
-                          className="pointer-events-auto rounded-full bg-black/40 p-1.5 text-white border border-white/10"
-                        >
-                          <ChevronRight size={20} />
-                        </button>
-                      </div>
                     </motion.div>
 
                     <button

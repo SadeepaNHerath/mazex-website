@@ -200,7 +200,7 @@ export const PAST_EVENTS = [
     {
         title: "Naturenook 2024",
         description:
-            "A community-driven initiative by the IEEE Women in Engineering Affinity Group of University of Moratuwa focused on supporting underprivileged preschoolers through engaging activities, educational sessions, and collaborative efforts to nurture young minds and create a lasting positive impact",
+            "A community initiative by IEEE WIE, University of Moratuwa, supporting underprivileged preschoolers through engaging and educational activities.",
         images: ["/2.jpg", "/2-1.jpg", "/2-2.jpg"],
     },
     {
@@ -212,7 +212,7 @@ export const PAST_EVENTS = [
     {
         title: "Hackelite 2.0",
         description:
-            "innovation challenge by the IEEE WIE Student Branch Affinity Group of University of Moratuwa that brings together aspiring developers and innovators to collaborate, showcase their skills, and build impactful technological solutions.",
+            "An innovation challenge by the IEEE WIE Student Branch Affinity Group of University of Moratuwa that brings together aspiring developers and innovators to collaborate, showcase their skills, and build impactful technological solutions.",
         images: ["/4.jpeg", "/4-1.jpg"],
     },
 ];
