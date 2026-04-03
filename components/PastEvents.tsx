@@ -169,10 +169,8 @@ export default function PastEvents() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
-                className="max-w-xl text-sm sm:text-base text-gray-400/90 leading-relaxed font-mono"
+                className="max-w-xl text-sm sm:text-base text-gray-400/90 leading-relaxed"
               >
-                {/* Minimalist 'Typewriter' effect simulation via simple fade & container slide */}
-                <span className="text-[#6b528f] mr-2 opacity-50">{">"}</span>
                 {PAST_EVENTS[activeSlide].description}
               </motion.p>
             </motion.div>

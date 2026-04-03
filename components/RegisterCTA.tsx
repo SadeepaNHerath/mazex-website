@@ -123,7 +123,7 @@ export default function RegisterCTA({
            whileInView={{ opacity: 1, y: 0 }}
            viewport={{ once: true }}
            transition={{ duration: 0.6 }}
-           className="maze-card mx-auto max-w-5xl px-6 py-24 sm:px-10 sm:py-36 !bg-[#07050d]/95"
+           className="maze-card mx-auto max-w-5xl px-4 py-16 sm:px-10 sm:py-36 !bg-[#07050d]/95"
         >
           <div className="maze-card-scan" />
           

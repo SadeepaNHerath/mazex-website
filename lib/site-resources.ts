@@ -10,6 +10,8 @@ import {
 export const DELEGATE_BOOKLET_RESOURCE_KEY = "delegate_booklet";
 export const DEFAULT_DELEGATE_BOOKLET_PATH =
   "/downloads/Delegate_booklet_dummy.pdf";
+export const SPONSOR_OPENINGS_RESOURCE_KEY = "sponsor_openings_enabled";
+export const DEFAULT_SPONSOR_OPENINGS_ENABLED = true;
 
 type SiteResourceDocument = Models.DefaultDocument & {
   key?: string;
@@ -74,6 +76,24 @@ export function normalizeSiteResourceLink(value: string) {
   return null;
 }
 
+function parseSiteResourceBoolean(value: string | null, fallback: boolean) {
+  const normalizedValue = value?.trim().toLowerCase();
+
+  if (!normalizedValue) {
+    return fallback;
+  }
+
+  if (["true", "1", "yes", "on", "enabled"].includes(normalizedValue)) {
+    return true;
+  }
+
+  if (["false", "0", "no", "off", "disabled"].includes(normalizedValue)) {
+    return false;
+  }
+
+  return fallback;
+}
+
 export async function getSiteResourceValue(key: string) {
   if (!isAppwriteConfigured() || !isSiteResourcesConfigured()) {
     return null;
@@ -109,6 +129,22 @@ export async function upsertSiteResourceValue(key: string, value: string) {
       value,
     },
   });
+}
+
+export async function getSponsorOpeningsEnabled() {
+  const storedValue = await getSiteResourceValue(SPONSOR_OPENINGS_RESOURCE_KEY);
+
+  return parseSiteResourceBoolean(
+    storedValue,
+    DEFAULT_SPONSOR_OPENINGS_ENABLED,
+  );
+}
+
+export async function setSponsorOpeningsEnabled(enabled: boolean) {
+  return upsertSiteResourceValue(
+    SPONSOR_OPENINGS_RESOURCE_KEY,
+    enabled ? "true" : "false",
+  );
 }
 
 export async function getDelegateBookletHref() {

@@ -17,8 +17,10 @@ import ImageWithSkeleton from "./ImageWithSkeleton";
 
 export default function Sponsorship({
   sponsors,
+  sponsorOpeningsEnabled,
 }: {
   sponsors: PublicSponsor[];
+  sponsorOpeningsEnabled: boolean;
 }) {
   return (
     <section id="sponsors" className="theme-section-alt relative overflow-hidden py-16 sm:py-20 lg:py-24">
@@ -40,7 +42,7 @@ export default function Sponsorship({
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="flex flex-col items-center justify-center gap-16 pt-4 md:flex-row md:items-end md:gap-28 md:pt-8"
+          className="flex flex-wrap items-center justify-center gap-12 pt-4 sm:gap-16 md:items-end md:gap-20 lg:gap-28 md:pt-8"
         >
           {sponsors.map((partner, i) => (
             <motion.div
@@ -138,25 +140,29 @@ export default function Sponsorship({
           </motion.div>
         ) : null}
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mx-auto mt-20 flex flex-col items-center text-center px-4"
-        >
-          <h3 className="mb-8 text-xl font-medium text-[#e2e8f0] sm:text-2xl">
-            Interested in partnering?{" "}
-            <span className="bg-gradient-to-r from-[#A855F7] to-[#818CF8] bg-clip-text font-bold text-transparent">Let&apos;s talk.</span>
-          </h3>
-          
-          <a
-            href="mailto:mazex@knurdz.org"
-            className="theme-button theme-button-register inline-flex items-center justify-center rounded-full px-7 py-3 font-bold"
+        {sponsorOpeningsEnabled ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mx-auto mt-20 flex flex-col items-center px-4 text-center"
           >
-            Contact Us
-          </a>
-        </motion.div>
+            <h3 className="mb-8 text-xl font-medium text-[#e2e8f0] sm:text-2xl">
+              Interested in partnering?{" "}
+              <span className="bg-gradient-to-r from-[#A855F7] to-[#818CF8] bg-clip-text font-bold text-transparent">
+                Let&apos;s talk.
+              </span>
+            </h3>
+
+            <a
+              href="mailto:mazex@knurdz.org"
+              className="theme-button theme-button-register inline-flex items-center justify-center rounded-full px-7 py-3 font-bold"
+            >
+              Contact Us
+            </a>
+          </motion.div>
+        ) : null}
       </div>
     </section>
   );

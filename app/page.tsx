@@ -13,13 +13,15 @@ import Footer from "@/components/Footer";
 import HexBackground from "@/components/HexBackground";
 import { getResolvedSiteEvents } from "@/lib/site-events";
 import { listSponsors } from "@/lib/sponsors";
+import { getSponsorOpeningsEnabled } from "@/lib/site-resources";
 
 const Sponsorship = dynamic(() => import("@/components/Sponsorship"));
 
 export default async function Home() {
-  const [sponsors, siteEvents] = await Promise.all([
+  const [sponsors, siteEvents, sponsorOpeningsEnabled] = await Promise.all([
     listSponsors(),
     getResolvedSiteEvents(),
+    getSponsorOpeningsEnabled(),
   ]);
 
   return (
@@ -38,7 +40,10 @@ export default async function Home() {
         <WorkshopTimeline events={siteEvents.workshops} />
         <Delegates />
 
-        <Sponsorship sponsors={sponsors} />
+        <Sponsorship
+          sponsors={sponsors}
+          sponsorOpeningsEnabled={sponsorOpeningsEnabled}
+        />
         <PastEvents />
         <RegisterCTA competition={siteEvents.competition} />
         <ContactUs />
