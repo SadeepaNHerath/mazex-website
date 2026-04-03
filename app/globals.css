@@ -392,7 +392,10 @@ input.admin-auth-input:autofill {
   background: rgba(13, 20, 37, 0.4);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(168, 85, 247, 0.15);
-  padding: 1.5rem;
+  padding: 0.5rem;
+  @media (min-width: 640px) {
+    padding: 1.5rem;
+  }
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }

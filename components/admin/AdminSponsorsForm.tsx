@@ -16,6 +16,7 @@ import {
 import {
   createSponsorAction,
   deleteSponsorAction,
+  updateSponsorOpeningsAction,
   type UpdateAdminSponsorsState,
 } from "@/app/admin/sponsors/actions";
 import type { PublicSponsor } from "@/lib/sponsor-types";
@@ -72,10 +73,125 @@ function DeleteButton() {
   );
 }
 
+function SponsorOpeningsSaveButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus:ring-zinc-300 dark:focus:ring-offset-zinc-900"
+    >
+      {pending ? "Saving..." : "Save setting"}
+    </button>
+  );
+}
+
+function SponsorOpeningsForm({
+  defaultEnabled,
+}: {
+  defaultEnabled: boolean;
+}) {
+  const [enabled, setEnabled] = useState(defaultEnabled);
+  const [state, formAction] = useActionState(
+    updateSponsorOpeningsAction,
+    initialUpdateAdminSponsorsState,
+  );
+
+  useEffect(() => {
+    setEnabled(defaultEnabled);
+  }, [defaultEnabled]);
+
+  return (
+    <form action={formAction} className="mt-8">
+      <input
+        type="hidden"
+        name="sponsorOpeningsEnabled"
+        value={enabled ? "on" : "off"}
+      />
+
+      <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+              Partnering call-to-action
+            </p>
+            <p className="mt-1 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+              Control whether the homepage shows the
+              {" "}
+              <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                Interested in partnering? Let&apos;s talk.
+              </span>
+              {" "}
+              section and its Contact Us button.
+            </p>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-3">
+            <span className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              Sponsor openings
+            </span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={enabled}
+              aria-label="Toggle sponsor openings"
+              onClick={() => setEnabled((value) => !value)}
+              className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:focus:ring-zinc-200 dark:focus:ring-offset-zinc-900 ${
+                enabled
+                  ? "border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100"
+                  : "border-zinc-300 bg-zinc-300 dark:border-zinc-600 dark:bg-zinc-700"
+              }`}
+            >
+              <span
+                className={`inline-block h-5 w-5 rounded-full bg-white shadow transition-transform dark:bg-zinc-950 ${
+                  enabled ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </button>
+            <span
+              className={`text-xs font-semibold uppercase tracking-wide ${
+                enabled
+                  ? "text-zinc-900 dark:text-zinc-100"
+                  : "text-zinc-500 dark:text-zinc-400"
+              }`}
+            >
+              {enabled ? "Enabled" : "Hidden"}
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs leading-5 text-zinc-500 dark:text-zinc-400">
+            {enabled
+              ? "Visitors will see the sponsor partnership invite and the Contact Us button on the homepage."
+              : "The sponsor partnership invite and its Contact Us button will stay hidden on the homepage."}
+          </p>
+          <SponsorOpeningsSaveButton />
+        </div>
+
+        {state.status !== "idle" && state.message ? (
+          <p
+            className={`mt-4 text-sm ${
+              state.status === "success"
+                ? "text-emerald-600 dark:text-emerald-400"
+                : "text-rose-600 dark:text-rose-400"
+            }`}
+          >
+            {state.message}
+          </p>
+        ) : null}
+      </div>
+    </form>
+  );
+}
+
 export default function AdminSponsorsForm({
   sponsors,
+  sponsorOpeningsEnabled,
 }: {
   sponsors: PublicSponsor[];
+  sponsorOpeningsEnabled: boolean;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -301,6 +417,8 @@ export default function AdminSponsorsForm({
               </div>
             </div>
           </div>
+
+          <SponsorOpeningsForm defaultEnabled={sponsorOpeningsEnabled} />
 
           <form ref={formRef} action={formAction} className="mt-8 space-y-6">
             <div className="grid gap-6 lg:grid-cols-2">

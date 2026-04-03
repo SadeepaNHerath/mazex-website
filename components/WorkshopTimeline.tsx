@@ -26,14 +26,14 @@ const MicromouseRobot = () => (
 );
 
 const WorkshopCardContent = ({ event, index = 0 }: { event: ResolvedWorkshopEvent; index?: number }) => (
-  <div className="maze-card relative z-30 w-full p-5 sm:p-6 !bg-[#07050d]/95 hover:!bg-[#07050d]">
+  <div className="maze-card relative z-30 w-full h-full flex flex-col !p-6 md:!p-8 !bg-[#07050d]/95 hover:!bg-[#07050d]">
     <div 
       className="maze-card-scan" 
       style={{ animationDelay: `${index * 1.2}s` }}
     />
     <div className="absolute top-0 left-0 bottom-0 w-[1.5px] bg-gradient-to-b from-[#8A73A6] via-[#6B528F] to-transparent" />
 
-    <div className="mb-3 inline-flex items-center gap-2 rounded-none border border-[#403357] bg-[#1C1635] px-2.5 py-1.5 shadow-sm sm:mb-4">
+    <div className="mb-3 self-start inline-flex items-center gap-2 rounded-none border border-[#403357] bg-[#1C1635] px-2.5 py-1.5 shadow-sm sm:mb-4">
       <svg
         className="h-3.5 w-3.5 text-[#8A73A6]"
         fill="none"
@@ -47,25 +47,25 @@ const WorkshopCardContent = ({ event, index = 0 }: { event: ResolvedWorkshopEven
           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
         />
       </svg>
-      <span className="text-[9px] font-bold tracking-widest text-[#8A73A6] uppercase sm:text-[10px]">
+      <span className="text-[10px] font-bold tracking-widest text-[#8A73A6] uppercase">
         {event.displayDate}
       </span>
     </div>
 
     <h3 className="mb-2 font-bold leading-snug transition-all duration-300">
-      <span className="mb-1 block text-[12px] uppercase tracking-wider text-[#8A73A6] sm:text-[13px]">
+      <span className="mb-1 block text-[13px] uppercase tracking-wider text-[#8A73A6]">
         Workshop {event.number}
       </span>
-      <span className="block text-[16px] text-[#F8FAFC] transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-[#F8FAFC] group-hover:to-[#8A73A6] group-hover:bg-clip-text group-hover:text-transparent sm:text-[18px]">
+      <span className="block text-[18px] text-[#F8FAFC] transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-[#F8FAFC] group-hover:to-[#8A73A6] group-hover:bg-clip-text group-hover:text-transparent">
         {event.title}
       </span>
     </h3>
 
-    <p className="text-[12px] leading-relaxed text-[#9e8db3] sm:text-[13px]">
+    <p className="text-[13px] leading-relaxed text-[#9e8db3]">
       {event.description}
     </p>
 
-    <div className="mt-5">
+    <div className="mt-auto pt-5">
       {event.isRegisterEnabled && event.registerHref ? (
         <a
           href={event.registerHref}
@@ -146,7 +146,7 @@ export default function WorkshopTimeline({
   return (
     <section
       id="timeline"
-      className="theme-section-alt relative overflow-hidden py-24 sm:py-32"
+      className="theme-section-alt relative overflow-hidden py-32"
       ref={containerRef}
     >
       <div className="pointer-events-none absolute left-[-5%] top-[10%] h-[340px] w-[340px] rounded-full bg-[#6B528F]/10 opacity-35 blur-[120px]" />
@@ -169,7 +169,7 @@ export default function WorkshopTimeline({
           </h2>
         </motion.div>
 
-        <div className="hidden lg:block relative w-full h-[600px] mt-12 mx-auto">
+        <div className="hidden lg:block relative w-full h-[900px] mt-24 mx-auto">
           <div className="absolute top-1/2 left-4 right-4 h-[12px] -translate-y-1/2 overflow-hidden border-y border-[#6B528F]/25 bg-[#0A1224]/50">
             <div className="absolute top-1/2 left-0 right-0 h-[2px] -translate-y-1/2 border-t-[2px] border-dashed border-[#6B528F] opacity-20" />
             <motion.div
@@ -178,7 +178,7 @@ export default function WorkshopTimeline({
             />
           </div>
 
-          <div className="absolute inset-0 grid grid-cols-4 gap-4 px-4 w-full">
+          <div className="absolute inset-0 grid grid-cols-4 gap-16 px-6 w-full">
             {events.map((event, index) => {
               const isTop = index % 2 === 0;
 
@@ -210,7 +210,7 @@ export default function WorkshopTimeline({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.15 + 0.5 }}
-                    className={`absolute left-1/2 -translate-x-1/2 z-20 w-[100%] min-w-[280px] max-w-[340px] ${
+                    className={`absolute left-1/2 -translate-x-1/2 z-20 w-[100%] min-w-[280px] max-w-[340px] lg:h-[340px] ${
                       isTop ? "bottom-[calc(50%+65px)]" : "top-[calc(50%+65px)]"
                     }`}
                   >
@@ -229,9 +229,9 @@ export default function WorkshopTimeline({
           </motion.div>
         </div>
 
-        <div className="relative mt-20 w-full px-2 pb-8 sm:px-4 md:mt-32 lg:hidden">
+        <div className="relative mt-20 w-full pb-8 md:mt-32 lg:hidden">
           
-          <div className="absolute left-0 top-0 bottom-0 z-0 w-[72px] pointer-events-none sm:w-[88px]">
+          <div className="absolute left-0 top-0 bottom-0 z-0 w-[40px] pointer-events-none sm:w-[60px]">
             <div className="absolute left-1/2 top-0 bottom-0 w-[12px] -translate-x-1/2 overflow-hidden border-x border-[#6B528F]/25 bg-[#0A1224]/50">
               <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 border-l-[2px] border-dashed border-[#6B528F] opacity-20" />
               <motion.div
@@ -242,11 +242,11 @@ export default function WorkshopTimeline({
             </div>
           </div>
 
-          <div className="relative z-10 flex flex-col gap-12 pt-8 pb-8 sm:gap-16">
+          <div className="relative z-10 flex flex-col gap-16 pt-8 pb-8 sm:gap-20">
             {events.map((event, index) => (
-              <div key={event.key} className="relative z-10 pl-[72px] pr-2 sm:pl-[88px]">
+              <div key={event.key} className="relative z-10 pl-[48px] pr-4 sm:pl-[64px] sm:pr-6">
                 
-                <div className="absolute -left-2 top-1/2 z-30 w-[72px] -translate-y-1/2 sm:-left-4 sm:w-[88px]">
+                <div className="absolute left-0 top-1/2 z-30 w-[40px] -translate-y-1/2 sm:w-[60px]">
                   <motion.div
                     initial={{ scale: 0, opacity: 0, x: "-50%", y: "-50%" }}
                     whileInView={{ scale: 1, opacity: 1, x: "-50%", y: "-50%" }}
@@ -263,7 +263,7 @@ export default function WorkshopTimeline({
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
-                  className="absolute left-[28px] top-1/2 z-[-1] w-[44px] origin-left -translate-y-1/2 border-t-2 border-dashed border-[#6B528F] opacity-60 sm:left-[28px] sm:w-[60px]"
+                  className="absolute left-[20px] top-1/2 z-[-1] w-[28px] origin-left -translate-y-1/2 border-t-2 border-dashed border-[#6B528F] opacity-60 sm:left-[30px] sm:w-[34px]"
                 />
 
                 <motion.div
@@ -279,10 +279,10 @@ export default function WorkshopTimeline({
             ))}
           </div>
 
-          <div className="absolute left-0 top-0 bottom-0 z-50 w-[72px] pointer-events-none sm:w-[88px]">
+          <div className="absolute left-0 top-0 bottom-0 z-50 w-[40px] pointer-events-none sm:w-[60px]">
             <motion.div
               style={{ top: displayProgress }}
-              className="absolute left-1/2 -translate-x-1/2 drop-shadow-[0_0_12px_rgba(107,82,143,0.6)]"
+              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_0_12px_rgba(107,82,143,0.6)]"
             >
               <div className="rotate-90">
                 <MicromouseRobot />

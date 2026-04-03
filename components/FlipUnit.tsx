@@ -18,7 +18,7 @@ export default function FlipUnit({ value, label }: FlipUnitProps) {
           <Digit key={idx} digit={digit} />
         ))}
       </div>
-      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-maze-muted-strong sm:text-xs">
+      <span className="text-[12px] font-black uppercase tracking-[0.3em] text-maze-muted-strong sm:text-xs">
         {label}
       </span>
     </div>
@@ -38,13 +38,13 @@ function Digit({ digit }: { digit: string }) {
   }, [digit, prevDigit]);
 
   return (
-    <div className="relative h-20 w-14 sm:h-28 sm:w-20 [perspective:1000px] font-sans">
+    <div className="relative h-24 w-16 sm:h-28 sm:w-20 [perspective:1000px] font-sans">
       {/* Static Background Cards */}
       <div className="absolute inset-0 flex flex-col">
         {/* Top Half (New Value) */}
         <div className="relative h-1/2 w-full overflow-hidden rounded-t-md border-x border-t border-[#CBD5E1]/40 bg-[#F1F5F9]">
           <div 
-            className="absolute inset-x-0 top-0 flex h-[200%] items-center justify-center text-5xl font-black tracking-tighter text-[#1E293B] sm:text-7xl"
+            className="absolute inset-x-0 top-0 flex h-[200%] items-center justify-center text-6xl font-black tracking-tighter text-[#1E293B] sm:text-7xl"
             suppressHydrationWarning
           >
             {digit}
@@ -54,7 +54,7 @@ function Digit({ digit }: { digit: string }) {
         {/* Bottom Half (Old Value) */}
         <div className="relative h-1/2 w-full overflow-hidden rounded-b-md border-x border-b border-[#CBD5E1]/40 bg-[#F1F5F9] shadow-lg">
           <div 
-            className="absolute inset-x-0 bottom-0 flex h-[200%] items-center justify-center text-5xl font-black tracking-tighter text-[#1E293B] sm:text-7xl"
+            className="absolute inset-x-0 bottom-0 flex h-[200%] items-center justify-center text-6xl font-black tracking-tighter text-[#1E293B] sm:text-7xl"
             suppressHydrationWarning
           >
             {prevDigit}
@@ -75,7 +75,7 @@ function Digit({ digit }: { digit: string }) {
               className="relative h-1/2 w-full overflow-hidden rounded-t-md border-x border-t border-[#CBD5E1]/40 bg-[#F1F5F9]"
             >
               <div 
-                className="absolute inset-x-0 top-0 flex h-[200%] items-center justify-center text-5xl font-black tracking-tighter text-[#1E293B] sm:text-7xl"
+                className="absolute inset-x-0 top-0 flex h-[200%] items-center justify-center text-6xl font-black tracking-tighter text-[#1E293B] sm:text-7xl"
                 suppressHydrationWarning
               >
                 {prevDigit}
@@ -98,7 +98,7 @@ function Digit({ digit }: { digit: string }) {
               className="relative h-1/2 w-full overflow-hidden rounded-b-md border-x border-b border-[#CBD5E1]/40 bg-[#F1F5F9]"
             >
               <div 
-                className="absolute inset-x-0 bottom-0 flex h-[200%] items-center justify-center text-5xl font-black tracking-tighter text-[#1E293B] sm:text-7xl"
+                className="absolute inset-x-0 bottom-0 flex h-[200%] items-center justify-center text-6xl font-black tracking-tighter text-[#1E293B] sm:text-7xl"
                 suppressHydrationWarning
               >
                 {digit}

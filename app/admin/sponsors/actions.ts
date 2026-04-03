@@ -9,6 +9,7 @@ import {
   deleteSponsor,
   normalizeSponsorWebsite,
 } from "@/lib/sponsors";
+import { setSponsorOpeningsEnabled } from "@/lib/site-resources";
 
 export type UpdateAdminSponsorsState = {
   status: "idle" | "success" | "error";
@@ -190,4 +191,73 @@ export async function deleteSponsorAction(
   revalidatePath("/admin/sponsors");
 
   return buildState("success", "Sponsor removed successfully.");
+}
+
+export async function updateSponsorOpeningsAction(
+  _previousState: UpdateAdminSponsorsState,
+  formData: FormData,
+): Promise<UpdateAdminSponsorsState> {
+  const currentAdmin = await getCurrentAdmin();
+
+  if (!currentAdmin) {
+    return buildState(
+      "error",
+      "Your admin session has expired. Sign in again to continue.",
+    );
+  }
+
+  const sponsorOpeningsValue = formData.get("sponsorOpeningsEnabled");
+
+  if (
+    sponsorOpeningsValue !== "on" &&
+    sponsorOpeningsValue !== "off"
+  ) {
+    return buildState(
+      "error",
+      "Unable to determine the sponsor openings setting to save.",
+    );
+  }
+
+  const sponsorOpeningsEnabled = sponsorOpeningsValue === "on";
+
+  try {
+    await setSponsorOpeningsEnabled(sponsorOpeningsEnabled);
+  } catch (error) {
+    if (error instanceof AppwriteException) {
+      if (error.code === 404) {
+        return buildState(
+          "error",
+          "Resources collection was not found. Push appwrite.config.json first.",
+        );
+      }
+
+      if ([401, 403].includes(error.code ?? 0)) {
+        return buildState(
+          "error",
+          "The Appwrite API key needs databases.read and databases.write scopes.",
+        );
+      }
+
+      return buildState(
+        "error",
+        error.message || "Unable to update sponsor openings right now.",
+      );
+    }
+
+    if (error instanceof AppwriteConfigError) {
+      return buildState("error", error.message);
+    }
+
+    return buildState("error", "Unable to update sponsor openings right now.");
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin/sponsors");
+
+  return buildState(
+    "success",
+    sponsorOpeningsEnabled
+      ? "Sponsor openings enabled successfully."
+      : "Sponsor openings disabled successfully.",
+  );
 }

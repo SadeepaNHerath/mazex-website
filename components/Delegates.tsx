@@ -37,7 +37,7 @@ export default function Delegates() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="maze-card p-8 sm:p-12 group"
+          className="maze-card !px-8 !py-12 sm:!px-12 sm:!py-20 group"
         >
           <div className="maze-card-scan" />
           <div className="relative z-10 flex flex-col items-center gap-8 md:flex-row">
@@ -69,12 +69,12 @@ export default function Delegates() {
               </p>
             </div>
 
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
               <Link
                 href="/resources/delegate-booklet"
-                className="theme-button theme-button-register inline-flex items-center gap-3 rounded-full px-8 py-4 text-base font-bold"
+                className="theme-button theme-button-register flex w-full sm:inline-flex justify-center items-center gap-2 sm:gap-3 rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base font-bold"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.4}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.4}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                 </svg>
                 Download Booklet

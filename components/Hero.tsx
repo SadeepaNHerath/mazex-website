@@ -7,7 +7,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="theme-section relative flex min-h-screen items-start overflow-hidden pt-28 pb-16 sm:pt-36 lg:pt-40"
+      className="theme-section relative flex min-h-screen items-start overflow-hidden pt-32 pb-16 sm:pt-36 lg:pt-40"
     >
       <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#020105] via-[#05020d]/70 to-transparent pointer-events-none" />
       <div
@@ -25,7 +25,7 @@ export default function Hero() {
         }}
       />
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+        <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
           <div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -102,9 +102,9 @@ export default function Hero() {
             transition={{ duration: 0.9, delay: 0.4, ease: "easeOut" }}
             className="flex items-center justify-center"
           >
-            <div className="maze-card p-2 sm:p-2.5">
+            <div className="maze-card p-1 sm:p-2.5">
               <div className="maze-card-scan" />
-              <div className="relative z-10 bg-[#040811]/95 p-4 sm:p-6">
+              <div className="relative z-10 bg-[#040811]/95 p-2 sm:p-6">
                 <div
                   className="w-full"
                   style={{
@@ -119,7 +119,7 @@ export default function Hero() {
                     interactive
                   />
                 </div>
-                <p className="mt-4 text-center text-xs uppercase tracking-[0.22em] text-[#7f6e96] sm:text-sm">
+                <p className="mt-2 text-center text-[0.65rem] uppercase tracking-[0.22em] text-[#7f6e96] sm:text-sm">
                   Click any maze cell to add or remove a wall.
                 </p>
               </div>
