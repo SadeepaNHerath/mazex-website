@@ -5,9 +5,9 @@ export default function VerticalBrandText() {
         className="flex items-center gap-6 text-[0.65rem] font-medium tracking-[0.4em] uppercase text-[#8a73a6]/70 transition-all duration-300 hover:text-[#f8fafc] whitespace-nowrap"
         style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
       >
-        <span className="h-24 w-[1px] bg-gradient-to-t from-transparent via-[#8a73a6]/40 to-transparent"></span>
+        <span className="h-24 w-[0.0625rem] bg-gradient-to-t from-transparent via-[#8a73a6]/40 to-transparent"></span>
         University of Moratuwa
-        <span className="h-24 w-[1px] bg-gradient-to-t from-transparent via-[#8a73a6]/40 to-transparent"></span>
+        <span className="h-24 w-[0.0625rem] bg-gradient-to-t from-transparent via-[#8a73a6]/40 to-transparent"></span>
       </div>
     </div>
   );

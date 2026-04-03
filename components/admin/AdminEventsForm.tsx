@@ -109,7 +109,7 @@ function StatusBadge({ status }: { status: RegistrationFormStatus }) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${className}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-wide ${className}`}
     >
       {status}
     </span>
@@ -206,12 +206,12 @@ function EventCard({
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-2xl">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+            <span className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-wide text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
               {event.kind === "competition" ? "Competition" : `Workshop ${event.number}`}
             </span>
             {event.linkedForm?.status ? <StatusBadge status={event.linkedForm.status} /> : null}
             {event.linkedFormMissing ? (
-              <span className="inline-flex items-center rounded-full bg-rose-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-rose-800 dark:bg-rose-500/20 dark:text-rose-300">
+              <span className="inline-flex items-center rounded-full bg-rose-100 px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-wide text-rose-800 dark:bg-rose-500/20 dark:text-rose-300">
                 Linked form unavailable
               </span>
             ) : null}

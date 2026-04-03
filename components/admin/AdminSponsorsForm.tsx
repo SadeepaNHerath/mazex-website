@@ -414,7 +414,7 @@ export default function AdminSponsorsForm({
 
                 {previewSrc ? (
                   <div className="mt-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                    <p className="text-[0.625rem] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                       Preview
                     </p>
                     <div className="mt-3 flex min-h-28 items-center justify-center rounded-lg bg-white p-4 shadow-sm dark:bg-zinc-950 dark:border dark:border-zinc-800">
@@ -482,14 +482,14 @@ export default function AdminSponsorsForm({
                   </div>
 
                   <div className="mt-4 flex-1">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                    <p className="text-[0.625rem] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                       Sponsor title
                     </p>
                     <p className="mt-1 text-base font-semibold text-zinc-900 dark:text-zinc-50 truncate">
                       {sponsor.title}
                     </p>
 
-                    <p className="mt-3 text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                    <p className="mt-3 text-[0.625rem] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                       Website
                     </p>
                     {sponsor.websiteUrl ? (
@@ -507,7 +507,7 @@ export default function AdminSponsorsForm({
                       </p>
                     )}
 
-                    <p className="mt-3 text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                    <p className="mt-3 text-[0.625rem] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                       Sort order
                     </p>
                     <p className="mt-1 text-sm font-medium text-zinc-900 dark:text-zinc-50">

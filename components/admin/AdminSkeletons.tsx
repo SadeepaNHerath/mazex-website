@@ -79,11 +79,11 @@ export function DashboardSkeleton() {
         </div>
       </div>
 
-      <Skeleton className="h-[400px] w-full rounded-xl" />
+      <Skeleton className="h-[25rem] w-full rounded-xl" />
 
       <div className="grid gap-8 xl:grid-cols-[1.5fr_1fr]">
-         <Skeleton className="h-[500px] w-full rounded-xl" />
-         <Skeleton className="h-[500px] w-full rounded-xl" />
+         <Skeleton className="h-[31.25rem] w-full rounded-xl" />
+         <Skeleton className="h-[31.25rem] w-full rounded-xl" />
       </div>
     </div>
   );

@@ -245,7 +245,7 @@ function BannerArea({ form, bannerUrl }: { form: FormDefinition; bannerUrl: stri
           <img src={bannerUrl} alt="Banner" className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100" />
           <div className="absolute top-3 left-3 opacity-0 transition-opacity group-hover:opacity-100">
-            <span className="rounded-md bg-black/50 px-2 py-1 text-[11px] font-medium text-white backdrop-blur-md">
+            <span className="rounded-md bg-black/50 px-2 py-1 text-[0.6875rem] font-medium text-white backdrop-blur-md">
               Recommended: 3:1
             </span>
           </div>
@@ -273,7 +273,7 @@ function BannerArea({ form, bannerUrl }: { form: FormDefinition; bannerUrl: stri
           <button type="button" onClick={() => { setClientError(null); fileRef.current?.click(); }}
              className="flex h-full w-full flex-col items-center justify-center gap-1.5 bg-zinc-50 text-sm font-medium text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100">
             <span className="flex items-center gap-2"><FileImage className="h-4 w-4" /> Add banner image</span>
-            <span className="text-[11px] font-normal text-zinc-400 dark:text-zinc-500">Recommended aspect ratio: 3:1 · Max 5 MB</span>
+            <span className="text-[0.6875rem] font-normal text-zinc-400 dark:text-zinc-500">Recommended aspect ratio: 3:1 · Max 5 MB</span>
           </button>
         </form>
       )}
@@ -392,7 +392,7 @@ function SyncedFieldsDropdown({
               : "No syncable fields"}
         </span>
         <span className="flex items-center gap-2 shrink-0">
-          <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-bold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+          <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[0.625rem] font-bold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
             {selectedFieldIds.length} / {syncableCount}
           </span>
           <ChevronDown
@@ -449,7 +449,7 @@ function SyncedFieldsDropdown({
                           <span className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
                             {field.label || "Untitled field"}
                           </span>
-                          <span className="truncate text-[10px] uppercase tracking-wider text-zinc-500">
+                          <span className="truncate text-[0.625rem] uppercase tracking-wider text-zinc-500">
                             {field.scope} · {TYPE_LABELS[field.type]}
                             {!syncable && " · Not syncable"}
                           </span>
@@ -624,7 +624,7 @@ function SettingsPanel({
                   role="dialog"
                   aria-modal="true"
                   aria-labelledby={settingsTitleId}
-                  className="relative z-[110] flex max-h-[calc(100vh-2rem)] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.45)] dark:border-zinc-800 dark:bg-zinc-900 sm:max-h-[calc(100vh-3rem)]"
+                  className="relative z-[110] flex max-h-[calc(100vh-2rem)] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_1.875rem_5rem_-1.875rem_rgba(0,0,0,0.45)] dark:border-zinc-800 dark:bg-zinc-900 sm:max-h-[calc(100vh-3rem)]"
                 >
                   <div className="flex items-start justify-between gap-4 border-b border-zinc-200 px-5 py-4 dark:border-zinc-800 sm:px-6">
                     <div>

@@ -94,7 +94,7 @@ export function SubmissionDetailPanel({
     <div className="w-full bg-white dark:bg-zinc-900">
       <div className="sticky top-0 z-10 flex flex-wrap items-start justify-between gap-4 border-b border-zinc-100 bg-white/95 px-6 pb-6 pt-6 backdrop-blur-md sm:px-8 sm:pt-8 dark:border-zinc-800/80 dark:bg-zinc-900/95">
         <div>
-           <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+           <p className="text-[0.625rem] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
             Submission Detail
           </p>
           <h3 className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
@@ -235,7 +235,7 @@ function SubmissionRow({
             )}
           </div>
         </div>
-        <p className="text-[10px] text-zinc-400 dark:text-zinc-500 whitespace-nowrap pt-1">
+        <p className="text-[0.625rem] text-zinc-400 dark:text-zinc-500 whitespace-nowrap pt-1">
           {formatTimestamp(submission.createdAt)}
         </p>
       </div>

@@ -57,7 +57,7 @@ export default async function SlugPage({ params }: PageProps) {
 
         <div className="relative z-10 mx-auto max-w-2xl px-4 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-24">
           {bannerUrl && (
-            <div className="mb-8 w-full overflow-hidden rounded-[24px] border border-white/[0.08] shadow-2xl sm:mb-12">
+            <div className="mb-8 w-full overflow-hidden rounded-[1.5rem] border border-white/[0.08] shadow-2xl sm:mb-12">
               <div className="relative aspect-[3/1] w-full">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -69,11 +69,11 @@ export default async function SlugPage({ params }: PageProps) {
             </div>
           )}
 
-          <div className="relative overflow-hidden rounded-[24px] border border-white/[0.08] bg-[#09090b]/80 shadow-2xl backdrop-blur-2xl ring-1 ring-white/5">
+          <div className="relative overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-[#09090b]/80 shadow-2xl backdrop-blur-2xl ring-1 ring-white/5">
             <div className="p-6 sm:p-8 md:p-10">
               <div className="mb-8">
                 <span
-                  className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest backdrop-blur-md ${
+                  className={`inline-flex rounded-full border px-2.5 py-1 text-[0.6875rem] font-bold uppercase tracking-widest backdrop-blur-md ${
                     availability.state === "open"
                       ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
                       : availability.state === "closed"
@@ -88,12 +88,12 @@ export default async function SlugPage({ params }: PageProps) {
                 </h1>
 
                 {form.description && (
-                  <p className="mt-4 text-[15px] leading-relaxed text-slate-300">
+                  <p className="mt-4 text-[0.9375rem] leading-relaxed text-slate-300">
                     {form.description}
                   </p>
                 )}
                 {availability.description && (
-                  <p className="mt-4 text-[13px] font-medium text-slate-400">
+                  <p className="mt-4 text-[0.8125rem] font-medium text-slate-400">
                     {availability.description}
                   </p>
                 )}

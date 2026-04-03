@@ -162,7 +162,7 @@ function InsightCard({
     <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-4 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+          <p className="text-[0.625rem] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
             {label}
           </p>
           <p className="mt-2 text-lg font-semibold leading-tight text-zinc-900 dark:text-zinc-50">
@@ -271,7 +271,7 @@ export default function AdminRegistrationAnalyticsCharts({
           description="A 14-day view of registration activity, split by competitions and workshops so momentum changes are easy to spot."
         >
           {hasTrendData ? (
-            <div className="h-[340px]">
+            <div className="h-[21.25rem]">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={analytics.trend}>
                   <defs>
@@ -359,7 +359,7 @@ export default function AdminRegistrationAnalyticsCharts({
           >
             {hasKindBreakdown ? (
               <>
-                <div className="h-[230px]">
+                <div className="h-[14.375rem]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Tooltip
@@ -448,7 +448,7 @@ export default function AdminRegistrationAnalyticsCharts({
           >
             {hasWeekdayBreakdown ? (
               <>
-                <div className="h-[230px]">
+                <div className="h-[14.375rem]">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={analytics.weekdayBreakdown}>
                       <CartesianGrid vertical={false} stroke={CHART_COLORS.grid} />
@@ -531,7 +531,7 @@ export default function AdminRegistrationAnalyticsCharts({
           <div
             className="w-full"
             style={{
-              height: `${Math.max(260, analytics.formBreakdown.length * 58)}px`,
+              height: `${(Math.max(260, analytics.formBreakdown.length * 58)) / 16}rem`,
             }}
           >
             <ResponsiveContainer width="100%" height="100%">

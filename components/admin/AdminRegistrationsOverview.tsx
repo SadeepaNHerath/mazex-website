@@ -227,10 +227,10 @@ export default async function AdminRegistrationsOverview() {
                     </p>
                   )}
                   <div className="mt-3 flex items-center justify-between">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-500 line-clamp-1 mr-2">
+                    <p className="text-[0.625rem] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-500 line-clamp-1 mr-2">
                       {submission.formTitle ?? "Registration"}
                     </p>
-                    <p className="text-[10px] text-zinc-400 dark:text-zinc-500 whitespace-nowrap">
+                    <p className="text-[0.625rem] text-zinc-400 dark:text-zinc-500 whitespace-nowrap">
                       {formatTimestamp(submission.createdAt)}
                     </p>
                   </div>
@@ -256,7 +256,7 @@ export default async function AdminRegistrationsOverview() {
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-4 sm:p-5">
-      <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+      <p className="text-[0.625rem] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
         {label}
       </p>
       <p className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
@@ -281,7 +281,7 @@ function SummaryPill({
         <Icon className="h-4 w-4" />
       </div>
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        <p className="text-[0.625rem] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
           {label}
         </p>
         <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
@@ -295,7 +295,7 @@ function SummaryPill({
 function FeatureStat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3.5 py-3 shadow-sm">
-      <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+      <p className="text-[0.625rem] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
         {label}
       </p>
       <p className="mt-1 text-base font-semibold text-zinc-900 dark:text-zinc-50 truncate">
@@ -311,22 +311,22 @@ function formatFormKindLabel(kind: string) {
 
 function getKindBadgeClasses(kind: string) {
   if (kind === "competition") {
-    return "inline-flex items-center rounded-full border border-zinc-200 bg-zinc-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300";
+    return "inline-flex items-center rounded-full border border-zinc-200 bg-zinc-100 px-2.5 py-1 text-[0.625rem] font-bold uppercase tracking-wider text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300";
   }
 
-  return "inline-flex items-center rounded-full border border-zinc-200 bg-zinc-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400";
+  return "inline-flex items-center rounded-full border border-zinc-200 bg-zinc-100 px-2.5 py-1 text-[0.625rem] font-bold uppercase tracking-wider text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400";
 }
 
 function getAvailabilityBadgeClasses(state: string) {
   if (state === "open") {
-    return "inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-200";
+    return "inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[0.625rem] font-bold uppercase tracking-wider text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-200";
   }
 
   if (state === "upcoming") {
-    return "inline-flex items-center rounded-full border border-zinc-200 bg-zinc-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300";
+    return "inline-flex items-center rounded-full border border-zinc-200 bg-zinc-100 px-2.5 py-1 text-[0.625rem] font-bold uppercase tracking-wider text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300";
   }
 
-  return "inline-flex items-center rounded-full border border-zinc-200 bg-zinc-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300";
+  return "inline-flex items-center rounded-full border border-zinc-200 bg-zinc-100 px-2.5 py-1 text-[0.625rem] font-bold uppercase tracking-wider text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300";
 }
 
 function getProgressBarClasses(kind: string) {

@@ -31,7 +31,7 @@ function getNavbarOffset() {
 function syncAnchorOffset() {
   document.documentElement.style.setProperty(
     "--anchor-offset",
-    `${Math.round(getNavbarOffset())}px`,
+    `${(Math.round(getNavbarOffset())) / 16}rem`,
   );
 }
 

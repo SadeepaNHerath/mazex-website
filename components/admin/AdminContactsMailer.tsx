@@ -168,11 +168,11 @@ function SegmentChoice({
           <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
             {label}
           </p>
-          <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+          <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[0.6875rem] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
             {syncedCount} synced
           </span>
           {totalCount > syncedCount ? (
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[0.6875rem] font-medium text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
               {totalCount - syncedCount} pending
             </span>
           ) : null}
@@ -221,17 +221,17 @@ function ContactSegmentBadges({
   return (
     <div className="mt-2 flex flex-wrap gap-2">
       {contact.registeredForCompetition ? (
-        <span className="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-medium text-sky-700 dark:bg-sky-500/10 dark:text-sky-300">
+        <span className="rounded-full bg-sky-100 px-2 py-0.5 text-[0.6875rem] font-medium text-sky-700 dark:bg-sky-500/10 dark:text-sky-300">
           Competition
         </span>
       ) : null}
       {contact.registeredForWorkshop ? (
-        <span className="rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-medium text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
+        <span className="rounded-full bg-violet-100 px-2 py-0.5 text-[0.6875rem] font-medium text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
           Workshop
         </span>
       ) : null}
       {!isRegistrationContactSyncedToResend(contact) ? (
-        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[0.6875rem] font-medium text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
           Pending Resend sync
         </span>
       ) : null}
@@ -504,7 +504,7 @@ export default function AdminContactsMailer({
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby={syncSettingsTitleId}
-                className="relative z-[110] flex max-h-[calc(100vh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.45)] dark:border-zinc-800 dark:bg-zinc-900 sm:max-h-[calc(100vh-3rem)]"
+                className="relative z-[110] flex max-h-[calc(100vh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-[0_1.875rem_5rem_-1.875rem_rgba(0,0,0,0.45)] dark:border-zinc-800 dark:bg-zinc-900 sm:max-h-[calc(100vh-3rem)]"
               >
                 <div className="flex items-start justify-between gap-4 border-b border-zinc-200 px-5 py-4 dark:border-zinc-800 sm:px-6">
                   <div>

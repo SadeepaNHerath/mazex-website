@@ -27,7 +27,7 @@ export default function SignInPage() {
           <Link
             href="/login"
             aria-label="Admin login"
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/16 bg-white/6 text-white shadow-[0_12px_32px_rgba(2,4,12,0.34)] backdrop-blur-xl transition hover:border-white/28 hover:bg-white/10"
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/16 bg-white/6 text-white shadow-[0_0.75rem_2rem_rgba(2,4,12,0.34)] backdrop-blur-xl transition hover:border-white/28 hover:bg-white/10"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

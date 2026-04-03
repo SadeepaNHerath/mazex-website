@@ -96,7 +96,7 @@ function LoginToastMessage({
 
   return (
     <div
-      className={`fixed top-24 right-4 left-4 z-50 mx-auto flex w-auto max-w-sm items-center gap-3 rounded-2xl border px-4 py-3 text-sm shadow-[0_20px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:right-6 sm:left-auto ${toast.className}`}
+      className={`fixed top-24 right-4 left-4 z-50 mx-auto flex w-auto max-w-sm items-center gap-3 rounded-2xl border px-4 py-3 text-sm shadow-[0_1.25rem_3.125rem_rgba(0,0,0,0.45)] backdrop-blur-xl sm:right-6 sm:left-auto ${toast.className}`}
       role="status"
       aria-live="polite"
     >
@@ -162,7 +162,7 @@ export default function AdminLoginForm({
           >
             Email address
           </label>
-          <div className="flex h-[52px] items-center gap-3 rounded-xl border border-[#2a223a] bg-[#060813] px-4 shadow-[inset_0_1px_0_rgba(248,250,252,0.02)] transition focus-within:border-[#8a73a6] focus-within:shadow-[0_0_0_3px_rgba(107,82,143,0.18)]">
+          <div className="flex h-[3.25rem] items-center gap-3 rounded-xl border border-[#2a223a] bg-[#060813] px-4 shadow-[inset_0_0.0625rem_0_rgba(248,250,252,0.02)] transition focus-within:border-[#8a73a6] focus-within:shadow-[0_0_0_0.1875rem_rgba(107,82,143,0.18)]">
             <Mail className="h-5 w-5 shrink-0 text-[#8a73a6]" />
             <input
               id="email"
@@ -184,7 +184,7 @@ export default function AdminLoginForm({
           >
             Password
           </label>
-          <div className="flex h-[52px] items-center gap-3 rounded-xl border border-[#2a223a] bg-[#060813] px-4 shadow-[inset_0_1px_0_rgba(248,250,252,0.02)] transition focus-within:border-[#8a73a6] focus-within:shadow-[0_0_0_3px_rgba(107,82,143,0.18)]">
+          <div className="flex h-[3.25rem] items-center gap-3 rounded-xl border border-[#2a223a] bg-[#060813] px-4 shadow-[inset_0_0.0625rem_0_rgba(248,250,252,0.02)] transition focus-within:border-[#8a73a6] focus-within:shadow-[0_0_0_0.1875rem_rgba(107,82,143,0.18)]">
             <LockKeyhole className="h-5 w-5 shrink-0 text-[#8a73a6]" />
             <input
               id="password"

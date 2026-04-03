@@ -49,7 +49,7 @@ export default function FormSelectorDropdown({
     <div
       className="relative mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
     >
-      <div className="relative w-full sm:w-auto sm:min-w-[280px]" ref={containerRef}>
+      <div className="relative w-full sm:w-auto sm:min-w-[17.5rem]" ref={containerRef}>
         <button
           type="button"
           onClick={() => setOpen(!open)}
@@ -82,7 +82,7 @@ export default function FormSelectorDropdown({
 
         {open && (
           <div className="absolute left-0 top-full z-30 mt-2 w-full overflow-hidden rounded-xl border border-zinc-200 bg-white py-1.5 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="max-h-[300px] overflow-y-auto px-1.5">
+            <div className="max-h-[18.75rem] overflow-y-auto px-1.5">
               {items.map((item) => (
                 <Link
                   key={item.id}
@@ -106,7 +106,7 @@ export default function FormSelectorDropdown({
                     />
                     <span className="truncate">{item.title}</span>
                   </div>
-                  <span className="ml-5 text-[10px] font-bold uppercase tracking-wider opacity-60">
+                  <span className="ml-5 text-[0.625rem] font-bold uppercase tracking-wider opacity-60">
                     {item.kind}
                   </span>
                 </Link>
@@ -125,7 +125,7 @@ export default function FormSelectorDropdown({
         <button
           type="button"
           onClick={onNew}
-          className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-zinc-200 bg-white px-5 py-2.5 text-sm font-bold text-zinc-600 transition-all hover:border-zinc-900 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-400 dark:hover:border-zinc-100 dark:hover:shadow-[0_0_15px_rgba(255,255,255,0.05)]"
+          className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-zinc-200 bg-white px-5 py-2.5 text-sm font-bold text-zinc-600 transition-all hover:border-zinc-900 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-400 dark:hover:border-zinc-100 dark:hover:shadow-[0_0_0.9375rem_rgba(255,255,255,0.05)]"
         >
           <Plus className="h-4 w-4" />
           <span>New Form</span>

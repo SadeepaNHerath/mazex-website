@@ -64,7 +64,7 @@ export default function SubmissionDrawer({
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="absolute bottom-0 w-full z-[60] pointer-events-auto bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 rounded-t-2xl shadow-[0_-20px_40px_-20px_rgba(0,0,0,0.1)] flex flex-col h-[95vh] max-h-[95vh] overflow-hidden"
+            className="absolute bottom-0 w-full z-[60] pointer-events-auto bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 rounded-t-2xl shadow-[0_-1.25rem_2.5rem_-1.25rem_rgba(0,0,0,0.1)] flex flex-col h-[95vh] max-h-[95vh] overflow-hidden"
             onClick={(e: React.MouseEvent<HTMLDivElement>) => {
               // Intercept clicks on links that act as the close button inside the children
               const target = e.target as HTMLElement;

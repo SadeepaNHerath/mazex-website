@@ -11,7 +11,7 @@ export default function PrivacyPolicy() {
   return (
     <>
       <Navbar />
-      <main className="site-shell min-h-screen flex flex-col pt-[80px]">
+      <main className="site-shell min-h-screen flex flex-col pt-[5rem]">
         <div aria-hidden="true" className="site-background">
           <div className="site-background-glow site-background-glow-primary" />
           <div className="site-background-glow site-background-glow-secondary" />

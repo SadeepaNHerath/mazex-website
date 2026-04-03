@@ -24,7 +24,7 @@ const initialState: SubmitRegistrationState = {
 };
 
 function fieldInputClass(hasError: boolean) {
-  return `w-full rounded-xl bg-white/[0.03] px-4 py-3 text-[15px] text-zinc-100 outline-none transition-all placeholder:text-zinc-500 hover:bg-white/[0.04] focus:bg-white/[0.05] border border-white/5 ${
+  return `w-full rounded-xl bg-white/[0.03] px-4 py-3 text-[0.9375rem] text-zinc-100 outline-none transition-all placeholder:text-zinc-500 hover:bg-white/[0.04] focus:bg-white/[0.05] border border-white/5 ${
     hasError
       ? "border-rose-500/50 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10"
       : "focus:border-white/20 focus:ring-4 focus:ring-white/10"
@@ -37,7 +37,7 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
     <button
       type="submit"
       disabled={disabled || pending}
-      className="inline-flex w-full items-center justify-center rounded-xl bg-white text-black px-8 py-3.5 text-[15px] font-medium tracking-wide transition-all hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+      className="inline-flex w-full items-center justify-center rounded-xl bg-white text-black px-8 py-3.5 text-[0.9375rem] font-medium tracking-wide transition-all hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
     >
       {pending ? "Submitting…" : "Submit registration"}
     </button>
@@ -48,14 +48,14 @@ function FieldHint({ error }: { error?: string }) {
   if (!error) return null;
   return (
     <div className="mt-2 space-y-1">
-      <p className="text-[13px] font-medium text-rose-400">{error}</p>
+      <p className="text-[0.8125rem] font-medium text-rose-400">{error}</p>
     </div>
   );
 }
 
 function FieldDescription({ helpText }: { helpText?: string | null }) {
   if (!helpText) return null;
-  return <p className="mb-2.5 text-[13px] leading-relaxed text-zinc-400">{helpText}</p>;
+  return <p className="mb-2.5 text-[0.8125rem] leading-relaxed text-zinc-400">{helpText}</p>;
 }
 
 import { Check, ChevronDown, UploadCloud, File, AlertCircle } from "lucide-react";
@@ -109,7 +109,7 @@ function ChoiceField({
             key={o.value}
             className="group relative flex cursor-pointer items-start gap-3.5"
           >
-            <div className="relative mt-[3px] h-4 w-4 shrink-0">
+            <div className="relative mt-[0.1875rem] h-4 w-4 shrink-0">
               <input
                 type={field.type === "radio" ? "radio" : "checkbox"}
                 name={name}
@@ -131,12 +131,12 @@ function ChoiceField({
                 <>
                   <div className="absolute inset-0 rounded-full border border-white/20 transition-all peer-checked:border-white group-hover:border-white/40" />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity peer-checked:opacity-100">
-                    <div className="h-2 w-2 rounded-full bg-white shadow-[0_0_5px_rgba(255,255,255,0.5)]" />
+                    <div className="h-2 w-2 rounded-full bg-white shadow-[0_0_0.3125rem_rgba(255,255,255,0.5)]" />
                   </div>
                 </>
               )}
             </div>
-            <span className="text-[15px] leading-snug text-zinc-300 transition-colors group-hover:text-white">
+            <span className="text-[0.9375rem] leading-snug text-zinc-300 transition-colors group-hover:text-white">
               {o.label}
             </span>
           </label>
@@ -236,10 +236,10 @@ function ClientFileField({
                   <File className="h-6 w-6" />
                 </div>
               )}
-              <p className="truncate px-4 text-[15px] font-medium text-slate-200">
+              <p className="truncate px-4 text-[0.9375rem] font-medium text-slate-200">
                 {selectedFile.name}
               </p>
-              <p className="mt-1 text-[13px] text-emerald-500/80">
+              <p className="mt-1 text-[0.8125rem] text-emerald-500/80">
                 File attached successfully
               </p>
             </>
@@ -248,10 +248,10 @@ function ClientFileField({
               <div className="mb-4 rounded-full bg-white/5 p-3.5 text-slate-400 ring-1 ring-white/10 transition-transform group-hover:scale-105 group-hover:bg-white/10 group-hover:text-white">
                 <UploadCloud className="h-6 w-6" />
               </div>
-              <p className="text-[15px] font-medium text-slate-200">
+              <p className="text-[0.9375rem] font-medium text-slate-200">
                 Click to attach or drag & drop
               </p>
-              <p className="mt-1.5 text-[13px] text-slate-500">
+              <p className="mt-1.5 text-[0.8125rem] text-slate-500">
                 Supports common file formats up to 10MB
               </p>
             </>
@@ -283,13 +283,13 @@ function RenderField({
   const label = (
     <label
       htmlFor={field.type === "radio" ? undefined : name}
-      className="mb-2 block text-[14px] font-medium text-zinc-300"
+      className="mb-2 block text-[0.875rem] font-medium text-zinc-300"
     >
       {field.label}
       {field.required ? (
         <span className="ml-1 text-rose-400">*</span>
       ) : (
-        <span className="ml-2 text-[12px] font-normal text-zinc-500">
+        <span className="ml-2 text-[0.75rem] font-normal text-zinc-500">
           Optional
         </span>
       )}
@@ -317,7 +317,7 @@ function RenderField({
           rows={4}
           defaultValue={typeof defaultValue === "string" ? defaultValue : ""}
           placeholder={field.placeholder ?? undefined}
-          className={`${fieldInputClass(Boolean(error))} min-h-[100px] resize-y scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20`}
+          className={`${fieldInputClass(Boolean(error))} min-h-[6.25rem] resize-y scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20`}
         />
         <FieldHint error={error} />
       </div>
@@ -537,10 +537,10 @@ export default function PublicRegistrationForm({
     return (
       <div id="registration-success-message" className="relative flex flex-col items-center justify-center overflow-hidden p-12 py-24 text-center sm:p-16">
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="h-[300px] w-[300px] rounded-full bg-emerald-500/10 blur-[100px]" />
+          <div className="h-[18.75rem] w-[18.75rem] rounded-full bg-emerald-500/10 blur-[6.25rem]" />
         </div>
 
-        <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 shadow-[0_0_40px_rgba(16,185,129,0.2)]">
+        <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 shadow-[0_0_2.5rem_rgba(16,185,129,0.2)]">
           <Check className="h-10 w-10 stroke-[2.5]" />
         </div>
         
@@ -555,13 +555,13 @@ export default function PublicRegistrationForm({
         <div className="relative mt-12 flex flex-col justify-center gap-4 w-full sm:w-auto sm:flex-row">
           <Link
             href="/#register"
-            className="inline-flex w-full items-center justify-center rounded-xl bg-white px-8 py-3.5 text-[15px] font-medium tracking-wide text-black transition-all hover:bg-zinc-200 sm:w-auto"
+            className="inline-flex w-full items-center justify-center rounded-xl bg-white px-8 py-3.5 text-[0.9375rem] font-medium tracking-wide text-black transition-all hover:bg-zinc-200 sm:w-auto"
           >
             Explore more events
           </Link>
           <Link
             href="/"
-            className="inline-flex w-full items-center justify-center rounded-xl border border-white/5 bg-white/5 px-8 py-3.5 text-[15px] font-medium tracking-wide text-white transition-all hover:bg-white/10 sm:w-auto"
+            className="inline-flex w-full items-center justify-center rounded-xl border border-white/5 bg-white/5 px-8 py-3.5 text-[0.9375rem] font-medium tracking-wide text-white transition-all hover:bg-white/10 sm:w-auto"
           >
             Return to home
           </Link>
@@ -581,7 +581,7 @@ export default function PublicRegistrationForm({
               initial={{ opacity: 0, y: 20, x: "-50%" }}
               animate={{ opacity: 1, y: 0, x: "-50%" }}
               exit={{ opacity: 0, y: 20, x: "-50%" }}
-              className="fixed bottom-6 left-1/2 z-[99999] flex w-[90%] max-w-sm items-center gap-3 rounded-xl border border-rose-500/20 bg-[#18181b]/90 p-4 px-5 text-[14px] font-medium text-rose-200 shadow-2xl backdrop-blur-xl sm:bottom-10"
+              className="fixed bottom-6 left-1/2 z-[99999] flex w-[90%] max-w-sm items-center gap-3 rounded-xl border border-rose-500/20 bg-[#18181b]/90 p-4 px-5 text-[0.875rem] font-medium text-rose-200 shadow-2xl backdrop-blur-xl sm:bottom-10"
             >
               <AlertCircle className="h-5 w-5 shrink-0 text-rose-500" />
               <p className="flex-1 leading-snug">{validationError}</p>
@@ -595,11 +595,11 @@ export default function PublicRegistrationForm({
 
       {totalPages > 1 && !isFormEmpty && (
         <div className="mb-8">
-          <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-zinc-500">
+          <div className="flex items-center justify-between text-[0.6875rem] font-bold uppercase tracking-widest text-zinc-500">
             <span>Step {currentPage + 1} of {totalPages}</span>
             <span>{Math.round(((currentPage + 1) / totalPages) * 100)}%</span>
           </div>
-          <div className="mt-2.5 h-[3px] w-full overflow-hidden rounded-full bg-white/5">
+          <div className="mt-2.5 h-[0.1875rem] w-full overflow-hidden rounded-full bg-white/5">
             <div
               className="h-full bg-white transition-all duration-500 ease-out"
               style={{ width: `${((currentPage + 1) / totalPages) * 100}%` }}
@@ -613,7 +613,7 @@ export default function PublicRegistrationForm({
         <input type="hidden" name="slug" value={slug} />
         <div
           aria-hidden="true"
-          className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden"
+          className="absolute left-[-625rem] top-auto h-px w-px overflow-hidden"
         >
           <label htmlFor="registration_url">Leave this field empty</label>
           <input
@@ -628,9 +628,9 @@ export default function PublicRegistrationForm({
 
         {isFormEmpty ? (
           <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 px-6 py-8 text-center backdrop-blur-sm">
-            <p className="text-[15px] font-medium text-amber-200">{availability.label}</p>
+            <p className="text-[0.9375rem] font-medium text-amber-200">{availability.label}</p>
             {availability.description && (
-              <p className="mt-2 text-[14px] text-amber-300/80">{availability.description}</p>
+              <p className="mt-2 text-[0.875rem] text-amber-300/80">{availability.description}</p>
             )}
           </div>
         ) : (
@@ -662,18 +662,18 @@ export default function PublicRegistrationForm({
 
             {/* Team Details on the last page */}
             {memberFields.length > 0 && currentPage === totalPages - 1 && (
-              <div className="relative overflow-hidden rounded-[24px] border border-white/5 bg-white/[0.01] p-6 sm:p-8 mt-10">
+              <div className="relative overflow-hidden rounded-[1.5rem] border border-white/5 bg-white/[0.01] p-6 sm:p-8 mt-10">
                 <div className="absolute left-1/4 top-0 h-96 w-96 -translate-y-1/2 rounded-full bg-white/5 opacity-40 blur-3xl" />
                 
                 <div className="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
                   <div>
-                    <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-zinc-300">
+                    <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[0.625rem] font-bold uppercase tracking-widest text-zinc-300">
                       Team Details
                     </span>
                     <h3 className="mt-4 text-2xl font-semibold tracking-tight text-white">
                       Competition Members
                     </h3>
-                    <p className="mt-2 text-[14px] leading-relaxed text-zinc-400 max-w-sm">
+                    <p className="mt-2 text-[0.875rem] leading-relaxed text-zinc-400 max-w-sm">
                       Enter the information for each participant. Team size: {form.teamMinMembers}–
                       {form.teamMaxMembers}.
                     </p>
@@ -682,7 +682,7 @@ export default function PublicRegistrationForm({
                   <div className="w-full max-w-[16rem]">
                     <label
                       htmlFor="memberCount"
-                      className="mb-2 block text-[14px] font-medium text-zinc-300"
+                      className="mb-2 block text-[0.875rem] font-medium text-zinc-300"
                     >
                       How many members?
                     </label>
@@ -703,7 +703,7 @@ export default function PublicRegistrationForm({
                       ))}
                     </select>
                     {state.fieldErrors.memberCount && (
-                      <p className="mt-2 text-[13px] text-rose-300">
+                      <p className="mt-2 text-[0.8125rem] text-rose-300">
                         {state.fieldErrors.memberCount}
                       </p>
                     )}
@@ -717,7 +717,7 @@ export default function PublicRegistrationForm({
                       className="rounded-2xl border border-white/5 bg-white/[0.02] p-5 transition-colors sm:p-7"
                     >
                       <h4 className="flex items-center gap-3 text-lg font-medium text-white">
-                        <span className="flex h-6 w-6 items-center justify-center rounded bg-white/10 text-[11px] font-bold ring-1 ring-white/10">
+                        <span className="flex h-6 w-6 items-center justify-center rounded bg-white/10 text-[0.6875rem] font-bold ring-1 ring-white/10">
                           {i + 1}
                         </span>
                         Member {i + 1}
@@ -753,7 +753,7 @@ export default function PublicRegistrationForm({
                     <button
                       type="button"
                       onClick={handlePrev}
-                      className="inline-flex w-full items-center justify-center rounded-xl bg-white/5 py-3.5 px-6 text-[15px] font-medium text-white transition-all hover:bg-white/10 sm:w-auto"
+                      className="inline-flex w-full items-center justify-center rounded-xl bg-white/5 py-3.5 px-6 text-[0.9375rem] font-medium text-white transition-all hover:bg-white/10 sm:w-auto"
                     >
                       Previous
                     </button>
@@ -762,7 +762,7 @@ export default function PublicRegistrationForm({
                     <button
                       type="button"
                       onClick={handleNext}
-                      className="inline-flex w-full items-center justify-center rounded-xl bg-white text-black px-8 py-3.5 text-[15px] font-medium tracking-wide transition-all hover:bg-zinc-200 sm:w-auto"
+                      className="inline-flex w-full items-center justify-center rounded-xl bg-white text-black px-8 py-3.5 text-[0.9375rem] font-medium tracking-wide transition-all hover:bg-zinc-200 sm:w-auto"
                     >
                       Next Step
                     </button>
@@ -771,7 +771,7 @@ export default function PublicRegistrationForm({
                   )}
                 </div>
                 {!availability.isAcceptingSubmissions && (
-                  <p className="text-[13px] font-medium text-amber-300">
+                  <p className="text-[0.8125rem] font-medium text-amber-300">
                     This form is currently {availability.label.toLowerCase()}.
                   </p>
                 )}

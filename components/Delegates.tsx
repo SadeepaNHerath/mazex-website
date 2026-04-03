@@ -6,8 +6,8 @@ import Link from "next/link";
 export default function Delegates() {
   return (
     <section id="delegates" className="theme-section relative pt-24 pb-32 sm:pt-32 sm:pb-40">
-      <div className="absolute top-[10%] right-[-8%] h-[420px] w-[420px] rounded-full bg-[#A855F7]/10 opacity-40 blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-[8%] left-[-8%] h-[360px] w-[360px] rounded-full bg-[#818CF8]/10 opacity-40 blur-[130px] pointer-events-none" />
+      <div className="absolute top-[10%] right-[-8%] h-[26.25rem] w-[26.25rem] rounded-full bg-[#A855F7]/10 opacity-40 blur-[9.375rem] pointer-events-none" />
+      <div className="absolute bottom-[8%] left-[-8%] h-[22.5rem] w-[22.5rem] rounded-full bg-[#818CF8]/10 opacity-40 blur-[8.125rem] pointer-events-none" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.h2
@@ -41,7 +41,7 @@ export default function Delegates() {
         >
           <div className="relative z-10 flex flex-col items-center gap-8 md:flex-row">
             <div className="flex-shrink-0">
-              <div className="flex h-28 w-24 flex-col items-center justify-center rounded-[1.5rem] border border-[#2D374F] bg-[#111A31]/90 shadow-[0_0_30px_rgba(168,85,247,0.12)] sm:h-32 sm:w-28">
+              <div className="flex h-28 w-24 flex-col items-center justify-center rounded-[1.5rem] border border-[#2D374F] bg-[#111A31]/90 shadow-[0_0_1.875rem_rgba(168,85,247,0.12)] sm:h-32 sm:w-28">
                 <svg fill="currentColor" className="h-16 w-16 text-[#C084FC] sm:h-22 sm:w-22" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 335.08 335.079" xmlSpace="preserve">
                   <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                   <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
@@ -71,7 +71,7 @@ export default function Delegates() {
             <div className="flex-shrink-0">
               <Link
                 href="/resources/delegate-booklet"
-                className="inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 text-base font-bold text-[#3B0764] shadow-[0_12px_32px_rgba(255,255,255,0.18)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#F8F6FF] hover:shadow-[0_18px_48px_rgba(255,255,255,0.25)] active:scale-[0.98]"
+                className="inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 text-base font-bold text-[#3B0764] shadow-[0_0.75rem_2rem_rgba(255,255,255,0.18)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#F8F6FF] hover:shadow-[0_1.125rem_3rem_rgba(255,255,255,0.25)] active:scale-[0.98]"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.4}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />

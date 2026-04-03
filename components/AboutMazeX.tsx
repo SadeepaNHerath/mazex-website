@@ -16,8 +16,8 @@ const itemVariants = {
 export default function AboutMazeX() {
   return (
     <section id="about" className="theme-section-alt relative py-24 sm:py-32">
-      <div className="absolute left-[-10%] top-10 h-[380px] w-[380px] rounded-full bg-[#A855F7]/10 opacity-40 blur-[130px] pointer-events-none" />
-      <div className="absolute right-[-8%] bottom-0 h-[320px] w-[320px] rounded-full bg-[#818CF8]/10 opacity-40 blur-[120px] pointer-events-none" />
+      <div className="absolute left-[-10%] top-10 h-[23.75rem] w-[23.75rem] rounded-full bg-[#A855F7]/10 opacity-40 blur-[8.125rem] pointer-events-none" />
+      <div className="absolute right-[-8%] bottom-0 h-[20rem] w-[20rem] rounded-full bg-[#818CF8]/10 opacity-40 blur-[7.5rem] pointer-events-none" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-[0.95fr_1.05fr]">
@@ -38,7 +38,7 @@ export default function AboutMazeX() {
             </p>
 
             <div className="theme-card p-6 sm:p-8">
-              <div className="theme-chip mb-4 text-[11px] font-bold uppercase tracking-[0.28em]">
+              <div className="theme-chip mb-4 text-[0.6875rem] font-bold uppercase tracking-[0.28em]">
                 Why It Matters
               </div>
               <p className="theme-copy text-sm italic sm:text-base">
@@ -55,7 +55,7 @@ export default function AboutMazeX() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            className="hidden lg:grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
           >
             {ABOUT_FEATURES.map((feature, i) => (
               <motion.div
@@ -63,7 +63,7 @@ export default function AboutMazeX() {
                 variants={itemVariants}
                 className="theme-card-soft cursor-default p-5 transition-all duration-300 hover:-translate-y-1 sm:p-6"
               >
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#352F55] bg-[#1C1635] text-3xl shadow-[0_0_18px_rgba(168,85,247,0.18)]">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#352F55] bg-[#1C1635] text-3xl shadow-[0_0_1.125rem_rgba(168,85,247,0.18)]">
                   {feature.icon}
                 </div>
                 <div className="mb-3 h-px w-full bg-gradient-to-r from-[#A855F7]/70 via-[#818CF8]/30 to-transparent" />

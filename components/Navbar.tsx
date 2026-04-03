@@ -36,25 +36,25 @@ const NAV_THEMES: Record<
 > = {
   violet: {
     shell:
-      "overflow-hidden border-b border-[#352947]/75 bg-transparent shadow-[inset_0_-1px_0_rgba(107,82,143,0.18)]",
+      "overflow-hidden border-b border-[#352947]/75 bg-transparent shadow-[inset_0_-0.0625rem_0_rgba(107,82,143,0.18)]",
     linkGroup: "border-[#352947] bg-[#0c0918]/88",
     linkIdle: "text-[#d7d0e6] hover:bg-[#181127] hover:text-[#F8FAFC]",
-    linkActive: "bg-[#241837] text-[#F8FAFC] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
+    linkActive: "bg-[#241837] text-[#F8FAFC] shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.04)]",
     menuButton: "border-[#3b2a56] bg-[#0c0918]/92 text-[#F4F2FF]",
     mobilePanel:
-      "border-[#3b2a56]/80 bg-[linear-gradient(180deg,rgba(10,6,20,0.96)_0%,rgba(5,4,14,0.94)_100%)] shadow-[0_20px_60px_rgba(22,8,40,0.46)]",
+      "border-[#3b2a56]/80 bg-[linear-gradient(180deg,rgba(10,6,20,0.96)_0%,rgba(5,4,14,0.94)_100%)] shadow-[0_1.25rem_3.75rem_rgba(22,8,40,0.46)]",
     mobileLink:
       "border-[#312544] bg-[#0c0918]/92 hover:border-[#6b528f] hover:bg-[#161026] text-[#d7d0e6] hover:text-[#F8FAFC]",
   },
   blue: {
     shell:
-      "overflow-hidden border-b border-[#294864]/75 bg-transparent shadow-[inset_0_-1px_0_rgba(56,189,248,0.18)]",
+      "overflow-hidden border-b border-[#294864]/75 bg-transparent shadow-[inset_0_-0.0625rem_0_rgba(56,189,248,0.18)]",
     linkGroup: "border-[#21384e] bg-[#07131f]/88",
     linkIdle: "text-[#cfe2f3] hover:bg-[#102130] hover:text-[#F8FAFC]",
-    linkActive: "bg-[#122537] text-[#F8FAFC] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
+    linkActive: "bg-[#122537] text-[#F8FAFC] shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.04)]",
     menuButton: "border-[#294864] bg-[#07131f]/92 text-[#EAF6FF]",
     mobilePanel:
-      "border-[#294864]/80 bg-[linear-gradient(180deg,rgba(5,15,26,0.96)_0%,rgba(3,10,18,0.94)_100%)] shadow-[0_20px_60px_rgba(4,20,34,0.46)]",
+      "border-[#294864]/80 bg-[linear-gradient(180deg,rgba(5,15,26,0.96)_0%,rgba(3,10,18,0.94)_100%)] shadow-[0_1.25rem_3.75rem_rgba(4,20,34,0.46)]",
     mobileLink:
       "border-[#21384e] bg-[#07131f]/92 hover:border-[#38BDF8] hover:bg-[#0d1b29] text-[#cfe2f3] hover:text-[#F8FAFC]",
   },
@@ -126,7 +126,7 @@ export default function Navbar({
 
   const theme = NAV_THEMES[navTheme];
   const adminButtonClassName =
-    "inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/16 bg-white/6 text-white shadow-[0_12px_32px_rgba(2,4,12,0.34)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-white/28 hover:bg-white/10";
+    "inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/16 bg-white/6 text-white shadow-[0_0.75rem_2rem_rgba(2,4,12,0.34)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-white/28 hover:bg-white/10";
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50">
@@ -138,7 +138,7 @@ export default function Navbar({
           className={`w-full backdrop-blur-2xl transition-[background-color,border-color] duration-500 ${theme.shell}`}
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex h-[80px] items-center justify-between">
+            <div className="flex h-[5rem] items-center justify-between">
               <Link
                 href={HOME_PATH}
                 className="flex items-center transition-opacity hover:opacity-90"
@@ -148,20 +148,20 @@ export default function Navbar({
                   alt="MazeX Logo"
                   width={156}
                   height={88}
-                  className="h-[56px] w-auto object-contain sm:h-[64px]"
+                  className="h-[3.5rem] w-auto object-contain sm:h-[3.5rem] lg:h-[4rem]"
                   priority
                 />
               </Link>
 
-              <div className="hidden items-center gap-4 md:flex">
+              <div className="hidden items-center gap-2 lg:gap-4 md:flex">
                 <div
-                  className={`flex items-center gap-2 rounded-full border px-3 py-2 transition-[background-color,border-color] duration-500 ${theme.linkGroup}`}
+                  className={`flex items-center gap-1 lg:gap-2 rounded-full border px-2 py-1.5 lg:px-3 lg:py-2 transition-[background-color,border-color] duration-500 ${theme.linkGroup}`}
                 >
                   {NAV_LINKS.map((link) => (
                     <a
                       key={link.href}
                       href={getHomeSectionHref(link.href)}
-                      className={`rounded-full px-4 py-2 text-sm font-medium transition-[background-color,color,box-shadow] duration-300 ${
+                      className={`rounded-full px-3 py-1.5 lg:px-4 lg:py-2 text-sm font-medium transition-[background-color,color,box-shadow] duration-300 ${
                         activeHref === link.href ? theme.linkActive : theme.linkIdle
                       }`}
                     >
@@ -171,7 +171,7 @@ export default function Navbar({
                 </div>
                 <a
                   href={registerHref}
-                  className="theme-button theme-button-register rounded-full px-6 py-2.5 text-sm font-medium"
+                  className="theme-button theme-button-register whitespace-nowrap rounded-full px-4 py-2 lg:px-6 lg:py-2.5 text-sm font-medium"
                 >
                   Register Now
                 </a>

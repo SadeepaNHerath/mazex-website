@@ -60,7 +60,7 @@ export default function Countdown({
     <div>
       {showModeSwitch ? (
         <div className="mb-8 flex justify-center">
-          <div className="rounded-full border border-[#303959] bg-[#0B1427]/85 p-1.5 shadow-[0_12px_30px_rgba(2,6,23,0.25)]">
+          <div className="rounded-full border border-[#303959] bg-[#0B1427]/85 p-1.5 shadow-[0_0.75rem_1.875rem_rgba(2,6,23,0.25)]">
             <div className="flex gap-1">
               <button
                 onClick={() => {
@@ -99,7 +99,7 @@ export default function Countdown({
         </div>
       )}
 
-      <div className="min-h-[260px] sm:min-h-[220px] flex flex-col justify-center">
+      <div className="min-h-[16.25rem] sm:min-h-[13.75rem] flex flex-col justify-center">
         {showCompetition || registrationMode === "countdown" ? (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-6">
             {units.map((unit, i) => (

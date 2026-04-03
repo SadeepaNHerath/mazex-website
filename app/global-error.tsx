@@ -35,7 +35,7 @@ export default function GlobalError({
           
           <div className="flex-1 flex items-center justify-center p-6 relative z-10 w-full max-w-7xl mx-auto">
             <div className="theme-card max-w-xl w-full mx-auto text-center p-10 sm:p-14 space-y-8">
-              <div className="mx-auto w-24 h-24 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.15)]">
+              <div className="mx-auto w-24 h-24 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 shadow-[0_0_1.875rem_rgba(239,68,68,0.15)]">
                 <AlertTriangle className="w-12 h-12 text-red-500 drop-shadow-sm" />
               </div>
               

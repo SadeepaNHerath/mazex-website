@@ -135,7 +135,7 @@ export default function AdminDashboardShell({
             <div key={index}>
               <p
                 className={cn(
-                  "px-2 mb-2 text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500",
+                  "px-2 mb-2 text-[0.625rem] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500",
                   sidebarCollapsed && "text-center px-0 lg:text-center lg:px-0"
                 )}
                 aria-hidden="true"

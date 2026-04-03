@@ -21,7 +21,7 @@ export default function Error({
   return (
     <>
       <Navbar />
-      <main className="site-shell min-h-screen flex flex-col pt-[80px]">
+      <main className="site-shell min-h-screen flex flex-col pt-[5rem]">
         <div aria-hidden="true" className="site-background">
           <div className="site-background-glow site-background-glow-primary" />
           <div className="site-background-glow site-background-glow-secondary" />
@@ -31,7 +31,7 @@ export default function Error({
         
         <div className="flex-1 flex items-center justify-center p-6 pb-24 relative z-10 w-full max-w-7xl mx-auto">
           <div className="theme-card max-w-xl w-full mx-auto text-center p-10 sm:p-14 space-y-8">
-            <div className="mx-auto w-24 h-24 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.15)]">
+            <div className="mx-auto w-24 h-24 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 shadow-[0_0_1.875rem_rgba(239,68,68,0.15)]">
               <AlertTriangle className="w-12 h-12 text-red-500 drop-shadow-sm" />
             </div>
             
