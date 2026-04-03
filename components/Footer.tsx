@@ -107,7 +107,7 @@ export default function Footer() {
             </h4>
 
             {/* Mobile horizontal break */}
-            <div className="mx-auto mb-8 h-px w-35 bg-white/10 lg:hidden" />
+            <div className="mx-auto mb-8 h-px w-35 bg-white/10 md:hidden" />
 
             <div className="grid grid-cols-1 items-center justify-items-center lg:justify-items-start gap-5 sm:grid-cols-2">
               <a
