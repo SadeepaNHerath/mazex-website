@@ -14,11 +14,10 @@ export default function SubmissionDrawer({
 }) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     setMounted(true);
-    setIsOpen(true);
   }, []);
 
   const handleClose = (e?: React.MouseEvent) => {

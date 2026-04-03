@@ -13,7 +13,6 @@ import type {
 } from "@/lib/registration-types";
 
 import FormSelectorDropdown from "@/components/admin/FormSelectorDropdown";
-import SubmissionDrawer from "@/components/admin/SubmissionDrawer";
 import { OptimisticSubmissionDrawer } from "@/components/admin/OptimisticSubmissionDrawer";
 import SubmissionRowInteractive from "@/components/admin/SubmissionRowInteractive";
 import { useRouter } from "next/navigation";
@@ -312,7 +311,11 @@ export default function AdminRegistrationSubmissionsPanel({
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 pb-10">
-      <OptimisticSubmissionDrawer form={form} submissions={submissionPage.submissions} />
+      <OptimisticSubmissionDrawer
+        form={form}
+        submissions={submissionPage.submissions}
+        selectedSubmission={selectedSubmission}
+      />
       <FormSelectorDropdown
         items={forms.map((f) => ({
           id: f.id,
@@ -557,15 +560,7 @@ export default function AdminRegistrationSubmissionsPanel({
 
             </div>
 
-            {selectedSubmission && (
-              <SubmissionDrawer onCloseHref={buildPageHref({ slug: form.slug, from, to, page: submissionPage.page, pageSize, searchField, searchQuery })}>
-                <SubmissionDetailPanel 
-                  form={form} 
-                  submission={selectedSubmission} 
-                  onCloseHref={buildPageHref({ slug: form.slug, from, to, page: submissionPage.page, pageSize, searchField, searchQuery })} 
-                />
-              </SubmissionDrawer>
-            )}
+
         </div>
       </div>
     </div>

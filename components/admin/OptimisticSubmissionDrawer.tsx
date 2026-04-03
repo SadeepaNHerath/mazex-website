@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import type { FormWithFields, SubmissionDetail } from "@/lib/registration-types";
@@ -16,17 +16,16 @@ export const openOptimisticDrawer = (id: string | null) => {
 export function OptimisticSubmissionDrawer({
   form,
   submissions,
+  selectedSubmission,
 }: {
   form: FormWithFields;
   submissions: SubmissionDetail[];
+  selectedSubmission: SubmissionDetail | null;
 }) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
-  
-  // Notice when the URL actually reflects the loading ID, we clear the loading drawer
-  // because the REAL drawer is now mounting.
-  const currentId = searchParams.get("submission");
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -34,19 +33,29 @@ export function OptimisticSubmissionDrawer({
     return () => { dispatchOptimisticOpen = null; };
   }, []);
 
-  useEffect(() => {
-    if (currentId === loadingId) {
-      // The Next.js route transition has completed! Hide optimistic UI.
-      setLoadingId(null);
-    }
-  }, [currentId, loadingId]);
+  const closeHref = buildPageHref({
+    slug: form.slug,
+    from: searchParams.get("from"),
+    to: searchParams.get("to"),
+    page: Number(searchParams.get("page") ?? "1"),
+    pageSize: searchParams.get("pageSize") === "all" ? "all" : (searchParams.get("pageSize") ? Number(searchParams.get("pageSize")) : null),
+    searchField: searchParams.get("searchField"),
+    searchQuery: searchParams.get("searchQuery"),
+  });
+
+  const handleClose = () => {
+    setLoadingId(null);
+    router.push(closeHref, { scroll: false });
+  };
 
   if (!mounted) return null;
   const portalRoot = document.getElementById("admin-drawer-portal");
   if (!portalRoot) return null;
 
-  const isOpen = loadingId !== null;
-  const submissionToRender = submissions.find((s) => s.id === loadingId);
+  const isOpen = loadingId !== null || selectedSubmission !== null;
+  const submissionToRender = 
+    (loadingId ? submissions.find((s) => s.id === loadingId) : null) ?? 
+    selectedSubmission;
 
   return createPortal(
     <AnimatePresence>
@@ -60,11 +69,11 @@ export function OptimisticSubmissionDrawer({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="absolute inset-0 z-40 bg-zinc-900/40 backdrop-blur-sm dark:bg-zinc-900/60 pointer-events-auto"
-            onClick={() => setLoadingId(null)}
+            onClick={handleClose}
             aria-label="Cancel loading"
           />
 
-          {/* Skeleton/Actual Drawer Container */}
+          {/* Drawer Container */}
           <motion.div
             key="optimistic-drawer"
             initial={{ y: "100%" }}
@@ -76,7 +85,8 @@ export function OptimisticSubmissionDrawer({
               const target = e.target as HTMLElement;
               const link = target.closest("a");
               if (link && link.getAttribute("aria-label") === "Close") {
-                setLoadingId(null);
+                e.preventDefault();
+                handleClose();
               }
             }}
           >
@@ -85,15 +95,7 @@ export function OptimisticSubmissionDrawer({
                 <SubmissionDetailPanel
                   form={form}
                   submission={submissionToRender}
-                  onCloseHref={buildPageHref({
-                    slug: form.slug,
-                    from: searchParams.get("from"),
-                    to: searchParams.get("to"),
-                    page: Number(searchParams.get("page") ?? "1"),
-                    pageSize: searchParams.get("pageSize") === "all" ? "all" : (searchParams.get("pageSize") ? Number(searchParams.get("pageSize")) : null),
-                    searchField: searchParams.get("searchField"),
-                    searchQuery: searchParams.get("searchQuery"),
-                  })}
+                  onCloseHref={closeHref}
                 />
               </div>
             ) : (
