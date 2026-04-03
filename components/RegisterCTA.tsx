@@ -107,7 +107,7 @@ export default function RegisterCTA({
   return (
     <section
       id="register"
-      className="theme-section-alt relative overflow-hidden py-24 sm:py-32"
+      className="theme-section-alt relative overflow-hidden py-12 sm:py-16"
     >
       <div
         className="absolute top-1/2 left-1/2 h-[760px] w-[760px] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
@@ -117,24 +117,27 @@ export default function RegisterCTA({
         }}
       />
 
-      <div className="relative z-10 mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="theme-card px-6 py-10 sm:px-10 sm:py-12"
+           initial={{ opacity: 0, y: 40 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true }}
+           transition={{ duration: 0.6 }}
+           className="maze-card mx-auto max-w-5xl px-6 py-24 sm:px-10 sm:py-36 !bg-[#07050d]/95"
         >
-          <h2 className="mb-4 text-4xl font-bold text-[#F8FAFC] sm:text-5xl lg:text-6xl">
+          <div className="maze-card-scan" />
+          
+          <h2 className="mt-6 mb-4 text-4xl font-bold text-[#F8FAFC] sm:mt-12 sm:text-5xl lg:text-6xl">
             Ready to Build Your Micromouse?
           </h2>
 
-          <div className="mt-12 flex flex-col items-center justify-center">
-            <span className="inline-flex items-center rounded-full border border-[#303959] bg-[#0B1427]/85 px-6 py-2.5 text-sm font-semibold uppercase tracking-[0.24em] text-[#c9bedb]">
+          <div className="mt-12 relative z-10 flex flex-col items-center justify-center">
+            <span className="theme-kicker">
+              <div className="animate-kicker-scan" />
               {pillText}
             </span>
 
-            <div className="my-8 h-px w-24 bg-gradient-to-r from-transparent via-[#818CF8]/50 to-transparent" />
+            <div className="my-6 h-px w-24 bg-gradient-to-r from-transparent via-[#818CF8]/50 to-transparent" />
 
             <div className="w-full max-w-4xl">
               {showCountdown ? (
@@ -145,7 +148,7 @@ export default function RegisterCTA({
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
-                    className="bg-gradient-to-r from-[#F8FAFC] via-[#CBD5E1] to-[#818CF8] bg-clip-text font-[family-name:var(--font-space-grotesk)] text-2xl font-bold uppercase tracking-[0.3em] text-transparent drop-shadow-[0_0_15px_rgba(129,140,248,0.25)] sm:text-3xl md:text-4xl"
+                    className="bg-gradient-to-r from-[#F8FAFC] via-[#CBD5E1] to-[#818CF8] bg-clip-text font-[family-name:var(--font-space-grotesk)] text-2xl font-extrabold uppercase tracking-[0.3em] text-transparent drop-shadow-[0_0_15px_rgba(129,140,248,0.25)] sm:text-3xl md:text-4xl"
                   >
                     {statusText}
                   </motion.div>
@@ -154,7 +157,7 @@ export default function RegisterCTA({
             </div>
 
             {competition.scheduleLabel ? (
-              <p className="mt-6 max-w-2xl text-sm leading-relaxed text-[#c9bedb]">
+              <p className="mt-6 mb-6 max-w-2xl text-sm leading-relaxed text-[#c9bedb] sm:mb-12">
                 {competition.scheduleLabel}
               </p>
             ) : null}
@@ -162,7 +165,7 @@ export default function RegisterCTA({
             {liveState === "open" && competition.registerHref ? (
               <a
                 href={competition.registerHref}
-                className="theme-button theme-button-register mt-8 inline-flex rounded-full px-8 py-3 text-sm font-medium"
+                className="theme-button theme-button-register mt-4 mb-6 inline-flex rounded-full px-8 py-3 text-sm font-medium sm:mb-12"
               >
                 Register Now
               </a>
