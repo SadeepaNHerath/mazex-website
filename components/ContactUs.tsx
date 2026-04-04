@@ -6,7 +6,7 @@ import { useMemo } from "react";
 
 const TEAM_MEMBERS = [
   {
-    name: "Chanuru Dewnitha",
+    name: "Chaniru Dewnitha",
     role: "Chair",
     phone: "0788119064",
     email: "chaniruranawaka@gmail.com",

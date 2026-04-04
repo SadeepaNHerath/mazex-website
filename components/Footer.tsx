@@ -19,7 +19,7 @@ const SOCIAL_LINKS = [
   {
     icon: FaYoutube,
     label: "YouTube",
-    href: "https://www.youtube.com/@IEEEUOMSB",
+    href: "https://www.youtube.com/@mazex1.0",
   },
   {
     icon: FaInstagram,
