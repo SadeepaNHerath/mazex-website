@@ -169,8 +169,8 @@ export default function AdminSettingsForm({
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
                 Connect the single Google account used for registration syncs
-                here. Form settings will link back to this section whenever sync
-                needs Google access.
+                here. Changing it here updates the shared Google connection for
+                every admin account.
               </p>
             </div>
 
@@ -178,7 +178,7 @@ export default function AdminSettingsForm({
               {googleSheetsConnection ? (
                 <>
                   <p className="text-sm text-zinc-700 dark:text-zinc-300">
-                    Connected as{" "}
+                    Connected for all admins as{" "}
                     <span className="font-semibold text-zinc-900 dark:text-zinc-100">
                       {googleSheetsConnection.email ?? "Google account"}
                     </span>

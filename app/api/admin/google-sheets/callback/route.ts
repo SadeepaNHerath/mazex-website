@@ -5,7 +5,8 @@ import {
   ensureGoogleSpreadsheetForAdmin,
   exchangeGoogleOAuthCode,
   fetchGoogleUserInfo,
-  getGoogleSheetsConnectionRecordForAdmin,
+  getSharedGoogleSheetsConnectionDocumentId,
+  getSharedGoogleSheetsConnectionRecord,
   isGoogleSheetsOAuthConfigured,
   normalizeGoogleSheetsReturnToPath,
   upsertGoogleSheetsConnection,
@@ -94,9 +95,7 @@ export async function GET(request: NextRequest) {
       request,
       "/api/admin/google-sheets/callback",
     ).toString();
-    const existingConnection = await getGoogleSheetsConnectionRecordForAdmin(
-      currentAdmin.user.$id,
-    );
+    const existingConnection = await getSharedGoogleSheetsConnectionRecord();
     const tokenResponse = await exchangeGoogleOAuthCode({
       code,
       redirectUri,
@@ -119,6 +118,7 @@ export async function GET(request: NextRequest) {
     ]);
 
     await upsertGoogleSheetsConnection({
+      connectionDocumentId: getSharedGoogleSheetsConnectionDocumentId(),
       adminUserId: currentAdmin.user.$id,
       email: userInfo.email,
       refreshToken,

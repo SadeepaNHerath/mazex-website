@@ -1,15 +1,11 @@
 import AdminSettingsForm from "@/components/admin/AdminSettingsForm";
-import { getCurrentAdmin } from "@/lib/admin-auth";
 import {
-  getGoogleSheetsConnectionForAdmin,
+  getSharedGoogleSheetsConnection,
   isGoogleSheetsOAuthConfigured,
 } from "@/lib/google-sheets";
 
 export default async function AdminSettingsPage() {
-  const currentAdmin = await getCurrentAdmin();
-  const googleSheetsConnection = currentAdmin
-    ? await getGoogleSheetsConnectionForAdmin(currentAdmin.user.$id)
-    : null;
+  const googleSheetsConnection = await getSharedGoogleSheetsConnection();
 
   return (
     <AdminSettingsForm

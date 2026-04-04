@@ -50,17 +50,14 @@ function SaveEventButton() {
 }
 
 function EventToggle({
-  name,
-  defaultEnabled,
+  enabled,
+  onToggle,
 }: {
-  name: string;
-  defaultEnabled: boolean;
+  enabled: boolean;
+  onToggle: () => void;
 }) {
-  const [enabled, setEnabled] = useState(defaultEnabled);
-
   return (
     <div className="flex shrink-0 items-center gap-3">
-      <input type="hidden" name={name} value={enabled ? "on" : "off"} />
       <span className="hidden text-xs font-semibold uppercase tracking-wide text-zinc-500 sm:inline-block dark:text-zinc-400">
         Enable Event
       </span>
@@ -69,7 +66,7 @@ function EventToggle({
         role="switch"
         aria-checked={enabled}
         aria-label="Enable event"
-        onClick={() => setEnabled((value) => !value)}
+        onClick={onToggle}
         className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:focus:ring-zinc-200 dark:focus:ring-offset-zinc-900 ${
           enabled
             ? "border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100"
@@ -190,6 +187,11 @@ function EventCard({
     submissionState.resetTargetEventKey === event.key
       ? submissionState.toastKey
       : 0;
+  const [enabled, setEnabled] = useState(event.enabled);
+
+  useEffect(() => {
+    setEnabled(event.enabled);
+  }, [event.enabled, formResetKey]);
 
   return (
     <form
@@ -198,6 +200,11 @@ function EventCard({
       className="rounded-xl border border-zinc-200 bg-white px-3 py-5 sm:p-6 md:p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
     >
       <input type="hidden" name="targetEventKey" value={event.key} />
+      <input
+        type="hidden"
+        name={`${event.key}__enabled`}
+        value={enabled ? "on" : "off"}
+      />
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0 flex-1">
@@ -217,8 +224,8 @@ function EventCard({
             {/* Event toggle on mobile */}
             <div className="lg:hidden">
               <EventToggle
-                name={`${event.key}__enabled`}
-                defaultEnabled={event.enabled}
+                enabled={enabled}
+                onToggle={() => setEnabled((value) => !value)}
               />
             </div>
           </div>
@@ -259,8 +266,8 @@ function EventCard({
         {/* Event toggle on desktop */}
         <div className="hidden lg:block">
           <EventToggle
-            name={`${event.key}__enabled`}
-            defaultEnabled={event.enabled}
+            enabled={enabled}
+            onToggle={() => setEnabled((value) => !value)}
           />
         </div>
       </div>

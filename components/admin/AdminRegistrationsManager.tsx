@@ -511,9 +511,7 @@ function SettingsPanel({
   );
   const googleSheetsFieldOptions = form.fields.filter((field) => field.type !== "page_break");
   const googleSheetsSettingsHref = "/admin/settings#google-sign-in";
-  const hasGoogleSheetsConnection = Boolean(
-    googleSheetsConnection || form.googleSheetsAdminUserId,
-  );
+  const hasGoogleSheetsConnection = Boolean(googleSheetsConnection);
   const canUseDom = typeof document !== "undefined";
   const settingsTitleId = `form-settings-title-${form.id}`;
 

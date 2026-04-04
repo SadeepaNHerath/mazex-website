@@ -1,7 +1,6 @@
 import AdminRegistrationsManager from "@/components/admin/AdminRegistrationsManager";
-import { getCurrentAdmin } from "@/lib/admin-auth";
 import {
-  getGoogleSheetsConnectionForAdmin,
+  getSharedGoogleSheetsConnection,
   isGoogleSheetsOAuthConfigured,
 } from "@/lib/google-sheets";
 import {
@@ -27,13 +26,10 @@ export default async function AdminFormBuilderPage({
   const formCards = await listRegistrationFormCards();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const forms = formCards.map(({ availability, ...form }) => form);
-  const currentAdmin = await getCurrentAdmin();
 
   const slugParam = readQuery(params.form) ?? forms[0]?.slug ?? "";
   const selectedForm = slugParam ? await getRegistrationFormBySlug(slugParam) : null;
-  const googleSheetsConnection = currentAdmin
-    ? await getGoogleSheetsConnectionForAdmin(currentAdmin.user.$id)
-    : null;
+  const googleSheetsConnection = await getSharedGoogleSheetsConnection();
 
   const bannerUrl =
     selectedForm?.bannerFileId ? getFormBannerUrl(selectedForm.bannerFileId) : null;

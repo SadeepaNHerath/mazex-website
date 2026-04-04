@@ -6,7 +6,8 @@ import { redirect } from "next/navigation";
 import { getCurrentAdmin } from "@/lib/admin-auth";
 import { AppwriteConfigError } from "@/lib/appwrite";
 import {
-  getGoogleSheetsConnectionRecordForAdmin,
+  getSharedGoogleSheetsConnectionDocumentId,
+  getSharedGoogleSheetsConnectionRecord,
   makeLegacyGoogleSheetsSheetTitle,
   makeDefaultGoogleSheetsSheetTitle,
 } from "@/lib/google-sheets";
@@ -358,8 +359,6 @@ async function validateGoogleSheetsSyncSettings(params: {
   enabled: boolean;
   selectedFieldIds: string[];
   fields: Array<Pick<FieldDefinition, "id" | "type">>;
-  currentAdminUserId: string;
-  currentAdminHasConnection: boolean;
   existingConnectionOwnerId: string | null;
   formTitle: string;
   formSlug: string;
@@ -382,22 +381,21 @@ async function validateGoogleSheetsSyncSettings(params: {
     !params.existingSheetTitle || params.existingSheetTitle === legacyDefaultSheetTitle
       ? nextDefaultSheetTitle
       : params.existingSheetTitle;
+  const sharedConnection = await getSharedGoogleSheetsConnectionRecord();
 
   if (!params.enabled) {
     return {
       googleSheetsSyncEnabled: false,
       googleSheetsSelectedFieldIds: selectedFieldIds,
-      googleSheetsAdminUserId: params.existingConnectionOwnerId,
+      googleSheetsAdminUserId:
+        params.existingConnectionOwnerId || sharedConnection?.adminUserId || null,
       googleSheetsSheetTitle: normalizedExistingSheetTitle,
     };
   }
 
-  const existingConnection = params.existingConnectionOwnerId
-    ? await getGoogleSheetsConnectionRecordForAdmin(params.existingConnectionOwnerId)
+  const googleSheetsAdminUserId = sharedConnection
+    ? getSharedGoogleSheetsConnectionDocumentId()
     : null;
-  const googleSheetsAdminUserId =
-    existingConnection?.adminUserId ||
-    (params.currentAdminHasConnection ? params.currentAdminUserId : null);
 
   if (!googleSheetsAdminUserId) {
     throw new Error(
@@ -639,7 +637,7 @@ export async function updateRegistrationFormSettingsAction(
   formData: FormData,
 ): Promise<RegistrationAdminActionState> {
   try {
-    const admin = await requireAdmin();
+    await requireAdmin();
 
     const formId = readString(formData, "formId");
     if (!formId) throw new Error("Unable to determine which form to update.");
@@ -728,17 +726,12 @@ export async function updateRegistrationFormSettingsAction(
       fields: form.fields,
     });
     const googleSheetsSyncEnabled = formData.get("googleSheetsSyncEnabled") === "on";
-    const currentAdminGoogleConnection = await getGoogleSheetsConnectionRecordForAdmin(
-      admin.user.$id,
-    );
     const googleSheetsSettings = await validateGoogleSheetsSyncSettings({
       enabled: googleSheetsSyncEnabled,
       selectedFieldIds: readStringArrayJson(
         readString(formData, "googleSheetsSelectedFieldIdsJson"),
       ),
       fields: form.fields,
-      currentAdminUserId: admin.user.$id,
-      currentAdminHasConnection: Boolean(currentAdminGoogleConnection),
       existingConnectionOwnerId: form.googleSheetsAdminUserId,
       formTitle: title,
       formSlug: slug,

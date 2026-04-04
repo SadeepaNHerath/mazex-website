@@ -1,10 +1,11 @@
 import "server-only";
 
-import { AppwriteException, Databases, Models } from "node-appwrite";
+import { AppwriteException, Databases, Models, Query } from "node-appwrite";
 import { createAppwriteAdminClient } from "@/lib/appwrite";
 
 const DEFAULT_CONNECTIONS_COLLECTION_ID = "google_sheets_connections";
 const DEFAULT_SPREADSHEET_TITLE = "MazeX Registrations";
+const SHARED_GOOGLE_SHEETS_CONNECTION_DOCUMENT_ID = "shared_google_sheets_connection";
 const GOOGLE_OAUTH_SCOPES = [
   "openid",
   "https://www.googleapis.com/auth/userinfo.email",
@@ -114,10 +115,14 @@ export function getGoogleSheetsConnectionDocumentId(adminUserId: string) {
   return adminUserId.trim();
 }
 
+export function getSharedGoogleSheetsConnectionDocumentId() {
+  return SHARED_GOOGLE_SHEETS_CONNECTION_DOCUMENT_ID;
+}
+
 function mapGoogleSheetsConnectionDoc(
   doc: GoogleSheetsConnectionDoc,
 ): GoogleSheetsConnectionRecord | null {
-  const adminUserId = trim(doc.adminUserId);
+  const adminUserId = trim(doc.$id) || trim(doc.adminUserId);
   const refreshToken = trim(doc.refreshToken);
   const spreadsheetId = trim(doc.spreadsheetId);
 
@@ -135,16 +140,16 @@ function mapGoogleSheetsConnectionDoc(
 }
 
 async function getGoogleSheetsConnectionDocument(
-  adminUserId: string,
+  documentId: string,
 ): Promise<GoogleSheetsConnectionRecord | null> {
-  const normalizedAdminUserId = adminUserId.trim();
-  if (!normalizedAdminUserId) return null;
+  const normalizedDocumentId = documentId.trim();
+  if (!normalizedDocumentId) return null;
 
   try {
     const document = await createDatabasesService().getDocument<GoogleSheetsConnectionDoc>(
       process.env.APPWRITE_DB_ID?.trim() || "mazex_data",
       getGoogleSheetsConnectionCollectionId(),
-      getGoogleSheetsConnectionDocumentId(normalizedAdminUserId),
+      getGoogleSheetsConnectionDocumentId(normalizedDocumentId),
     );
 
     return mapGoogleSheetsConnectionDoc(document);
@@ -157,10 +162,45 @@ async function getGoogleSheetsConnectionDocument(
   }
 }
 
-export async function getGoogleSheetsConnectionForAdmin(
-  adminUserId: string,
-): Promise<GoogleSheetsConnection | null> {
-  const record = await getGoogleSheetsConnectionDocument(adminUserId);
+async function getLatestLegacyGoogleSheetsConnectionDocument() {
+  const databaseId = process.env.APPWRITE_DB_ID?.trim() || "mazex_data";
+  const collectionId = getGoogleSheetsConnectionCollectionId();
+  const documents = await createDatabasesService().listDocuments<GoogleSheetsConnectionDoc>(
+    databaseId,
+    collectionId,
+    [
+      Query.orderDesc("$updatedAt"),
+      Query.limit(25),
+    ],
+  );
+
+  for (const document of documents.documents) {
+    if (trim(document.$id) === SHARED_GOOGLE_SHEETS_CONNECTION_DOCUMENT_ID) {
+      continue;
+    }
+
+    const connection = mapGoogleSheetsConnectionDoc(document);
+    if (connection) {
+      return connection;
+    }
+  }
+
+  return null;
+}
+
+export async function getSharedGoogleSheetsConnectionRecord() {
+  const sharedConnection = await getGoogleSheetsConnectionDocument(
+    SHARED_GOOGLE_SHEETS_CONNECTION_DOCUMENT_ID,
+  );
+  if (sharedConnection) {
+    return sharedConnection;
+  }
+
+  return getLatestLegacyGoogleSheetsConnectionDocument();
+}
+
+export async function getSharedGoogleSheetsConnection(): Promise<GoogleSheetsConnection | null> {
+  const record = await getSharedGoogleSheetsConnectionRecord();
   if (!record) return null;
 
   return {
@@ -171,27 +211,35 @@ export async function getGoogleSheetsConnectionForAdmin(
   };
 }
 
+export async function getGoogleSheetsConnectionForAdmin(
+  _adminUserId: string,
+): Promise<GoogleSheetsConnection | null> {
+  return getSharedGoogleSheetsConnection();
+}
+
 export async function getGoogleSheetsConnectionRecordForAdmin(
-  adminUserId: string,
+  _adminUserId: string,
 ) {
-  return getGoogleSheetsConnectionDocument(adminUserId);
+  return getSharedGoogleSheetsConnectionRecord();
 }
 
 export async function upsertGoogleSheetsConnection(params: {
+  connectionDocumentId?: string;
   adminUserId: string;
   email: string | null;
   refreshToken: string;
   spreadsheetId: string;
   spreadsheetUrl: string | null;
 }) {
-  const normalizedAdminUserId = params.adminUserId.trim();
-  if (!normalizedAdminUserId) {
-    throw new Error("Unable to save Google Sheets settings without an admin user.");
+  const documentId = trim(params.connectionDocumentId) || SHARED_GOOGLE_SHEETS_CONNECTION_DOCUMENT_ID;
+  const normalizedAdminUserId = params.adminUserId.trim() || documentId;
+  if (!documentId) {
+    throw new Error("Unable to save Google Sheets settings without a connection document.");
   }
 
   const databaseId = process.env.APPWRITE_DB_ID?.trim() || "mazex_data";
   const collectionId = getGoogleSheetsConnectionCollectionId();
-  const documentId = getGoogleSheetsConnectionDocumentId(normalizedAdminUserId);
+  const normalizedDocumentId = getGoogleSheetsConnectionDocumentId(documentId);
   const data = {
     adminUserId: normalizedAdminUserId,
     email: params.email?.trim() || null,
@@ -205,7 +253,7 @@ export async function upsertGoogleSheetsConnection(params: {
     return await databases.updateDocument<GoogleSheetsConnectionDoc>(
       databaseId,
       collectionId,
-      documentId,
+      normalizedDocumentId,
       data,
     );
   } catch (error) {
@@ -217,7 +265,7 @@ export async function upsertGoogleSheetsConnection(params: {
   return databases.createDocument<GoogleSheetsConnectionDoc>(
     databaseId,
     collectionId,
-    documentId,
+    normalizedDocumentId,
     data,
   );
 }

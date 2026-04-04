@@ -3,6 +3,7 @@ import { Client, Databases, Query } from "node-appwrite";
 const DEFAULT_SUBMISSIONS_COLLECTION_ID = "registration_submissions";
 const DEFAULT_FORM_SYNCS_COLLECTION_ID = "google_sheets_form_syncs";
 const DEFAULT_CONNECTIONS_COLLECTION_ID = "google_sheets_connections";
+const SHARED_GOOGLE_SHEETS_CONNECTION_DOCUMENT_ID = "shared_google_sheets_connection";
 const GOOGLE_SHEETS_API_BASE_URL = "https://sheets.googleapis.com/v4";
 const GOOGLE_OAUTH_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const LEGACY_SUBMISSION_ID_COLUMN_KEY = "meta:submission_id";
@@ -57,6 +58,86 @@ function normalizeStringArray(value) {
   if (!Array.isArray(value)) return [];
 
   return value.map((item) => trim(item)).filter(Boolean);
+}
+
+async function getGoogleSheetsConnectionDocument(
+  databases,
+  databaseId,
+  connectionsCollectionId,
+  documentId,
+) {
+  const normalizedDocumentId = trim(documentId);
+  if (!normalizedDocumentId) {
+    return null;
+  }
+
+  return databases
+    .getDocument(databaseId, connectionsCollectionId, normalizedDocumentId)
+    .catch((fetchError) => {
+      if (fetchError?.code === 404) return null;
+      throw fetchError;
+    });
+}
+
+async function resolveGoogleSheetsConnection(params) {
+  const sharedConnection = await getGoogleSheetsConnectionDocument(
+    params.databases,
+    params.databaseId,
+    params.connectionsCollectionId,
+    SHARED_GOOGLE_SHEETS_CONNECTION_DOCUMENT_ID,
+  );
+  if (sharedConnection) {
+    return {
+      connection: sharedConnection,
+      sourceDocumentId: SHARED_GOOGLE_SHEETS_CONNECTION_DOCUMENT_ID,
+    };
+  }
+
+  const normalizedLegacyDocumentId = trim(params.legacyDocumentId);
+  if (
+    normalizedLegacyDocumentId &&
+    normalizedLegacyDocumentId !== SHARED_GOOGLE_SHEETS_CONNECTION_DOCUMENT_ID
+  ) {
+    const legacyConnection = await getGoogleSheetsConnectionDocument(
+      params.databases,
+      params.databaseId,
+      params.connectionsCollectionId,
+      normalizedLegacyDocumentId,
+    );
+    if (legacyConnection) {
+      return {
+        connection: legacyConnection,
+        sourceDocumentId: normalizedLegacyDocumentId,
+      };
+    }
+  }
+
+  const recentConnections = await params.databases.listDocuments(
+    params.databaseId,
+    params.connectionsCollectionId,
+    [
+      Query.orderDesc("$updatedAt"),
+      Query.limit(25),
+    ],
+  );
+
+  for (const document of recentConnections.documents ?? []) {
+    const documentId = trim(document?.$id);
+    if (documentId === SHARED_GOOGLE_SHEETS_CONNECTION_DOCUMENT_ID) {
+      continue;
+    }
+
+    if (!trim(document?.refreshToken) || !trim(document?.spreadsheetId)) {
+      continue;
+    }
+
+    return {
+      connection: document,
+      sourceDocumentId: documentId,
+    };
+  }
+
+  return null;
 }
 
 function getRequiredEnv(key) {
@@ -1103,31 +1184,27 @@ async function syncRegistrationToGoogleSheets(context) {
   }
 
   const googleSheetsAdminUserId = trim(form.googleSheetsAdminUserId);
-  if (!googleSheetsAdminUserId) {
-    error(`Google Sheets sync is missing the connected admin reference for form ${formId}.`);
-    return res.json({ ok: true, skipped: "missing_connection_owner" });
-  }
+  const resolvedConnection = await resolveGoogleSheetsConnection({
+    databases,
+    databaseId,
+    connectionsCollectionId,
+    legacyDocumentId: googleSheetsAdminUserId,
+  });
 
-  const connection = await databases
-    .getDocument(
-      databaseId,
-      connectionsCollectionId,
-      googleSheetsAdminUserId,
-    )
-    .catch((fetchError) => {
-      if (fetchError?.code === 404) return null;
-      throw fetchError;
-    });
-
-  if (!connection) {
-    log(`Skipping Google Sheets sync because no connection was found for admin ${googleSheetsAdminUserId}.`);
+  if (!resolvedConnection) {
+    log(
+      `Skipping Google Sheets sync because no shared connection was found${
+        googleSheetsAdminUserId ? ` (legacy reference: ${googleSheetsAdminUserId})` : ""
+      }.`,
+    );
     return res.json({ ok: true, skipped: "missing_connection" });
   }
 
+  const { connection, sourceDocumentId } = resolvedConnection;
   const refreshToken = trim(connection.refreshToken);
   const spreadsheetId = trim(connection.spreadsheetId);
   if (!refreshToken || !spreadsheetId) {
-    error(`Google Sheets connection is incomplete for admin ${googleSheetsAdminUserId}.`);
+    error(`Google Sheets connection is incomplete for record ${sourceDocumentId}.`);
     return res.json({ ok: true, skipped: "invalid_connection" });
   }
 
