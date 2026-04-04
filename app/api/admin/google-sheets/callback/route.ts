@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { buildAppUrl } from "@/lib/app-url";
 import { getCurrentAdmin } from "@/lib/admin-auth";
 import {
   ensureGoogleSpreadsheetForAdmin,
@@ -42,7 +43,7 @@ function parseStateCookie(value: string | undefined): OAuthStateCookie | null {
 }
 
 function createRedirectResponse(request: NextRequest, returnTo: string) {
-  const response = NextResponse.redirect(new URL(returnTo, request.url));
+  const response = NextResponse.redirect(buildAppUrl(request, returnTo));
   response.cookies.set(GOOGLE_SHEETS_OAUTH_STATE_COOKIE, "", {
     expires: new Date(0),
     httpOnly: true,
@@ -66,7 +67,7 @@ export async function GET(request: NextRequest) {
 
   const currentAdmin = await getCurrentAdmin();
   if (!currentAdmin) {
-    return NextResponse.redirect(new URL("/login?reason=unauthorized", request.url));
+    return NextResponse.redirect(buildAppUrl(request, "/login?reason=unauthorized"));
   }
 
   const requestState = request.nextUrl.searchParams.get("state")?.trim() || "";
@@ -89,11 +90,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
-    const forwardedProto = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
-    const protocol = host?.includes("localhost") ? "http" : (forwardedProto === "https" ? "https" : (process.env.NODE_ENV === "production" ? "https" : (forwardedProto || "http")));
-    const origin = (host ? `${protocol}://${host}` : null) || process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || request.nextUrl.origin;
-    const redirectUri = new URL("/api/admin/google-sheets/callback", origin).toString();
+    const redirectUri = buildAppUrl(
+      request,
+      "/api/admin/google-sheets/callback",
+    ).toString();
     const existingConnection = await getGoogleSheetsConnectionRecordForAdmin(
       currentAdmin.user.$id,
     );
