@@ -153,5 +153,7 @@ export async function getConfiguredDelegateBookletHref() {
 }
 
 export async function getDelegateBookletHref() {
-  return getConfiguredDelegateBookletHref() ?? DEFAULT_DELEGATE_BOOKLET_PATH;
+  return (
+    (await getConfiguredDelegateBookletHref()) ?? DEFAULT_DELEGATE_BOOKLET_PATH
+  );
 }
