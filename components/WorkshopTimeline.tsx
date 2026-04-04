@@ -127,13 +127,24 @@ export default function WorkshopTimeline({
       }
 
       const progress = (2 * activeIndex + 1) / (2 * events.length);
+      // For the 1st workshop (index 0), stop 2-3 pixels early (approx 0.5% offset)
+      // For the 4th workshop (index 3), stop 2 pixels after (approx +0.4% offset)
+      // For others, stop exactly in the middle
+      let offset = 0;
+      if (activeIndex === 0) {
+        offset = 0.005;
+      } else if (activeIndex === 3) {
+        offset = -0.004; // Negative offset to move "after" the center
+      }
+      
+      const adjustedProgress = Math.max(0, progress - offset);
       
       // Calculate duration based on distance to travel (starting from 0)
-      const distance = Math.abs(progress - 0);
+      const distance = Math.abs(adjustedProgress - 0);
       const duration = 0.8 + (distance * 2.2); // Adaptive duration: base 0.8s + scaling factor
 
       // Smoothly animate the target progress with calculated duration
-      animate(targetProgress, progress, {
+      animate(targetProgress, adjustedProgress, {
         duration: duration,
         ease: "easeInOut",
         delay: 0.5, // Small delay so the user sees the start of movement
@@ -159,7 +170,7 @@ export default function WorkshopTimeline({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="mb-12 text-center md:mb-24 md:text-left md:ml-4"
+          className="mb-4 text-center md:mb-6 md:text-left md:ml-4"
         >
           <h2 className="text-4xl font-bold uppercase leading-[1.05] tracking-tight text-[#F8FAFC] sm:text-5xl lg:text-7xl">
             <span className="block bg-gradient-to-r from-[#7A6A96] to-[#8A73A6] bg-clip-text text-transparent">
@@ -169,7 +180,7 @@ export default function WorkshopTimeline({
           </h2>
         </motion.div>
 
-        <div className="hidden lg:block relative w-full h-[900px] mt-24 mx-auto">
+        <div className="hidden lg:block relative w-full h-[900px] mt-4 mx-auto">
           <div className="absolute top-1/2 left-4 right-4 h-[12px] -translate-y-1/2 overflow-hidden border-y border-[#6B528F]/25 bg-[#0A1224]/50">
             <div className="absolute top-1/2 left-0 right-0 h-[2px] -translate-y-1/2 border-t-[2px] border-dashed border-[#6B528F] opacity-20" />
             <motion.div
@@ -229,7 +240,7 @@ export default function WorkshopTimeline({
           </motion.div>
         </div>
 
-        <div className="relative mt-20 w-full pb-8 md:mt-32 lg:hidden">
+        <div className="relative mt-4 w-full pb-8 md:mt-6 lg:hidden">
           
           <div className="absolute left-0 top-0 bottom-0 z-0 w-[40px] pointer-events-none sm:w-[60px]">
             <div className="absolute left-1/2 top-0 bottom-0 w-[12px] -translate-x-1/2 overflow-hidden border-x border-[#6B528F]/25 bg-[#0A1224]/50">
