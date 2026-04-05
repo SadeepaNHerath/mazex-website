@@ -1507,12 +1507,13 @@ function FieldBuilder({ form }: { form: FormWithFields }) {
 
   if (form.fields !== fieldsVersion) {
     setFieldsVersion(form.fields);
-    setFields(
-      [...form.fields].map(normalizeFieldDraft).sort((a, b) =>
-        a.sortOrder !== b.sortOrder ? a.sortOrder - b.sortOrder : a.label.localeCompare(b.label)
-      )
-    );
-    setIsDirty(false);
+    if (!isDirty) {
+      setFields(
+        [...form.fields].map(normalizeFieldDraft).sort((a, b) =>
+          a.sortOrder !== b.sortOrder ? a.sortOrder - b.sortOrder : a.label.localeCompare(b.label)
+        )
+      );
+    }
   }
 
   useEffect(() => {
@@ -1762,7 +1763,7 @@ export default function AdminRegistrationsManager({
       )}
 
       {/* Questions */}
-      {selectedForm && <FieldBuilder form={selectedForm} />}
+      {selectedForm && <FieldBuilder key={selectedForm.id} form={selectedForm} />}
     </div>
   );
 }
