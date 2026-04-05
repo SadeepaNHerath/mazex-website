@@ -492,6 +492,12 @@ function SettingsPanel({
   const [confirmationEmailTemplate, setConfirmationEmailTemplate] = useState(
     form.confirmationEmailTemplate ?? "",
   );
+  const [confirmationEmailFieldId, setConfirmationEmailFieldId] = useState(
+    () => form.confirmationEmailFieldId ?? ""
+  );
+  const [confirmationNameFieldId, setConfirmationNameFieldId] = useState(
+    () => form.confirmationNameFieldId ?? ""
+  );
   const [googleSheetsSyncEnabled, setGoogleSheetsSyncEnabled] = useState(
     form.googleSheetsSyncEnabled,
   );
@@ -571,7 +577,10 @@ function SettingsPanel({
     form.googleSheetsSheetTitle ?? "",
   ].join(":");
 
-  const hasConfirmationEmailIssue = confirmationEmailEnabled && (emailFieldOptions.length === 0 || nameFieldOptions.length === 0);
+  const missingEmailFields = confirmationEmailEnabled && (emailFieldOptions.length === 0 || nameFieldOptions.length === 0);
+  const emailNotSelected = confirmationEmailEnabled && !confirmationEmailFieldId;
+  const nameNotSelected = confirmationEmailEnabled && !confirmationNameFieldId;
+  const hasConfirmationEmailIssue = missingEmailFields || emailNotSelected || nameNotSelected;
   const hasGoogleSheetsSyncIssue = googleSheetsSyncEnabled && googleSheetsFieldOptions.length === 0;
 
   const colomboToday = getStoredDateFromIso(new Date().toISOString());
@@ -819,12 +828,21 @@ function SettingsPanel({
                 />
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                      Recipient email field
-                    </label>
+                    <div className="mb-1 flex items-center justify-between">
+                      <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                        Recipient email field
+                      </label>
+                      {confirmationEmailEnabled && emailFieldOptions.length > 0 && !confirmationEmailFieldId && (
+                        <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                          <ShieldAlert className="h-3 w-3 shrink-0" />
+                          Selection required
+                        </span>
+                      )}
+                    </div>
                     <select
                       name="confirmationEmailFieldId"
-                      defaultValue={form.confirmationEmailFieldId ?? ""}
+                      value={confirmationEmailFieldId}
+                      onChange={(e) => setConfirmationEmailFieldId(e.target.value)}
                       disabled={!confirmationEmailEnabled || emailFieldOptions.length === 0}
                       className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 sm:text-sm disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
                     >
@@ -842,12 +860,21 @@ function SettingsPanel({
                     )}
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                      Recipient name field
-                    </label>
+                    <div className="mb-1 flex items-center justify-between">
+                      <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                        Recipient name field
+                      </label>
+                      {confirmationEmailEnabled && nameFieldOptions.length > 0 && !confirmationNameFieldId && (
+                        <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                          <ShieldAlert className="h-3 w-3 shrink-0" />
+                          Selection required
+                        </span>
+                      )}
+                    </div>
                     <select
                       name="confirmationNameFieldId"
-                      defaultValue={form.confirmationNameFieldId ?? ""}
+                      value={confirmationNameFieldId}
+                      onChange={(e) => setConfirmationNameFieldId(e.target.value)}
                       disabled={!confirmationEmailEnabled || nameFieldOptions.length === 0}
                       className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 sm:text-sm disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
                     >
