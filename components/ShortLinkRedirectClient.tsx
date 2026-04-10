@@ -52,6 +52,7 @@ export default function ShortLinkRedirectClient({
   state: RedirectState;
 }) {
   const showDestinationActions = state !== "inactive" && Boolean(destinationUrl);
+  const destinationHref = destinationUrl ?? undefined;
 
   useEffect(() => {
     if (state !== "redirecting" || !destinationUrl) {
@@ -115,7 +116,7 @@ export default function ShortLinkRedirectClient({
                     Destination URL
                   </p>
                   <a
-                    href={destinationUrl}
+                    href={destinationHref}
                     className="mt-3 block break-all text-sm font-medium text-slate-100 transition hover:text-white sm:text-base"
                   >
                     {destinationUrl}
@@ -126,7 +127,7 @@ export default function ShortLinkRedirectClient({
               <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
                 {showDestinationActions ? (
                   <a
-                    href={destinationUrl}
+                    href={destinationHref}
                     className="theme-button inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium text-white"
                   >
                     Open destination
