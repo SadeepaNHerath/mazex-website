@@ -155,7 +155,22 @@ function DecisionActionControls({
       <form
         action={formAction}
         className="flex flex-wrap items-center gap-2"
-        onSubmit={(event) => event.stopPropagation()}
+        onSubmit={(event) => {
+          event.stopPropagation();
+          const submitter = (event.nativeEvent as SubmitEvent).submitter;
+          const decision =
+            submitter instanceof HTMLButtonElement
+              ? submitter.value
+              : "";
+          const label = decision === "approved" ? "approve" : "decline";
+          const confirmed = window.confirm(
+            `Are you sure you want to ${label} this submission and send the ${label} email?`,
+          );
+
+          if (!confirmed) {
+            event.preventDefault();
+          }
+        }}
       >
         <input type="hidden" name="submissionId" value={submission.id} />
         <DecisionSubmitButton
