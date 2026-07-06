@@ -16,6 +16,11 @@ export type CompetitionEventConfig = {
   formId: string | null;
   openDate: string | null;
   closeDate: string | null;
+  decisionEmailFieldId: string | null;
+  approvalEmailSubject: string | null;
+  approvalEmailTemplate: string | null;
+  declineEmailSubject: string | null;
+  declineEmailTemplate: string | null;
 };
 
 export type WorkshopEventConfig = {
@@ -240,6 +245,11 @@ export type AdminCompetitionEventItem = {
   formId: string | null;
   openDate: string | null;
   closeDate: string | null;
+  decisionEmailFieldId: string | null;
+  approvalEmailSubject: string | null;
+  approvalEmailTemplate: string | null;
+  declineEmailSubject: string | null;
+  declineEmailTemplate: string | null;
   linkedForm: SiteEventLinkedForm | null;
   linkedFormMissing: boolean;
 };

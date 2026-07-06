@@ -34,7 +34,7 @@ const SHORT_LINKS_COL =
   env.APPWRITE_COLLECTION_SHORT_LINKS || "short_links";
 const BUCKET_ID  = env.APPWRITE_BUCKET_FORM_BANNERS             || "form_banners";
 const FILES_BUCKET_ID = env.APPWRITE_BUCKET_REGISTRATION_FILES  || "registration_files";
-const REGISTRATION_FILE_EXTENSIONS = ["png", "jpg", "jpeg", "webp", "pdf", "doc", "docx"];
+const REGISTRATION_FILE_EXTENSIONS = ["png", "jpg", "jpeg", "webp", "pdf"];
 
 if (!ENDPOINT || !PROJECT_ID || !API_KEY || !DB_ID) {
   console.error("❌  Missing required Appwrite env vars"); process.exit(1);
@@ -172,6 +172,9 @@ const subAttrs = [
   { t:"str", key:"answersJson",       size:16384, req:true },
   { t:"str", key:"memberAnswersJson", size:32768           },
   { t:"str", key:"searchText",        size:4096            },
+  { t:"str", key:"decisionStatus",    size:32              },
+  { t:"str", key:"decisionEmailSentAt", size:64            },
+  { t:"str", key:"decisionEmailSentByAdminUserId", size:255 },
 ];
 await createAttrs(SUBS_COL, subAttrs);
 await waitAvailable(SUBS_COL, subAttrs.map(a => a.key));

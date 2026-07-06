@@ -150,6 +150,11 @@ function normalizeCompetitionConfig(value: unknown): CompetitionEventConfig {
     formId: normalizeString(record.formId),
     openDate: normalizeStoredDate(record.openDate),
     closeDate: normalizeStoredDate(record.closeDate),
+    decisionEmailFieldId: normalizeString(record.decisionEmailFieldId),
+    approvalEmailSubject: normalizeString(record.approvalEmailSubject),
+    approvalEmailTemplate: normalizeString(record.approvalEmailTemplate),
+    declineEmailSubject: normalizeString(record.declineEmailSubject),
+    declineEmailTemplate: normalizeString(record.declineEmailTemplate),
   };
 }
 
@@ -192,6 +197,11 @@ export function getDefaultSiteEventConfigs() {
       formId: null,
       openDate: null,
       closeDate: null,
+      decisionEmailFieldId: null,
+      approvalEmailSubject: null,
+      approvalEmailTemplate: null,
+      declineEmailSubject: null,
+      declineEmailTemplate: null,
     },
     workshop_foundations: {
       enabled: false,
@@ -520,6 +530,11 @@ export async function getResolvedSiteEvents(): Promise<ResolvedSiteEvents> {
       formId: competition.formId,
       openDate: competition.openDate,
       closeDate: competition.closeDate,
+      decisionEmailFieldId: competitionConfig.decisionEmailFieldId,
+      approvalEmailSubject: competitionConfig.approvalEmailSubject,
+      approvalEmailTemplate: competitionConfig.approvalEmailTemplate,
+      declineEmailSubject: competitionConfig.declineEmailSubject,
+      declineEmailTemplate: competitionConfig.declineEmailTemplate,
       linkedForm: toLinkedForm(competitionForm),
       linkedFormMissing: competition.linkedFormMissing,
     },

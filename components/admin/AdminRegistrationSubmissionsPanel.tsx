@@ -1,13 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronDown, ListFilter } from "lucide-react";
+import { useActionState, useEffect, useMemo, useRef, useState } from "react";
+import { useFormStatus } from "react-dom";
+import { Check, ChevronDown, ExternalLink, FileText, ListFilter } from "lucide-react";
+import {
+  sendSubmissionDecisionEmailAction,
+  type RegistrationAdminActionState,
+} from "@/app/admin/registrations/actions";
 import FormattedPickerInput from "@/components/FormattedPickerInput";
 import {
   listCommonUserFieldOptions,
 } from "@/lib/registration-common-fields";
 import { formatDateTimeDisplay, formatStoredDateForInput } from "@/lib/date-format";
+import {
+  formatBytes,
+  getSubmissionFileId,
+  isPreviewableRegistrationFileMimeType,
+  isSubmissionFileAnswer,
+} from "@/lib/registration-files";
 import type {
   FormDefinition,
   FormWithFields,
@@ -22,6 +33,11 @@ import SubmissionRowInteractive from "@/components/admin/SubmissionRowInteractiv
 import { useRouter } from "next/navigation";
 
 const FORM_FILTER_ITEM_ID = "__form_filter__";
+const decisionInitialState: RegistrationAdminActionState = {
+  status: "idle",
+  message: null,
+  toastKey: 0,
+};
 
 function normalizeCommonFormSlugs(value: string[] | null | undefined) {
   return Array.from(
@@ -49,11 +65,121 @@ function formatValue(
     return formatStoredDateForInput(value);
   }
 
+  if (fieldType === "file") {
+    if (isSubmissionFileAnswer(value)) return value.fileName || value.fileId;
+    if (typeof value === "string" && value.trim()) return value.trim();
+    return "—";
+  }
+
   return String(value);
 }
 
 function formatTimestamp(value: string) {
   return formatDateTimeDisplay(value);
+}
+
+function getDecisionLabel(status: SubmissionSummary["decisionStatus"]) {
+  if (status === "approved") return "Approved";
+  if (status === "declined") return "Declined";
+  return "Pending";
+}
+
+function DecisionStatusBadge({
+  status,
+}: {
+  status: SubmissionSummary["decisionStatus"];
+}) {
+  const className =
+    status === "approved"
+      ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300"
+      : status === "declined"
+        ? "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300"
+        : "border-zinc-200 bg-white text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400";
+
+  return (
+    <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-wide ${className}`}>
+      {getDecisionLabel(status)}
+    </span>
+  );
+}
+
+function DecisionSubmitButton({
+  decision,
+  disabled,
+}: {
+  decision: "approved" | "declined";
+  disabled: boolean;
+}) {
+  const { pending } = useFormStatus();
+  const isApprove = decision === "approved";
+
+  return (
+    <button
+      type="submit"
+      name="decision"
+      value={decision}
+      disabled={pending || disabled}
+      className={`inline-flex h-8 items-center justify-center rounded-md px-3 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+        isApprove
+          ? "bg-emerald-600 text-white hover:bg-emerald-700"
+          : "bg-rose-600 text-white hover:bg-rose-700"
+      }`}
+    >
+      {pending ? "Sending..." : isApprove ? "Approve" : "Decline"}
+    </button>
+  );
+}
+
+function DecisionActionControls({
+  submission,
+}: {
+  submission: SubmissionSummary;
+}) {
+  const router = useRouter();
+  const [state, formAction] = useActionState(
+    sendSubmissionDecisionEmailAction,
+    decisionInitialState,
+  );
+
+  useEffect(() => {
+    if (state.status === "success") {
+      router.refresh();
+    }
+  }, [router, state.status, state.toastKey]);
+
+  return (
+    <div
+      className="mt-4 border-t border-zinc-200 pt-3 dark:border-zinc-800"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <form
+        action={formAction}
+        className="flex flex-wrap items-center gap-2"
+        onSubmit={(event) => event.stopPropagation()}
+      >
+        <input type="hidden" name="submissionId" value={submission.id} />
+        <DecisionSubmitButton
+          decision="approved"
+          disabled={submission.decisionStatus === "approved"}
+        />
+        <DecisionSubmitButton
+          decision="declined"
+          disabled={submission.decisionStatus === "declined"}
+        />
+      </form>
+      {state.message ? (
+        <p
+          className={`mt-2 text-xs font-medium ${
+            state.status === "success"
+              ? "text-emerald-700 dark:text-emerald-300"
+              : "text-rose-700 dark:text-rose-300"
+          }`}
+        >
+          {state.message}
+        </p>
+      ) : null}
+    </div>
+  );
 }
 
 export function buildPageHref({
@@ -124,6 +250,16 @@ export function SubmissionDetailPanel({
   const labelMap = new Map(form?.fields.map((f) => [f.key, f.label] as const) ?? []);
   const typeMap = new Map(form?.fields.map((f) => [f.key, f.type] as const) ?? []);
 
+  const renderAnswerValue = (key: string, value: unknown) => {
+    const fieldType = typeMap.get(key);
+
+    if (fieldType === "file") {
+      return <FileAnswerValue value={value} />;
+    }
+
+    return formatValue(value, fieldType);
+  };
+
   return (
     <div className="w-full bg-white dark:bg-zinc-900">
       <div className="sticky top-0 z-10 flex flex-wrap items-start justify-between gap-4 border-b border-zinc-100 bg-white/95 px-6 pb-6 pt-6 backdrop-blur-md sm:px-8 sm:pt-8 dark:border-zinc-800/80 dark:bg-zinc-900/95">
@@ -155,6 +291,16 @@ export function SubmissionDetailPanel({
           {submission.displaySubtitle && <SummaryItem label="Contact" value={submission.displaySubtitle} />}
           {submission.teamName && <SummaryItem label="Team name" value={submission.teamName} />}
           <SummaryItem label="Form" value={submission.formTitle ?? form?.title ?? "Unknown form"} />
+          <SummaryItem
+            label="Decision"
+            value={getDecisionLabel(submission.decisionStatus)}
+          />
+          {submission.decisionEmailSentAt ? (
+            <SummaryItem
+              label="Decision email"
+              value={formatTimestamp(submission.decisionEmailSentAt)}
+            />
+          ) : null}
         </div>
 
         {submission.commonMatches && submission.commonMatches.length > 0 ? (
@@ -184,7 +330,7 @@ export function SubmissionDetailPanel({
             <SummaryItem
               key={key}
               label={labelMap.get(key) ?? key}
-              value={formatValue(value, typeMap.get(key))}
+              value={renderAnswerValue(key, value)}
               vertical
             />
           ))}
@@ -209,7 +355,7 @@ export function SubmissionDetailPanel({
                   <SummaryItem
                     key={`${submission.id}-${index}-${key}`}
                     label={labelMap.get(key) ?? key}
-                    value={formatValue(value, typeMap.get(key))}
+                    value={renderAnswerValue(key, value)}
                     vertical
                   />
                 ))}
@@ -223,7 +369,47 @@ export function SubmissionDetailPanel({
   );
 }
 
-function SummaryItem({ label, value, vertical = false }: { label: string; value: string; vertical?: boolean }) {
+function FileAnswerValue({ value }: { value: unknown }) {
+  const fileId = getSubmissionFileId(value);
+  const hasMetadata = isSubmissionFileAnswer(value);
+  const fileName = hasMetadata
+    ? value.fileName
+    : fileId
+      ? `Uploaded file (${fileId})`
+      : "—";
+  const canPreview =
+    Boolean(fileId) &&
+    (!hasMetadata || isPreviewableRegistrationFileMimeType(value.mimeType));
+
+  if (!fileId) {
+    return <span>—</span>;
+  }
+
+  return (
+    <span className="flex flex-col gap-2">
+      <span className="flex min-w-0 items-center gap-2">
+        <FileText className="h-4 w-4 shrink-0 text-zinc-400" />
+        <span className="min-w-0 truncate">{fileName}</span>
+      </span>
+      <span className="flex flex-wrap items-center gap-3 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+        {hasMetadata && value.size > 0 ? <span>{formatBytes(value.size)}</span> : null}
+        {canPreview ? (
+          <a
+            href={`/admin/registrations/files/${encodeURIComponent(fileId)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-zinc-900 underline decoration-zinc-300 underline-offset-4 transition-colors hover:text-zinc-600 dark:text-zinc-100 dark:decoration-zinc-600 dark:hover:text-zinc-300"
+          >
+            Preview
+            <ExternalLink className="h-3 w-3" />
+          </a>
+        ) : null}
+      </span>
+    </span>
+  );
+}
+
+function SummaryItem({ label, value, vertical = false }: { label: string; value: React.ReactNode; vertical?: boolean }) {
   if (vertical) {
     return (
        <div className="rounded-md border border-zinc-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900">
@@ -401,12 +587,14 @@ function SubmissionRow({
   isActive,
   sequenceNumber,
   showCommonMatches = false,
+  showDecisionActions = false,
 }: {
   submission: SubmissionSummary;
   href: string;
   isActive?: boolean;
   sequenceNumber: number;
   showCommonMatches?: boolean;
+  showDecisionActions?: boolean;
 }) {
   return (
       <SubmissionRowInteractive
@@ -430,9 +618,12 @@ function SubmissionRow({
             )}
           </div>
         </div>
-        <p className="text-[0.625rem] text-zinc-400 dark:text-zinc-500 whitespace-nowrap pt-1">
-          {formatTimestamp(submission.createdAt)}
-        </p>
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          <p className="text-[0.625rem] text-zinc-400 dark:text-zinc-500 whitespace-nowrap pt-1">
+            {formatTimestamp(submission.createdAt)}
+          </p>
+          <DecisionStatusBadge status={submission.decisionStatus} />
+        </div>
       </div>
 
       {submission.teamName && (
@@ -453,6 +644,9 @@ function SubmissionRow({
           ))}
         </div>
       ) : null}
+      {showDecisionActions ? (
+        <DecisionActionControls submission={submission} />
+      ) : null}
     </SubmissionRowInteractive>
   );
 }
@@ -471,6 +665,7 @@ export default function AdminRegistrationSubmissionsPanel({
   mode = "single",
   commonFormSlugs = [],
   commonFieldKey = "",
+  decisionFormId = null,
 }: {
   forms: FormDefinition[];
   formsWithFields: FormWithFields[];
@@ -485,6 +680,7 @@ export default function AdminRegistrationSubmissionsPanel({
   mode?: "single" | "common";
   commonFormSlugs?: string[];
   commonFieldKey?: string;
+  decisionFormId?: string | null;
 }) {
   const router = useRouter();
   const isCommonMode = mode === "common";
@@ -947,9 +1143,12 @@ export default function AdminRegistrationSubmissionsPanel({
                           submissionId: submission.id,
                         })}
                         isActive={selectedSubmission?.id === submission.id}
-                        sequenceNumber={sequenceNumber}
-                        showCommonMatches={isCommonMode}
-                    />
+	                        sequenceNumber={sequenceNumber}
+	                        showCommonMatches={isCommonMode}
+                          showDecisionActions={
+                            !isCommonMode && submission.formId === decisionFormId
+                          }
+	                    />
                   );
                 })
             ) : (

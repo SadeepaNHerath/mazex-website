@@ -5,6 +5,7 @@ import type {
   SubmissionAnswerValue,
 } from "@/lib/registration-types";
 import { fieldTypeSupportsUnique } from "@/lib/registration-types";
+import { isSubmissionFileAnswer } from "@/lib/registration-files";
 
 export type CommonUserFieldOption = {
   value: string;
@@ -149,6 +150,7 @@ export function normalizeCommonUserFieldValue(
 ) {
   if (value === null || value === undefined || value === "") return null;
   if (Array.isArray(value) || typeof value === "boolean") return null;
+  if (isSubmissionFileAnswer(value)) return null;
   if (typeof File !== "undefined" && value instanceof File) return null;
 
   if (field.type === "tel") {

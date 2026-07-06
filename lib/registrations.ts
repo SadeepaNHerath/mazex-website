@@ -18,6 +18,11 @@ import {
   isAppwriteConfigured,
 } from "@/lib/appwrite";
 import {
+  isAllowedRegistrationFileMimeType,
+  isSubmissionFileAnswer,
+  REGISTRATION_FILE_MAX_BYTES,
+} from "@/lib/registration-files";
+import {
   findCommonUserFieldInForm,
   normalizeCommonUserFieldValue,
 } from "@/lib/registration-common-fields";
@@ -35,6 +40,7 @@ import type {
   RegistrationOverview,
   RegistrationOverviewItem,
   SubmissionAnswerValue,
+  SubmissionDecisionStatus,
   SubmissionDetail,
   SubmissionFilters,
   SubmissionPage,
@@ -48,6 +54,7 @@ import {
   REGISTRATION_FIELD_TYPES,
   REGISTRATION_FORM_KINDS,
   REGISTRATION_FORM_STATUSES,
+  SUBMISSION_DECISION_STATUSES,
   type RegistrationOverviewAnalytics,
   type RegistrationOverviewCategoryBreakdownPoint,
   type RegistrationOverviewFormBreakdownPoint,
@@ -105,6 +112,9 @@ type SubmissionDoc = Models.Document & {
   answersJson?: string;
   memberAnswersJson?: string | null;
   searchText?: string | null;
+  decisionStatus?: string | null;
+  decisionEmailSentAt?: string | null;
+  decisionEmailSentByAdminUserId?: string | null;
 };
 
 type UniqueValueDoc = Models.Document & {
@@ -244,6 +254,15 @@ function trimNullable(v: unknown) {
   return s || null;
 }
 
+function normalizeSubmissionDecisionStatus(
+  value: unknown,
+): SubmissionDecisionStatus {
+  return typeof value === "string" &&
+    SUBMISSION_DECISION_STATUSES.includes(value as SubmissionDecisionStatus)
+    ? (value as SubmissionDecisionStatus)
+    : "pending";
+}
+
 function parseJson<T>(v: string | null | undefined, fallback: T): T {
   if (!v) return fallback;
   try {
@@ -266,7 +285,14 @@ function normalizeUniqueComparableValue(
 ) {
   if (!field.isUnique || !fieldTypeSupportsUnique(field.type)) return null;
   if (value === null || value === undefined) return null;
-  if (Array.isArray(value) || value instanceof File || typeof value === "boolean") return null;
+  if (
+    Array.isArray(value) ||
+    value instanceof File ||
+    typeof value === "boolean" ||
+    isSubmissionFileAnswer(value)
+  ) {
+    return null;
+  }
 
   const raw = typeof value === "number" ? String(value) : String(value).trim();
   if (!raw) return null;
@@ -483,6 +509,9 @@ function mapSubmissionDoc(
     displayTitle,
     displaySubtitle,
     teamName: trimNullable(doc.teamName),
+    decisionStatus: normalizeSubmissionDecisionStatus(doc.decisionStatus),
+    decisionEmailSentAt: trimNullable(doc.decisionEmailSentAt),
+    decisionEmailSentByAdminUserId: trimNullable(doc.decisionEmailSentByAdminUserId),
     answers,
     memberAnswers: parseJson<Record<string, SubmissionAnswerValue>[]>(
       doc.memberAnswersJson,
@@ -944,13 +973,18 @@ export async function attachUniqueValueReservationsToSubmission(
   );
 }
 
-export async function uploadRegistrationFile(file: File): Promise<string> {
+export async function uploadRegistrationFile(file: File) {
   const { filesBucketId } = getRegistrationsConfig();
   const storage = createStorageService();
   const buffer = Buffer.from(await file.arrayBuffer());
   const inputFile = InputFile.fromBuffer(buffer, file.name);
   const uploaded = await storage.createFile(filesBucketId, ID.unique(), inputFile);
-  return uploaded.$id;
+  return {
+    fileId: uploaded.$id,
+    fileName: uploaded.name || file.name,
+    mimeType: uploaded.mimeType || file.type,
+    size: typeof uploaded.sizeOriginal === "number" ? uploaded.sizeOriginal : file.size,
+  };
 }
 
 export async function deleteRegistrationFiles(fileIds: string[]) {
@@ -970,6 +1004,32 @@ export async function deleteRegistrationFiles(fileIds: string[]) {
       }
     }),
   );
+}
+
+export async function getRegistrationFileContent(fileId: string) {
+  noStore();
+
+  const normalizedFileId = fileId.trim();
+  if (!normalizedFileId) return null;
+
+  try {
+    const { filesBucketId } = getRegistrationsConfig();
+    const storage = createStorageService();
+    const [file, content] = await Promise.all([
+      storage.getFile(filesBucketId, normalizedFileId),
+      storage.getFileView(filesBucketId, normalizedFileId),
+    ]);
+
+    return {
+      buffer: Buffer.from(content),
+      contentType: file.mimeType || "application/octet-stream",
+      fileName: file.name || normalizedFileId,
+      size: typeof file.sizeOriginal === "number" ? file.sizeOriginal : null,
+    };
+  } catch (error) {
+    if (error instanceof AppwriteException) return null;
+    throw error;
+  }
 }
 
 export async function deleteRegistrationForm(formId: string) {
@@ -1296,6 +1356,7 @@ function buildSearchText(payload: SubmissionPayload) {
   ];
   for (const v of values) {
     if (typeof v === "string" || typeof v === "number") parts.push(String(v));
+    if (isSubmissionFileAnswer(v)) parts.push(v.fileName);
   }
   return parts.join(" ").replace(/\s+/g, " ").trim().slice(0, 4000);
 }
@@ -1467,6 +1528,33 @@ export async function createRegistrationSubmission(payload: SubmissionPayload) {
       answersJson: JSON.stringify(payload.answers),
       memberAnswersJson: JSON.stringify(payload.memberAnswers),
       searchText: buildSearchText(payload),
+      decisionStatus: "pending",
+      decisionEmailSentAt: null,
+      decisionEmailSentByAdminUserId: null,
+    },
+  );
+}
+
+export async function updateRegistrationSubmissionDecision(params: {
+  submissionId: string;
+  status: Exclude<SubmissionDecisionStatus, "pending">;
+  sentAt: string;
+  adminUserId: string;
+}) {
+  const normalizedSubmissionId = trim(params.submissionId);
+  const normalizedAdminUserId = trim(params.adminUserId);
+  if (!normalizedSubmissionId) throw new Error("Unable to identify the submission.");
+  if (!normalizedAdminUserId) throw new Error("Unable to identify the admin user.");
+
+  const { databaseId, submissionsCollectionId } = getRegistrationsConfig();
+  return createDatabasesService().updateDocument<SubmissionDoc>(
+    databaseId,
+    submissionsCollectionId,
+    normalizedSubmissionId,
+    {
+      decisionStatus: params.status,
+      decisionEmailSentAt: params.sentAt,
+      decisionEmailSentByAdminUserId: normalizedAdminUserId,
     },
   );
 }
@@ -1576,6 +1664,10 @@ function filterSubmissionsBySearch(
 
   const queryLower = query.toLowerCase();
   const scope = filters.searchField?.trim();
+  const formatSearchValue = (value: SubmissionAnswerValue | string | null | undefined) => {
+    if (isSubmissionFileAnswer(value)) return value.fileName;
+    return value;
+  };
 
   return submissions.filter((sub) => {
     if (!scope || scope === "all") {
@@ -1584,8 +1676,10 @@ function filterSubmissionsBySearch(
         sub.displaySubtitle,
         sub.teamName,
         sub.formTitle,
-        ...Object.values(sub.answers),
-        ...sub.memberAnswers.flatMap((member) => Object.values(member)),
+        ...Object.values(sub.answers).map(formatSearchValue),
+        ...sub.memberAnswers.flatMap((member) =>
+          Object.values(member).map(formatSearchValue),
+        ),
         ...(sub.commonMatches?.flatMap((match) => [match.formTitle, match.formSlug]) ?? []),
       ];
 
@@ -1601,7 +1695,7 @@ function filterSubmissionsBySearch(
       return sub.teamName?.toLowerCase().includes(queryLower);
     }
 
-    const value = sub.answers[scope];
+    const value = formatSearchValue(sub.answers[scope]);
     if (
       value !== undefined &&
       value !== null &&
@@ -2182,19 +2276,14 @@ export function validateFieldValue(
     if (field.required && !(value instanceof File))
       return `${field.label} is required. Please upload a file.`;
     if (value instanceof File) {
-      if (value.size > 10 * 1024 * 1024) {
+      if (value.size <= 0) {
+        return `${field.label} cannot be empty.`;
+      }
+      if (value.size > REGISTRATION_FILE_MAX_BYTES) {
         return `${field.label} must be less than 10MB.`;
       }
-      const allowedTypes = [
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-        "application/pdf",
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ];
-      if (!allowedTypes.includes(value.type)) {
-        return `${field.label} format is not supported. Please upload a PDF, Word document, or image.`;
+      if (!isAllowedRegistrationFileMimeType(value.type)) {
+        return `${field.label} format is not supported. Please upload a JPG, PNG, WebP, or PDF file.`;
       }
     }
     return null;

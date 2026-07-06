@@ -5,6 +5,10 @@ import { useFormStatus, createPortal } from "react-dom";
 import Link from "next/link";
 import FormattedPickerInput from "@/components/FormattedPickerInput";
 import { parseDisplayDateInput } from "@/lib/date-format";
+import {
+  getRegistrationFileValidationError,
+  REGISTRATION_FILE_ACCEPT,
+} from "@/lib/registration-files";
 import type {
   FieldDefinition,
   FieldOption,
@@ -205,19 +209,19 @@ function ClientFileField({
   onFileChange: (file: File | null) => void;
   restoreKey: number;
 }) {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const previewUrl = useMemo(
+    () =>
+      selectedFile?.type.startsWith("image/")
+        ? URL.createObjectURL(selectedFile)
+        : null,
+    [selectedFile],
+  );
 
   useEffect(() => {
-    if (!selectedFile || !selectedFile.type.startsWith("image/")) {
-      setPreviewUrl(null);
-      return;
-    }
-
-    const nextPreviewUrl = URL.createObjectURL(selectedFile);
-    setPreviewUrl(nextPreviewUrl);
-    return () => URL.revokeObjectURL(nextPreviewUrl);
-  }, [selectedFile]);
+    if (!previewUrl) return;
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [previewUrl]);
 
   useEffect(() => {
     const input = inputRef.current;
@@ -253,13 +257,20 @@ function ClientFileField({
         className={`group relative mt-2 cursor-pointer overflow-hidden rounded-2xl border border-dashed bg-white/[0.01] px-6 py-8 text-center transition-all hover:bg-white/[0.02] focus-within:ring-4 focus-within:ring-white/10 ${
           error ? "border-rose-500/50" : "border-white/10 hover:border-white/20"
         }`}
+        onDragOver={(event) => {
+          event.preventDefault();
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          onFileChange(event.dataTransfer.files?.[0] ?? null);
+        }}
       >
         <input
           ref={inputRef}
           id={name}
           name={name}
           type="file"
-          accept="image/jpeg,image/png,image/webp,application/pdf,.doc,.docx"
+          accept={REGISTRATION_FILE_ACCEPT}
           onChange={(e) => {
             const selectedFile = e.target.files?.[0] ?? null;
             onFileChange(selectedFile);
@@ -295,7 +306,7 @@ function ClientFileField({
                 Click to attach or drag & drop
               </p>
               <p className="mt-1.5 text-[0.8125rem] text-slate-500">
-                Supports common file formats up to 10MB
+                JPG, PNG, WebP, or PDF up to 10MB
               </p>
             </>
           )}
@@ -438,14 +449,15 @@ export default function PublicRegistrationForm({
   const [memberCount, setMemberCount] = useState(form.teamMinMembers);
   const [currentPage, setCurrentPage] = useState(0);
   const [validationError, setValidationError] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<Record<string, File | null>>({});
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const [fileErrors, setFileErrors] = useState<Record<string, string>>({});
+  const canUseDom = typeof document !== "undefined";
 
   const formAction = async (formData: FormData) => {
+    for (const [name, file] of Object.entries(selectedFiles)) {
+      if (file) formData.set(name, file);
+    }
+
     const result = await submitRegistrationAction(state, formData);
     setState(result);
   };
@@ -489,15 +501,19 @@ export default function PublicRegistrationForm({
         );
         if (hasMemberError) errorPage = totalPages - 1;
       }
-      setCurrentPage(errorPage);
+      const frameId = window.requestAnimationFrame(() => setCurrentPage(errorPage));
+      return () => window.cancelAnimationFrame(frameId);
     }
   }, [state, pages, memberFields, totalPages]);
 
   useEffect(() => {
     if (state.status === "error" && state.message) {
-      setValidationError(state.message);
-      const timer = setTimeout(() => setValidationError(null), 5000);
-      return () => clearTimeout(timer);
+      const showTimer = window.setTimeout(() => setValidationError(state.message), 0);
+      const hideTimer = window.setTimeout(() => setValidationError(null), 5000);
+      return () => {
+        window.clearTimeout(showTimer);
+        window.clearTimeout(hideTimer);
+      };
     }
   }, [state.toastKey, state.status, state.message]);
 
@@ -515,8 +531,14 @@ export default function PublicRegistrationForm({
       let hasError = false;
       const currentFields = pages[currentPage];
       for (const f of currentFields) {
-        if (!f.required) continue;
         const name = `submission__${f.key}`;
+
+        if (fileErrors[name]) {
+          hasError = true;
+          continue;
+        }
+
+        if (!f.required) continue;
 
         if (f.type === "checkbox") {
           const checks = formEl.querySelectorAll(`input[name="${name}"]:checked`);
@@ -564,8 +586,21 @@ export default function PublicRegistrationForm({
   };
 
   const handleFileChange = (name: string, file: File | null) => {
+    const error = file ? getRegistrationFileValidationError(file) : null;
+
+    setFileErrors((current) => {
+      if (!error) {
+        if (!(name in current)) return current;
+        const next = { ...current };
+        delete next[name];
+        return next;
+      }
+
+      return { ...current, [name]: error };
+    });
+
     setSelectedFiles((current) => {
-      if (!file) {
+      if (!file || error) {
         if (!(name in current)) return current;
         const next = { ...current };
         delete next[name];
@@ -588,7 +623,7 @@ export default function PublicRegistrationForm({
         </div>
         
         <h2 className="relative mt-6 text-2xl font-bold tracking-tight text-white sm:mt-8 sm:text-3xl lg:text-5xl">
-          You're all set!
+          You&apos;re all set!
         </h2>
         
         <p className="relative mt-3 w-full max-w-[90vw] px-2 text-base leading-relaxed text-slate-300 sm:mt-4 sm:max-w-lg sm:text-lg">
@@ -617,7 +652,7 @@ export default function PublicRegistrationForm({
 
   return (
     <div className="relative">
-      {isMounted && document.body && createPortal(
+      {canUseDom && document.body && createPortal(
         <AnimatePresence>
           {validationError && (
             <motion.div
@@ -689,7 +724,7 @@ export default function PublicRegistrationForm({
                           <RenderField
                             field={field}
                             name={name}
-                            error={state.fieldErrors[name]}
+                            error={state.fieldErrors[name] ?? fileErrors[name]}
                             defaultValue={state.fields?.[name]}
                             selectedFile={selectedFiles[name] ?? null}
                             onFileChange={(file) => handleFileChange(name, file)}
@@ -773,7 +808,7 @@ export default function PublicRegistrationForm({
                               <RenderField
                                 field={field}
                                 name={name}
-                                error={state.fieldErrors[name]}
+                                error={state.fieldErrors[name] ?? fileErrors[name]}
                                 defaultValue={state.fields?.[name]}
                                 selectedFile={selectedFiles[name] ?? null}
                                 onFileChange={(file) => handleFileChange(name, file)}

@@ -60,6 +60,11 @@ function readString(formData: FormData, key: string) {
   return typeof value === "string" ? value.trim() : "";
 }
 
+function readOptionalString(formData: FormData, key: string, maxLength: number) {
+  const value = readString(formData, key);
+  return value ? value.slice(0, maxLength) : null;
+}
+
 function readOptionalDate(formData: FormData, key: string) {
   const value = readString(formData, key);
   if (!value) return null;
@@ -197,6 +202,36 @@ function assertLinkedForm(
   return form;
 }
 
+function isDecisionEmailFieldCandidate(field: {
+  id: string;
+  scope: string;
+  type: string;
+}) {
+  return field.scope === "submission" && field.type === "email";
+}
+
+async function assertDecisionEmailSettings(params: {
+  formId: string | null;
+  fieldId: string | null;
+}) {
+  if (!params.fieldId) return null;
+  if (!params.formId) {
+    throw new Error("Link a competition form before choosing a decision email field.");
+  }
+
+  const form = await getRegistrationFormById(params.formId);
+  if (!form) {
+    throw new Error("The linked competition form could not be loaded.");
+  }
+
+  const emailField = form.fields.find((field) => field.id === params.fieldId);
+  if (!emailField || !isDecisionEmailFieldCandidate(emailField)) {
+    throw new Error("Decision emails can only use a submission email field from the linked competition form.");
+  }
+
+  return emailField.id;
+}
+
 function assertCanOpenBeforeRegistrationStarts(params: {
   eventKey: SiteEventKey;
   title: string;
@@ -319,10 +354,39 @@ export async function updateAdminEventsAction(
             formData,
             `${COMPETITION_SITE_EVENT.key}__closeDate`,
           ),
+          decisionEmailFieldId: readString(
+            formData,
+            `${COMPETITION_SITE_EVENT.key}__decisionEmailFieldId`,
+          ) || null,
+          approvalEmailSubject: readOptionalString(
+            formData,
+            `${COMPETITION_SITE_EVENT.key}__approvalEmailSubject`,
+            255,
+          ),
+          approvalEmailTemplate: readOptionalString(
+            formData,
+            `${COMPETITION_SITE_EVENT.key}__approvalEmailTemplate`,
+            4096,
+          ),
+          declineEmailSubject: readOptionalString(
+            formData,
+            `${COMPETITION_SITE_EVENT.key}__declineEmailSubject`,
+            255,
+          ),
+          declineEmailTemplate: readOptionalString(
+            formData,
+            `${COMPETITION_SITE_EVENT.key}__declineEmailTemplate`,
+            4096,
+          ),
         }
       : (currentConfigs[COMPETITION_SITE_EVENT.key] as CompetitionEventConfig);
 
     if (shouldReadCompetition) {
+      competitionConfig.decisionEmailFieldId = await assertDecisionEmailSettings({
+        formId: competitionConfig.formId,
+        fieldId: competitionConfig.decisionEmailFieldId,
+      });
+
       if (
         readString(formData, `${COMPETITION_SITE_EVENT.key}__openDate`) &&
         !competitionConfig.openDate
