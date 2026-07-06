@@ -4,6 +4,7 @@ import {
   listAllRegistrationSubmissionDetails,
 } from "@/lib/registrations";
 import { formatDateTimeDisplay } from "@/lib/date-format";
+import { getSubmissionFileName, isSubmissionFileAnswer } from "@/lib/registration-files";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,14 @@ function escapeCsv(value: unknown) {
   }
 
   return stringValue;
+}
+
+function formatExportValue(value: unknown) {
+  if (isSubmissionFileAnswer(value)) {
+    return getSubmissionFileName(value) || value.fileId;
+  }
+
+  return value;
 }
 
 export async function GET(request: Request) {
@@ -50,6 +59,8 @@ export async function GET(request: Request) {
 
   const headers = [
     "Submitted At",
+    "Decision Status",
+    "Decision Email Sent At",
     "Team Name",
     ...submissionFields.map((field) => `Submission: ${field.label}`),
     ...Array.from({ length: maxMembers }).flatMap((_, memberIndex) =>
@@ -60,14 +71,18 @@ export async function GET(request: Request) {
   const rows = details.map((detail) => {
     const baseColumns = [
       formatDateTimeDisplay(detail.createdAt),
+      detail.decisionStatus,
+      detail.decisionEmailSentAt
+        ? formatDateTimeDisplay(detail.decisionEmailSentAt)
+        : "",
       detail.teamName ?? "",
-      ...submissionFields.map((field) => detail.answers[field.key] ?? ""),
+      ...submissionFields.map((field) => formatExportValue(detail.answers[field.key] ?? "")),
     ];
     const memberColumns = Array.from({ length: maxMembers }).flatMap(
       (_, memberIndex) => {
         const member = detail.memberAnswers[memberIndex] ?? {};
 
-        return memberFields.map((field) => member[field.key] ?? "");
+        return memberFields.map((field) => formatExportValue(member[field.key] ?? ""));
       },
     );
 

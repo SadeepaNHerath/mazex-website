@@ -1396,7 +1396,7 @@ function FieldPreview({ field }: { field: FieldDefinition }) {
   if (type === "file") {
     return (
       <div className="mt-4 flex items-center justify-center rounded-lg border-2 border-dashed border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50">
-        <span className="text-sm font-medium text-zinc-400 dark:text-zinc-500">Click to upload file</span>
+        <span className="text-sm font-medium text-zinc-400 dark:text-zinc-500">JPG, PNG, WebP, or PDF up to 10MB</span>
       </div>
     );
   }

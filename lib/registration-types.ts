@@ -114,7 +114,21 @@ export type FormCard = FormDefinition & {
   availability: FormAvailability;
 };
 
-export type SubmissionAnswerValue = string | number | boolean | null | string[] | File;
+export type SubmissionFileAnswer = {
+  fileId: string;
+  fileName: string;
+  mimeType: string;
+  size: number;
+};
+
+export type SubmissionAnswerValue =
+  | string
+  | number
+  | boolean
+  | null
+  | string[]
+  | File
+  | SubmissionFileAnswer;
 export type SubmissionAnswers = Record<string, SubmissionAnswerValue>;
 
 export type SubmissionPayload = {
@@ -123,6 +137,15 @@ export type SubmissionPayload = {
   memberAnswers: SubmissionAnswers[];
   teamName: string | null;
 };
+
+export const SUBMISSION_DECISION_STATUSES = [
+  "pending",
+  "approved",
+  "declined",
+] as const;
+
+export type SubmissionDecisionStatus =
+  (typeof SUBMISSION_DECISION_STATUSES)[number];
 
 export type SubmissionSummary = {
   id: string;
@@ -133,6 +156,9 @@ export type SubmissionSummary = {
   displayTitle: string;
   displaySubtitle: string | null;
   teamName: string | null;
+  decisionStatus: SubmissionDecisionStatus;
+  decisionEmailSentAt: string | null;
+  decisionEmailSentByAdminUserId: string | null;
   commonMatches?: SubmissionCommonMatch[];
 };
 

@@ -7,6 +7,11 @@ import {
   listRegistrationForms,
   listRegistrationSubmissions,
 } from "@/lib/registrations";
+import { getSiteEventConfigs } from "@/lib/site-events";
+import {
+  COMPETITION_SITE_EVENT,
+  type CompetitionEventConfig,
+} from "@/lib/site-event-types";
 
 type SearchParamsValue = string | string[] | undefined;
 
@@ -108,7 +113,7 @@ export default async function AdminRegistrationsPage({
       ? commonFieldParam
       : commonFieldOptions[0]?.value ?? "";
 
-  const [submissionPage] = await Promise.all([
+  const [submissionPage, siteEventConfigs] = await Promise.all([
     listRegistrationSubmissions({
       formId: mode === "common" ? undefined : activeForm.id,
       commonFormIds: mode === "common" ? commonForms.map((form) => form.id) : null,
@@ -119,8 +124,11 @@ export default async function AdminRegistrationsPage({
       pageSize: pageSize === "all" ? "all" : (Number.isInteger(pageSize) && pageSize > 0 ? pageSize : 15),
       searchField,
       searchQuery,
-    })
+    }),
+    getSiteEventConfigs(),
   ]);
+  const competitionConfig =
+    siteEventConfigs[COMPETITION_SITE_EVENT.key] as CompetitionEventConfig;
 
   let selectedSubmission = submissionId
     ? submissionPage.submissions.find(s => s.id === submissionId) || null
@@ -151,6 +159,7 @@ export default async function AdminRegistrationsPage({
       mode={mode}
       commonFormSlugs={commonForms.map((form) => form.slug)}
       commonFieldKey={commonFieldKey}
+      decisionFormId={competitionConfig.formId}
     />
   );
 }

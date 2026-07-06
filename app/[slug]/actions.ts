@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { AppwriteConfigError } from "@/lib/appwrite";
+import { REGISTRATION_TOTAL_UPLOAD_MAX_BYTES } from "@/lib/registration-files";
 import {
   attachUniqueValueReservationsToSubmission,
   coerceFieldValue,
@@ -30,7 +31,6 @@ export type SubmitRegistrationState = {
 
 const empty: Record<string, string> = {};
 const HONEYPOT_FIELD_NAME = "registration_url";
-const MAX_TOTAL_UPLOAD_BYTES = 25 * 1024 * 1024;
 const DEFAULT_SUCCESS_MESSAGE =
   "Registration received successfully. We will contact you with the next steps.";
 
@@ -87,9 +87,9 @@ async function uploadAnswerFiles(
   for (const [key, value] of Object.entries(record)) {
     if (!(value instanceof File)) continue;
 
-    const fileId = await uploadRegistrationFile(value);
-    record[key] = fileId;
-    uploadedFileIds.push(fileId);
+    const uploadedFile = await uploadRegistrationFile(value);
+    record[key] = uploadedFile;
+    uploadedFileIds.push(uploadedFile.fileId);
   }
 }
 
@@ -213,7 +213,7 @@ export async function submitRegistrationAction(
   }
 
   const totalUploadBytes = getTotalUploadBytes([answers, ...memberAnswers]);
-  if (totalUploadBytes > MAX_TOTAL_UPLOAD_BYTES) {
+  if (totalUploadBytes > REGISTRATION_TOTAL_UPLOAD_MAX_BYTES) {
     return buildState(
       "error",
       "Combined uploads must be 25MB or less.",

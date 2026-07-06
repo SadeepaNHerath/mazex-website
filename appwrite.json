@@ -570,6 +570,33 @@
                     "size": 4096,
                     "encrypt": false,
                     "default": null
+                },
+                {
+                    "key": "decisionStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 32,
+                    "encrypt": false,
+                    "default": null
+                },
+                {
+                    "key": "decisionEmailSentAt",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 64,
+                    "encrypt": false,
+                    "default": null
+                },
+                {
+                    "key": "decisionEmailSentByAdminUserId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "encrypt": false,
+                    "default": null
                 }
             ],
             "indexes": [
@@ -1064,9 +1091,7 @@
                 "jpg",
                 "jpeg",
                 "webp",
-                "pdf",
-                "doc",
-                "docx"
+                "pdf"
             ],
             "compression": "gzip",
             "encryption": true,

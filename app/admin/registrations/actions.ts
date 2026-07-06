@@ -11,7 +11,12 @@ import {
   makeLegacyGoogleSheetsSheetTitle,
   makeDefaultGoogleSheetsSheetTitle,
 } from "@/lib/google-sheets";
-import { parseDisplayDateBoundaryInput } from "@/lib/date-format";
+import { formatDateTimeDisplay, parseDisplayDateBoundaryInput } from "@/lib/date-format";
+import {
+  normalizeDecisionEmailAddress,
+  sendRegistrationDecisionEmail,
+  type RegistrationDecision,
+} from "@/lib/registration-decision-emails";
 import {
   getAutoManagedSiteEventEnabled,
   getSiteEventDatesFromFormWindow,
@@ -25,6 +30,7 @@ import {
   deleteRegistrationField,
   deleteRegistrationForm,
   getRegistrationFormById,
+  getRegistrationSubmissionById,
   isChoiceField,
   isTextLikeField,
   listRegistrationForms,
@@ -33,6 +39,7 @@ import {
   bulkSaveRegistrationFields,
   updateRegistrationFieldOrders,
   updateRegistrationFormSettings,
+  updateRegistrationSubmissionDecision,
   uploadFormBanner,
 } from "@/lib/registrations";
 import type {
@@ -109,6 +116,10 @@ function isFormKind(v: unknown): v is RegistrationFormKind {
     typeof v === "string" &&
     REGISTRATION_FORM_KINDS.includes(v as RegistrationFormKind)
   );
+}
+
+function isRegistrationDecision(value: unknown): value is RegistrationDecision {
+  return value === "approved" || value === "declined";
 }
 
 
@@ -1037,6 +1048,96 @@ export async function bulkSaveRegistrationFieldsAction(
 
     revalidateAll(form.slug);
     return buildState("success", "Form fields saved successfully.");
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
+export async function sendSubmissionDecisionEmailAction(
+  _prev: RegistrationAdminActionState = initialState,
+  formData: FormData,
+): Promise<RegistrationAdminActionState> {
+  try {
+    const admin = await requireAdmin();
+    const submissionId = readString(formData, "submissionId");
+    const decisionValue = readString(formData, "decision");
+    if (!submissionId) throw new Error("Unable to identify the submission.");
+    if (!isRegistrationDecision(decisionValue)) {
+      throw new Error("Choose either approve or decline for this submission.");
+    }
+
+    const submission = await getRegistrationSubmissionById(submissionId);
+    if (!submission) throw new Error("Submission not found.");
+
+    if (submission.decisionStatus === decisionValue) {
+      return buildState(
+        "success",
+        `This submission is already ${decisionValue}.`,
+      );
+    }
+
+    const configs = await getSiteEventConfigs();
+    const competitionConfig =
+      configs[COMPETITION_SITE_EVENT.key] as CompetitionEventConfig;
+    if (competitionConfig.formId !== submission.formId) {
+      throw new Error("Approve and decline emails are only available for Competition Registration submissions.");
+    }
+
+    if (!competitionConfig.decisionEmailFieldId) {
+      throw new Error("Choose the Competition Registration decision email field in Events before sending decisions.");
+    }
+
+    const form = await getRegistrationFormById(submission.formId);
+    if (!form) throw new Error("The linked competition form could not be loaded.");
+    const emailField = form.fields.find(
+      (field) =>
+        field.id === competitionConfig.decisionEmailFieldId &&
+        field.scope === "submission" &&
+        field.type === "email",
+    );
+    if (!emailField) {
+      throw new Error("The configured decision email field is no longer available on the linked form.");
+    }
+
+    const recipientEmail = normalizeDecisionEmailAddress(
+      submission.answers[emailField.key],
+    );
+    if (!recipientEmail) {
+      throw new Error(`This submission does not have an email value for ${emailField.label}.`);
+    }
+
+    await sendRegistrationDecisionEmail({
+      decision: decisionValue,
+      recipientEmail,
+      recipientName:
+        submission.displayTitle && submission.displayTitle !== "Submission"
+          ? submission.displayTitle
+          : null,
+      formTitle: form.title,
+      eventTitle: COMPETITION_SITE_EVENT.title,
+      submittedAt: formatDateTimeDisplay(submission.createdAt),
+      subjectTemplate:
+        decisionValue === "approved"
+          ? competitionConfig.approvalEmailSubject
+          : competitionConfig.declineEmailSubject,
+      bodyTemplate:
+        decisionValue === "approved"
+          ? competitionConfig.approvalEmailTemplate
+          : competitionConfig.declineEmailTemplate,
+    });
+
+    await updateRegistrationSubmissionDecision({
+      submissionId: submission.id,
+      status: decisionValue,
+      sentAt: new Date().toISOString(),
+      adminUserId: admin.user.$id,
+    });
+
+    revalidateAll(form.slug);
+    return buildState(
+      "success",
+      `${decisionValue === "approved" ? "Approval" : "Decline"} email sent to ${recipientEmail}.`,
+    );
   } catch (error) {
     return handleError(error);
   }

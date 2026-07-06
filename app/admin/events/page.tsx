@@ -1,5 +1,5 @@
 import AdminEventsForm from "@/components/admin/AdminEventsForm";
-import { listRegistrationForms } from "@/lib/registrations";
+import { getRegistrationFormById, listRegistrationForms } from "@/lib/registrations";
 import { getResolvedSiteEvents } from "@/lib/site-events";
 
 export default async function AdminEventsPage() {
@@ -7,6 +7,14 @@ export default async function AdminEventsPage() {
     listRegistrationForms({ skipSiteEventAutoSync: true }),
     getResolvedSiteEvents(),
   ]);
+  const formsWithFields = await Promise.all(
+    forms.map((form) => getRegistrationFormById(form.id)),
+  );
+  const fieldsByFormId = new Map(
+    formsWithFields
+      .filter((form): form is NonNullable<typeof form> => form !== null)
+      .map((form) => [form.id, form.fields] as const),
+  );
 
   return (
     <AdminEventsForm
@@ -16,6 +24,12 @@ export default async function AdminEventsPage() {
         slug: form.slug,
         status: form.status,
         kind: form.kind,
+        emailFields: (fieldsByFormId.get(form.id) ?? [])
+          .filter((field) => field.scope === "submission" && field.type === "email")
+          .map((field) => ({
+            id: field.id,
+            label: field.label,
+          })),
       }))}
       events={siteEvents.adminItems}
     />

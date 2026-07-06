@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   ExternalLink,
   Link2,
+  MailCheck,
   ShieldAlert,
   X,
 } from "lucide-react";
@@ -26,6 +27,10 @@ type AdminEventFormOption = {
   slug: string;
   status: RegistrationFormStatus;
   kind: RegistrationFormKind;
+  emailFields: Array<{
+    id: string;
+    label: string;
+  }>;
 };
 
 const initialState: UpdateAdminEventsState = {
@@ -188,10 +193,10 @@ function EventCard({
       ? submissionState.toastKey
       : 0;
   const [enabled, setEnabled] = useState(event.enabled);
-
-  useEffect(() => {
-    setEnabled(event.enabled);
-  }, [event.enabled, formResetKey]);
+  const [selectedFormId, setSelectedFormId] = useState(event.formId ?? "");
+  const selectedForm = forms.find((form) => form.id === selectedFormId) ?? null;
+  const emailFieldOptions =
+    event.kind === "competition" ? selectedForm?.emailFields ?? [] : [];
 
   return (
     <form
@@ -283,7 +288,8 @@ function EventCard({
         >
           <select
             name={`${event.key}__formId`}
-            defaultValue={event.formId ?? ""}
+            value={selectedFormId}
+            onChange={(changeEvent) => setSelectedFormId(changeEvent.target.value)}
             className="block h-11 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
           >
             <option value="">No form linked</option>
@@ -372,6 +378,107 @@ function EventCard({
         )}
       </div>
 
+      {event.kind === "competition" ? (
+        <div className="mt-6 rounded-lg border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-950">
+          <div className="flex items-start gap-3">
+            <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white text-zinc-700 shadow-sm dark:bg-zinc-900 dark:text-zinc-200">
+              <MailCheck className="h-4 w-4" />
+            </span>
+            <div>
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                Decision emails
+              </h3>
+              <p className="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+                Used by the Approve and Decline buttons in Competition Registration submissions.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-5 md:grid-cols-2">
+            <FieldShell
+              label="Recipient email field"
+              description="Choose a submission email field from the linked competition form."
+            >
+              <select
+                name={`${event.key}__decisionEmailFieldId`}
+                defaultValue={event.decisionEmailFieldId ?? ""}
+                disabled={!selectedFormId || emailFieldOptions.length === 0}
+                className="block h-11 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
+              >
+                <option value="">
+                  {selectedFormId ? "Select email field" : "Link a form first"}
+                </option>
+                {emailFieldOptions.map((field) => (
+                  <option key={field.id} value={field.id}>
+                    {field.label}
+                  </option>
+                ))}
+              </select>
+              {selectedFormId && emailFieldOptions.length === 0 ? (
+                <p className="mt-2 text-xs font-medium text-amber-700 dark:text-amber-300">
+                  The linked form needs a submission email field before decisions can send email.
+                </p>
+              ) : null}
+            </FieldShell>
+
+            <FieldShell
+              label="Template placeholders"
+              description="{{name}}, {{formTitle}}, {{eventTitle}}, {{submittedAt}}, {{decision}}"
+            >
+              <div className="flex h-11 items-center rounded-md border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
+                Placeholders work in subjects and message bodies.
+              </div>
+            </FieldShell>
+          </div>
+
+          <div className="mt-5 grid gap-5 lg:grid-cols-2">
+            <div className="space-y-4">
+              <FieldShell label="Approval subject">
+                <input
+                  name={`${event.key}__approvalEmailSubject`}
+                  defaultValue={event.approvalEmailSubject ?? ""}
+                  maxLength={255}
+                  placeholder="MazeX Registration Approved"
+                  className="block h-11 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
+                />
+              </FieldShell>
+              <FieldShell label="Approval body">
+                <textarea
+                  name={`${event.key}__approvalEmailTemplate`}
+                  defaultValue={event.approvalEmailTemplate ?? ""}
+                  rows={5}
+                  maxLength={4096}
+                  placeholder={"Hi {{name}},\n\nYour {{formTitle}} submission has been approved."}
+                  className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
+                />
+              </FieldShell>
+            </div>
+
+            <div className="space-y-4">
+              <FieldShell label="Decline subject">
+                <input
+                  name={`${event.key}__declineEmailSubject`}
+                  defaultValue={event.declineEmailSubject ?? ""}
+                  maxLength={255}
+                  placeholder="MazeX Registration Update"
+                  className="block h-11 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
+                />
+              </FieldShell>
+              <FieldShell label="Decline body">
+                <textarea
+                  name={`${event.key}__declineEmailTemplate`}
+                  defaultValue={event.declineEmailTemplate ?? ""}
+                  rows={5}
+                  maxLength={4096}
+                  placeholder={"Hi {{name}},\n\nYour {{formTitle}} submission was not approved this time."}
+                  className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-400 dark:focus:ring-zinc-400"
+                />
+              </FieldShell>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <div className="mt-6 flex flex-col gap-3 border-t border-zinc-200 pt-6 sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
           Save this card to update the public event, CTA state, and linked form availability.
@@ -390,6 +497,11 @@ function getEventRenderKey(event: AdminSiteEventItem) {
       event.formId ?? "none",
       event.openDate ?? "none",
       event.closeDate ?? "none",
+      event.decisionEmailFieldId ?? "no-decision-email-field",
+      event.approvalEmailSubject ?? "default-approve-subject",
+      event.approvalEmailTemplate ?? "default-approve-template",
+      event.declineEmailSubject ?? "default-decline-subject",
+      event.declineEmailTemplate ?? "default-decline-template",
       event.linkedForm?.slug ?? "no-slug",
       event.linkedFormMissing ? "missing" : "present",
     ].join(":");
@@ -478,7 +590,11 @@ export default function AdminEventsForm({
           <div className="mt-8 space-y-6">
             {events.map((event) => (
               <EventCard
-                key={getEventRenderKey(event)}
+                key={`${getEventRenderKey(event)}:${
+                  state.status === "error" && state.resetTargetEventKey === event.key
+                    ? state.toastKey
+                    : 0
+                }`}
                 event={event}
                 forms={forms}
                 formAction={formAction}

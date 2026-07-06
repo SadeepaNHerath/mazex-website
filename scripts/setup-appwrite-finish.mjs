@@ -37,7 +37,7 @@ const SHORT_LINKS_COL =
   env.APPWRITE_COLLECTION_SHORT_LINKS || "short_links";
 const BUCKET_ID  = env.APPWRITE_BUCKET_FORM_BANNERS || "form_banners";
 const FILES_BUCKET_ID = env.APPWRITE_BUCKET_REGISTRATION_FILES || "registration_files";
-const REGISTRATION_FILE_EXTENSIONS = ["png", "jpg", "jpeg", "webp", "pdf", "doc", "docx"];
+const REGISTRATION_FILE_EXTENSIONS = ["png", "jpg", "jpeg", "webp", "pdf"];
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -158,6 +158,16 @@ await createAttrs(FIELDS_COL, [
 ]);
 await waitAvailable(FIELDS_COL, ["placeholder", "helpText", "isUnique", "uniqueCaseSensitive"]);
 await ensureIndex(FIELDS_COL, "by_form", "key", ["formId"]);
+await createAttrs(SUBS_COL, [
+  { t:"str", key:"decisionStatus", size:32 },
+  { t:"str", key:"decisionEmailSentAt", size:64 },
+  { t:"str", key:"decisionEmailSentByAdminUserId", size:255 },
+]);
+await waitAvailable(SUBS_COL, [
+  "decisionStatus",
+  "decisionEmailSentAt",
+  "decisionEmailSentByAdminUserId",
+]);
 await ensureIndex(SUBS_COL,   "by_form", "key", ["formId"]);
 
 // Create the unique-value reservation collection if needed
